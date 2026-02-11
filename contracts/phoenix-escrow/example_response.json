@@ -1,0 +1,17 @@
+{
+  "id": 0,
+  "item_id": "gold-001",
+  "description": "1kg Gold Bar",
+  "metal_type": "Gold",
+  "product_form": "Bar",
+  "weight": 1000,
+  "starting_price": "1000000",
+  "reserve_price": "1500000",
+  "buy_now_price": "2000000",  // NEW FIELD - included automatically
+  "highest_bid": null,
+  "highest_bidder": null,
+  "seller": "core1...",
+  "status": "Active",
+  "end_time": "1234567890",
+  "created_at": "1234567800"
+}

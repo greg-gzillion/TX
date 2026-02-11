@@ -1,0 +1,459 @@
+import { Request, Response } from 'express';
+import { AuthenticatedRequest } from '../middleware/auth.middleware';
+
+export class AuctionController {
+  // List all auctions (public)
+  async listAuctions(req: Request, res: Response) {
+    try {
+      const { 
+        page = '1', 
+        limit = '20', 
+        status,
+        search,
+        sortBy = 'createdAt',
+        sortOrder = 'desc'
+      } = req.query;
+
+      const pageNum = parseInt(page as string);
+      const limitNum = parseInt(limit as string);
+      const skip = (pageNum - 1) * limitNum;
+
+      // Build filter
+      const where: any = {};
+      
+      if (status) {
+        where.status = status;
+      } else {
+        // Default to active auctions
+        where.status = 'active';
+      }
+
+      if (search) {
+        where.OR = [
+          { title: { contains: search as string, mode: 'insensitive' } },
+          { description: { contains: search as string, mode: 'insensitive' } }
+        ];
+      }
+
+      // Validate sort fields
+      const validSortFields = ['createdAt', 'updatedAt', 'endTime', 'currentPrice', 'startingPrice'];
+      const sortField = validSortFields.includes(sortBy as string) 
+        ? sortBy as string 
+        : 'createdAt';
+
+      // Get auctions with seller info
+      const [auctions, total] = await Promise.all([
+          where,
+          include: {
+            seller: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              }
+            },
+            bids: {
+              select: {
+                id: true,
+                amount: true,
+                createdAt: true,
+              },
+              orderBy: {
+                amount: 'desc'
+              },
+              take: 1 // Get highest bid
+            }
+          },
+          skip,
+          take: limitNum,
+          orderBy: {
+            [sortField]: sortOrder as 'asc' | 'desc'
+          }
+        }),
+      ]);
+
+      return res.json({
+        success: true,
+        data: {
+          auctions,
+          meta: {
+            page: pageNum,
+            limit: limitNum,
+            total,
+            pages: Math.ceil(total / limitNum)
+          }
+        }
+      });
+
+    } catch (error) {
+      console.error('List auctions error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to fetch auctions'
+      });
+    }
+  }
+
+  // Get single auction by ID (public)
+  async getAuction(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+        where: { id },
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              createdAt: true,
+            }
+          },
+          bids: {
+            include: {
+              bidder: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                }
+              }
+            },
+            orderBy: {
+              amount: 'desc'
+            },
+            take: 10
+          }
+        }
+      });
+
+      if (!auction) {
+        return res.status(404).json({
+          success: false,
+          error: 'Auction not found'
+        });
+      }
+
+      return res.json({
+        success: true,
+        data: { auction }
+      });
+
+    } catch (error) {
+      console.error('Get auction error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to fetch auction'
+      });
+    }
+  }
+
+  // Create new auction (authenticated users only)
+  async createAuction(req: AuthenticatedRequest, res: Response) {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Not authenticated'
+        });
+      }
+
+      const { 
+        title, 
+        description, 
+        startingPrice,
+        endTime 
+      } = req.body;
+
+      // Validation
+      if (!title || !description || !startingPrice || !endTime) {
+        return res.status(400).json({
+          success: false,
+          error: 'Title, description, starting price, and end time are required'
+        });
+      }
+
+      if (startingPrice <= 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Starting price must be greater than 0'
+        });
+      }
+
+      // Create auction
+        data: {
+          title,
+          description,
+          startingPrice: parseFloat(startingPrice),
+          currentPrice: parseFloat(startingPrice), // Start with starting price
+          status: 'active',
+          endTime: new Date(endTime),
+          sellerId: user.userId,
+        },
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            }
+          }
+        }
+      });
+
+      return res.status(201).json({
+        success: true,
+        message: 'Auction created successfully',
+        data: { auction }
+      });
+
+    } catch (error) {
+      console.error('Create auction error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to create auction'
+      });
+    }
+  }
+
+  // Update auction (only owner or admin)
+  async updateAuction(req: AuthenticatedRequest, res: Response) {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Not authenticated'
+        });
+      }
+
+      const { id } = req.params;
+      const updates = req.body;
+
+      // Check if auction exists
+        where: { id },
+        select: {
+          sellerId: true,
+          status: true
+        }
+      });
+
+      if (!existingAuction) {
+        return res.status(404).json({
+          success: false,
+          error: 'Auction not found'
+        });
+      }
+
+      // Check permissions (owner or admin)
+      if (existingAuction.sellerId !== user.userId && user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          error: 'You can only update your own auctions'
+        });
+      }
+
+      // Don't allow updates to ended auctions
+      if (existingAuction.status === 'ended') {
+        return res.status(400).json({
+          success: false,
+          error: 'Cannot update ended auctions'
+        });
+      }
+
+      // Update auction
+        where: { id },
+        data: updates,
+        include: {
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            }
+          }
+        }
+      });
+
+      return res.json({
+        success: true,
+        message: 'Auction updated successfully',
+        data: { auction }
+      });
+
+    } catch (error) {
+      console.error('Update auction error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to update auction'
+      });
+    }
+  }
+
+  // Delete auction (only owner or admin)
+  async deleteAuction(req: AuthenticatedRequest, res: Response) {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Not authenticated'
+        });
+      }
+
+      const { id } = req.params;
+
+      // Check if auction exists
+        where: { id },
+        select: {
+          sellerId: true
+        }
+      });
+
+      if (!existingAuction) {
+        return res.status(404).json({
+          success: false,
+          error: 'Auction not found'
+        });
+      }
+
+      // Check permissions (owner or admin)
+      if (existingAuction.sellerId !== user.userId && user.role !== 'admin') {
+        return res.status(403).json({
+          success: false,
+          error: 'You can only delete your own auctions'
+        });
+      }
+
+      // Delete auction (cascade will delete bids)
+        where: { id }
+      });
+
+      return res.json({
+        success: true,
+        message: 'Auction deleted successfully'
+      });
+
+    } catch (error) {
+      console.error('Delete auction error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to delete auction'
+      });
+    }
+  }
+
+  // Place a bid on an auction (authenticated users)
+  async placeBid(req: AuthenticatedRequest, res: Response) {
+    try {
+      const user = req.user;
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          error: 'Not authenticated'
+        });
+      }
+
+      const { id } = req.params;
+      const { amount } = req.body;
+
+      if (!amount || amount <= 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Valid bid amount is required'
+        });
+      }
+
+      // Check if auction exists and is active
+        where: { id },
+        select: {
+          id: true,
+          currentPrice: true,
+          status: true,
+          endTime: true,
+          sellerId: true
+        }
+      });
+
+      if (!auction) {
+        return res.status(404).json({
+          success: false,
+          error: 'Auction not found'
+        });
+      }
+
+      if (auction.status !== 'active') {
+        return res.status(400).json({
+          success: false,
+          error: 'Auction is not active'
+        });
+      }
+
+      if (auction.endTime && new Date() > auction.endTime) {
+        return res.status(400).json({
+          success: false,
+          error: 'Auction has ended'
+        });
+      }
+
+      // User can't bid on their own auction
+      if (auction.sellerId === user.userId) {
+        return res.status(400).json({
+          success: false,
+          error: 'You cannot bid on your own auction'
+        });
+      }
+
+      // Bid must be higher than current price
+      if (amount <= auction.currentPrice) {
+        return res.status(400).json({
+          success: false,
+          error: `Bid must be higher than current price ($${auction.currentPrice})`
+        });
+      }
+
+      // Create bid transaction
+          data: {
+            amount: parseFloat(amount),
+            auctionId: auction.id,
+            bidderId: user.userId,
+            status: 'active'
+          },
+          include: {
+            bidder: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              }
+            }
+          }
+        }),
+          where: { id: auction.id },
+          data: {
+            currentPrice: parseFloat(amount)
+          }
+        })
+      ]);
+
+      return res.status(201).json({
+        success: true,
+        message: 'Bid placed successfully',
+        data: {
+          bid,
+          auction: updatedAuction
+        }
+      });
+
+    } catch (error) {
+      console.error('Place bid error:', error);
+      return res.status(500).json({
+        success: false,
+        error: 'Failed to place bid'
+      });
+    }
+  }
+}
+
+export const auctionController = new AuctionController();

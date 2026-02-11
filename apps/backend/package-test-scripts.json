@@ -1,0 +1,29 @@
+{
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "clean": "rm -rf dist node_modules",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "test": "node -e \"if (process.platform === 'win32') { console.log('Use npm run test:win or test:ps1 on Windows'); process.exit(1); }\" || NODE_ENV=test jest --runInBand --forceExit",
+    "test:win": "powershell -File ./scripts/test-runner.ps1",
+    "test:ps1": "powershell -File ./scripts/test-runner.ps1",
+    "test:watch": "NODE_ENV=test jest --watch --runInBand",
+    "test:coverage": "NODE_ENV=test jest --coverage --runInBand --forceExit",
+    "test:auth": "NODE_ENV=test jest src/__tests__/auth.test.ts --runInBand --forceExit",
+    "test:setup": "node -e \"if (process.platform === 'win32') { console.log('Run: powershell -File ./scripts/test-db-setup.ps1'); } else { console.log('Run: bash ./scripts/test-db-setup.sh'); }\"",
+    "test:ci": "npm run test:setup && npm run test:coverage",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate deploy",
+    "prisma:migrate:dev": "prisma migrate dev",
+    "prisma:migrate:reset": "prisma migrate reset",
+    "prisma:seed": "tsx prisma/seed.ts",
+    "prisma:studio": "prisma studio",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:clean": "docker-compose down -v",
+    "type-check": "tsc --noEmit"
+  }
+}

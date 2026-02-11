@@ -1,0 +1,151 @@
+use cosmwasm_std::{
+    entry_point, to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
+};
+use cw_storage_plus::Bound;
+
+use crate::error::ContractError;
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, AuctionResponse, AuctionsResponse, ConfigResponse};
+use crate::state::{Config, CONFIG, AUCTIONS, Auction, AuctionStatus};
+
+#[entry_point]
+pub fn instantiate(
+    deps: DepsMut,
+    _env: Env,
+    info: MessageInfo,
+    msg: InstantiateMsg,
+) -> Result<Response, ContractError> {
+    let config = Config {
+        admin: deps.api.addr_validate(&msg.admin)?,
+    };
+    CONFIG.save(deps.storage, &config)?;
+
+    Ok(Response::new()
+        .add_attribute("action", "instantiate")
+        .add_attribute("admin", config.admin))
+}
+
+#[entry_point]
+pub fn execute(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    msg: ExecuteMsg,
+) -> Result<Response, ContractError> {
+    match msg {
+        ExecuteMsg::CreateAuction {
+            item_id,
+            description,
+            metal_type,
+            product_form,
+            weight,
+            starting_price,
+            reserve_price,
+            duration_hours,
+        } => execute_create_auction(
+            deps,
+            env,
+            info,
+            item_id,
+            description,
+            metal_type,
+            product_form,
+            weight,
+            starting_price,
+            reserve_price,
+            duration_hours,
+        ),
+        ExecuteMsg::PlaceBid { auction_id, amount } => {
+            execute_place_bid(deps, env, info, auction_id, amount)
+        }
+        ExecuteMsg::EndAuction { auction_id } => execute_end_auction(deps, env, info, auction_id),
+        ExecuteMsg::ReleaseFunds { auction_id } => execute_release_funds(deps, env, info, auction_id),
+        ExecuteMsg::CancelAuction { auction_id } => execute_cancel_auction(deps, env, info, auction_id),
+    }
+}
+
+#[entry_point]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::GetConfig {} => {
+            let config = CONFIG.load(deps.storage)?;
+            to_json_binary(&ConfigResponse { admin: config.admin })
+        }
+        QueryMsg::GetAuction { id } => {
+            let auction = AUCTIONS.load(deps.storage, id)?;
+            to_json_binary(&auction)
+        }
+        QueryMsg::ListAuctions { start_after, limit } => {
+            let auctions = list_auctions(deps, start_after, limit)?;
+            to_json_binary(&AuctionsResponse { auctions })
+        }
+        QueryMsg::GetCompletedAuctions { start_after, limit } => {
+            let auctions = query_completed_auctions(deps, start_after, limit)?;
+            to_json_binary(&auctions)
+        }
+    }
+}
+
+// Helper function to list auctions
+fn list_auctions(
+    deps: Deps,
+    start_after: Option<u64>,
+    limit: Option<u32>,
+) -> StdResult<Vec<Auction>> {
+    let limit = limit.unwrap_or(50).min(100) as usize;
+    let start = start_after.map(Bound::exclusive);
+
+    AUCTIONS
+        .range(deps.storage, start, None, cosmwasm_std::Order::Ascending)
+        .take(limit)
+        .map(|item| item.map(|(_, auction)| auction))
+        .collect()
+}
+
+// Query completed/ended auctions
+fn query_completed_auctions(
+    deps: Deps,
+    start_after: Option<u64>,
+    limit: Option<u32>,
+) -> StdResult<Vec<Auction>> {
+    use cosmwasm_std::Order;
+    
+    let limit = limit.unwrap_or(50).min(100) as usize;
+    let start = start_after.map(Bound::exclusive);
+    
+    AUCTIONS
+        .range(deps.storage, start, None, Order::Ascending)
+        .filter(|item| {
+            if let Ok((_, auction)) = item {
+                auction.status == AuctionStatus::Ended
+            } else {
+                false
+            }
+        })
+        .take(limit)
+        .map(|item| item.map(|(_, auction)| auction))
+        .collect()
+}
+
+// Add your existing execute functions here (execute_create_auction, execute_place_bid, etc.)
+// Copy them from your backup
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use cosmwasm_std::coins;
+
+    #[test]
+    fn test_instantiate() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        let info = mock_info("creator", &coins(1000, "ucore"));
+        
+        let msg = InstantiateMsg {
+            admin: "admin".to_string(),
+        };
+        
+        let res = instantiate(deps.as_mut(), env.clone(), info, msg).unwrap();
+        assert_eq!(0, res.messages.len());
+    }
+}

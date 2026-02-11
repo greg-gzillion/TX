@@ -1,0 +1,33 @@
+# Blockchain binaries
+/junod*
+/osmosisd*
+/starsd
+/wasmd
+*.tar.gz
+
+# Transaction files
+/tx_*.log
+/tx_*.json
+/unsigned_*.json
+
+# Build artifacts
+/target/
+/.next/
+/node_modules/
+
+# Environment
+.env
+*.log
+
+# Sensitive files
+mnemonic.txt
+*.txt
+
+# Temporary files
+token-created.txt
+cored-new
+# Binary files
+*.wasm
+*.d
+/tools/blockchain/osmosisd
+/tools/blockchain/wasmd

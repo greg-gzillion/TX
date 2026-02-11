@@ -1,0 +1,17 @@
+[target.wasm32-unknown-unknown]
+rustflags = [
+    "-C", "target-feature=-bulk-memory",
+    "-C", "target-feature=-reference-types",
+    "-C", "target-feature=-sign-ext",
+    "-C", "target-feature=-simd128",
+    "-C", "target-feature=-nontrapping-fptoint",
+    "-C", "opt-level=z",
+    "-C", "panic=abort",
+]
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+overflow-checks = true

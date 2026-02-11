@@ -1,0 +1,16 @@
+[package]
+name = "phoenix-auction"
+version = "0.1.0"
+edition = "2018"  # OLD edition
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+cosmwasm-std = { version = "=1.0.0", default-features = false }
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1
+panic = "abort"

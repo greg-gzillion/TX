@@ -1,0 +1,88 @@
+use cosmwasm_schema::{cw_serde, QueryResponses};
+use cosmwasm_std::{Addr, Uint128};
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+
+// 1.1% FEE - PhoenixPME business logic
+pub const PLATFORM_FEE_PERCENT: u64 = 11; // 1.1% = 11/1000
+pub const FEE_DENOMINATOR: u64 = 1000;
+
+#[cw_serde]
+    pub admin: String,
+    pub insurance_pool: String,
+    pub token_denom: String,
+}
+
+#[cw_serde]
+    CreateAuction {
+        item_id: String,
+        reserve_price: Uint128,
+        buy_it_now_price: Option<Uint128>,
+        duration_days: u64,
+    },
+    PlaceBid {
+        auction_id: String,
+    },
+    BuyItNow {
+        auction_id: String,
+    },
+    SettleAuction {
+        auction_id: String,
+    },
+}
+
+#[cw_serde]
+pub enum QueryMsg {
+    #[returns(AuctionResponse)]
+    GetAuction { auction_id: String },
+    
+    #[returns(Vec<AuctionResponse>)]
+    ListAuctions { start_after: Option<String>, limit: Option<u32> },
+    
+    #[returns(ConfigResponse)]
+    GetConfig {},
+}
+
+// Response types
+#[cw_serde]
+    pub admin: String,
+    pub insurance_pool: String,
+    pub token_denom: String,
+}
+
+#[cw_serde]
+    pub seller: String,
+    pub item_id: String,
+    pub reserve_price: Uint128,
+    pub buy_it_now_price: Option<Uint128>,
+    pub highest_bid: Uint128,
+    pub highest_bidder: String,
+    pub end_time: u64,
+    pub status: AuctionStatus,
+}
+
+// Internal types (not exposed in schema)
+pub struct Auction {
+    pub seller: Addr,
+    pub item_id: String,
+    pub reserve_price: Uint128,
+    pub buy_it_now_price: Option<Uint128>,
+    pub highest_bid: Uint128,
+    pub highest_bidder: Addr,
+    pub end_time: u64,
+    pub status: AuctionStatus,
+}
+
+#[cw_serde]
+pub enum AuctionStatus {
+    Active,
+    Ended,
+    Settled,
+    Sold,
+}
+
+pub struct Config {
+    pub admin: Addr,
+    pub insurance_pool: Addr,
+    pub token_denom: String,
+}

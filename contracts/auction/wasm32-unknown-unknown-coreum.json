@@ -1,0 +1,27 @@
+{
+  "llvm-target": "wasm32-unknown-unknown",
+  "data-layout": "e-m:e-p:32:32-p10:8:8-p20:8:8-i64:64-n32:64-S128",
+  "arch": "wasm32",
+  "os": "unknown",
+  "env": "",
+  "vendor": "unknown",
+  "linker": "rust-lld",
+  "linker-flavor": "wasm-ld",
+  "pre-link-args": {
+    "wasm-ld": ["--no-entry", "--export-all"]
+  },
+  "post-link-args": {
+    "wasm-ld": ["--no-gc-sections", "-z", "stack-size=32768"]
+  },
+  "target-family": ["wasm"],
+  "cpu": "generic",
+  "features": "-bulk-memory,-reference-types,-simd128,-sign-ext",
+  "max-atomic-width": 64,
+  "atomic-cas": true,
+  "panic-strategy": "abort",
+  "relocation-model": "static",
+  "code-model": "large",
+  "emit-debug-gdb-scripts": false,
+  "requires-uwtable": true,
+  "singlethread": true
+}

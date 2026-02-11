@@ -1,0 +1,100 @@
+use schemars::JsonSchema;
+use serde::{Deserialize, Serialize};
+use cosmwasm_std::Uint128;
+
+// ==================== METAL TYPES ====================
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum MetalType {
+    Gold,
+    Silver,
+    Platinum,
+    Palladium,
+    Rhodium,
+    Copper,
+    Other,
+}
+
+// ==================== PRODUCT FORMS ====================
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum ProductForm {
+    Bar,        // Cast or minted bars
+    Round,      // Rounds (bullion without currency value)
+    Coin,       // Legal tender coins
+    Grain,      // Small granules/powder
+    Sheet,      // Flat sheets
+    Wire,       // Wire form
+    Shot,       // Small spherical pieces
+    Jewelry,    // Finished jewelry
+    Scrap,      // Recyclable material
+    Other,      // Other forms
+}
+
+// ==================== WEIGHT UNITS ====================
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum WeightUnit {
+    Grams,
+    Ounces,      // Troy ounces for precious metals
+    Kilograms,
+    Pounds,
+    Tolas,       // Traditional Indian unit (11.66g)
+    Taels,       // Traditional Chinese unit (37.5g)
+}
+
+// ==================== AUCTION STRUCTURE ====================
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct Auction {
+    pub seller: String,
+    pub item_id: String,
+    pub description: String,
+    
+    // Metal Details
+    pub metal_type: MetalType,
+    pub product_form: ProductForm,
+    pub weight: u64,           // Weight amount
+    pub weight_unit: WeightUnit, // Weight unit
+    pub purity_percent: u8,    // Purity (e.g., 99 for 99.9%)
+    pub brand: Option<String>, // Brand/mint (e.g., "PAMP", "Royal Canadian Mint")
+    pub year: Option<u16>,     // Year of production
+    
+    // Auction Details
+    pub starting_price: Uint128,
+    pub reserve_price: Option<Uint128>,
+    pub start_time: u64,
+    pub end_time: u64,
+    pub current_bid: Option<Bid>,
+    pub bids: Vec<Bid>,
+    pub status: AuctionStatus,
+    pub escrow_released: bool,
+    
+    // Professional Grading (optional)
+    pub graded: bool,
+    pub grade: Option<String>, // e.g., "MS-70", "PF-70"
+    pub cert_number: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct Bid {
+    pub bidder: String,
+    pub amount: Uint128,
+    pub timestamp: u64,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub enum AuctionStatus {
+    Active,
+    Sold,
+    EndedNoSale,
+    EndedNoBids,
+    Cancelled,
+}
+
+// ==================== STORAGE ====================
+use cw_storage_plus::{Item, Map};
+
+pub const DEVELOPER_WALLET: &str = "coreum1v4f8s9z4h7j0q3x6k5w8n2r1t0y7u6i5o4p3l2k9j8h7g6f5";
+pub const AUCTION_COUNT: Item<u64> = Item::new("auction_count");
+pub const AUCTIONS: Map<u64, Auction> = Map::new("auctions");
+
+// Additional storage for categorization
+pub const AUCTIONS_BY_METAL: Map<(MetalType, u64), u64> = Map::new("auctions_by_metal");
+pub const AUCTIONS_BY_FORM: Map<(ProductForm, u64), u64> = Map::new("auctions_by_form");

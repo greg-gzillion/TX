@@ -1,0 +1,12 @@
+(module
+  (memory (export "memory") 1)
+  (func (export "instantiate") (param i32 i32 i32) (result i32) (i32.const 0))
+  (func (export "execute") (param i32 i32 i32) (result i32) (i32.const 0))
+  (func (export "query") (param i32 i32) (result i32) (i32.const 1024))
+  (func (export "allocate") (param i32) (result i32) (i32.const 2048))
+  (func (export "deallocate") (param i32) nop)
+  (func (export "interface_version_8") nop)
+  (data (i32.const 1024) "{\"name\":\"PhoenixPME\",\"fee\":1.1}")
+  (global $heap_base i32 (i32.const 4096))
+  (export "__heap_base" (global $heap_base))
+)

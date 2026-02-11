@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ExecuteMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["create_auction"],
+      "properties": {
+        "create_auction": {
+          "type": "object",
+          "required": ["item_id", "description", "metal_type", "product_form", "weight", "starting_price", "duration_hours"],
+          "properties": {
+            "item_id": {"type": "string"},
+            "description": {"type": "string"},
+            "metal_type": {"type": "string"},
+            "product_form": {"type": "string"},
+            "weight": {"type": "integer", "minimum": 1},
+            "starting_price": {"type": "string"},
+            "reserve_price": {"type": "string"},
+            "duration_hours": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["place_bid"],
+      "properties": {
+        "place_bid": {
+          "type": "object",
+          "required": ["auction_id", "amount"],
+          "properties": {
+            "auction_id": {"type": "integer", "minimum": 0},
+            "amount": {"type": "string"}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["end_auction"],
+      "properties": {
+        "end_auction": {
+          "type": "object",
+          "required": ["auction_id"],
+          "properties": {
+            "auction_id": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["release_funds"],
+      "properties": {
+        "release_funds": {
+          "type": "object",
+          "required": ["auction_id"],
+          "properties": {
+            "auction_id": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["cancel_auction"],
+      "properties": {
+        "cancel_auction": {
+          "type": "object",
+          "required": ["auction_id"],
+          "properties": {
+            "auction_id": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    }
+  ]
+}

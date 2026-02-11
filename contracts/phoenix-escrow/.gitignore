@@ -1,0 +1,27 @@
+﻿# Rust/Cargo
+/target/
+**/*.rs.bk
+
+# WASM builds
+*.wasm
+*.wasm.gz
+
+# Duplicates and backups
+contracts/
+backup/
+tmp/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp

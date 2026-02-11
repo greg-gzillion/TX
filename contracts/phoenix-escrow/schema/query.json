@@ -1,0 +1,55 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "QueryMsg",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": ["get_config"],
+      "properties": {
+        "get_config": {
+          "type": "object",
+          "properties": {}
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["get_auction"],
+      "properties": {
+        "get_auction": {
+          "type": "object",
+          "required": ["id"],
+          "properties": {
+            "id": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["list_auctions"],
+      "properties": {
+        "list_auctions": {
+          "type": "object",
+          "properties": {
+            "start_after": {"type": "integer", "minimum": 0},
+            "limit": {"type": "integer", "minimum": 1, "maximum": 100}
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": ["get_completed_auctions"],
+      "properties": {
+        "get_completed_auctions": {
+          "type": "object",
+          "properties": {
+            "start_after": {"type": "integer", "minimum": 0},
+            "limit": {"type": "integer", "minimum": 1, "maximum": 100}
+          }
+        }
+      }
+    }
+  ]
+}

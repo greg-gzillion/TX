@@ -1,0 +1,10 @@
+{
+  "admin": "testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6",
+  "fee_bps": 110,
+  "developer_stake": 10,
+  "insurance_target": "50000000000",
+  "testusd_denom": "utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6",
+  "name": "PhoenixPME Auction Platform",
+  "version": "1.0.0",
+  "description": "Precious Metals Exchange with 1.1% fee to insurance pool"
+}

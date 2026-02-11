@@ -1,0 +1,27 @@
+[package]
+name = "phoenix-auction"
+version = "0.1.0"
+edition = "2018"
+description = "Phoenix Auction Smart Contract"
+authors = ["PhoenixPME <info@phoenixpme.com>"]
+repository = "https://github.com/PhoenixPME/phoenix-auction"
+license = "Apache-2.0"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+cosmwasm-std = { version = "1.0.0", default-features = false }
+cosmwasm-storage = { version = "1.0.0" }
+schemars = "0.8"
+serde = { version = "1", features = ["derive"] }
+thiserror = { version = "1" }
+
+[dev-dependencies]
+cosmwasm-schema = { version = "1.0.0" }
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
