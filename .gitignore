@@ -31,3 +31,5 @@ cored-new
 *.d
 /tools/blockchain/osmosisd
 /tools/blockchain/wasmd
+.env
+.env.*
