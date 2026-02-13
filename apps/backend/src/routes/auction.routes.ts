@@ -1,47 +1,18 @@
 import { Router } from 'express';
-import { auctionController } from '../controllers/auction.controller';
+import * as auctionController from '../controllers/auction.controller';
 import { authenticate, authorize } from '../middleware/auth.middleware';
-import { validateZod } from '../middleware/zodValidation.middleware';
-import { auctionSchemas } from '../schemas/auction.schemas';
 
 const router = Router();
 
-// Get all auctions
-router.get(
-  '/',
-  auctionController.getAuctions
-);
+// Public routes
+router.get('/', auctionController.getAuctions);
+router.get('/:id', auctionController.getAuctionById);
 
-// Get auction by ID
-router.get(
-  '/:id',
-  validateZod(auctionSchemas.getAuction),
-  auctionController.getAuctionById
-);
-
-// Create auction (authenticated)
-router.post(
-  '/',
-  authenticate,
-  validateZod(auctionSchemas.createAuction),
-  auctionController.createAuction
-);
-
-// Update auction (authenticated)
-router.put(
-  '/:id',
-  authenticate,
-  validateZod(auctionSchemas.updateAuction),
-  auctionController.updateAuction
-);
-
-// Delete auction (authenticated + authorized)
-router.delete(
-  '/:id',
-  authenticate,
-  authorize(['admin']),
-  validateZod(auctionSchemas.deleteAuction),
-  auctionController.deleteAuction
-);
+// Protected routes
+router.post('/', authenticate, auctionController.createAuction);
+router.post('/:id/bid', authenticate, auctionController.placeBid);
+router.put('/:id', authenticate, authorize('seller'), auctionController.updateAuction);
+router.delete('/:id', authenticate, authorize('seller', 'admin'), auctionController.deleteAuction);
+router.post('/:id/end', authenticate, auctionController.endAuction);
 
 export default router;

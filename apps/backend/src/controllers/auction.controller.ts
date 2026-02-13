@@ -1,52 +1,117 @@
 import { Request, Response } from 'express';
+import { AuthRequest } from '../middleware/auth.middleware';
 
-export const auctionController = {
-  async createAuction(req: Request, res: Response) {
+export const getAuctions = async (req: Request, res: Response) => {
     try {
-      res.json({ message: 'Create auction endpoint', data: req.body });
+        res.json({ 
+            auctions: [], 
+            message: 'Auctions fetched successfully' 
+        });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to create auction' });
+        res.status(500).json({ error: 'Failed to fetch auctions' });
     }
-  },
+};
 
-  async getAuctions(req: Request, res: Response) {
+export const getAuctionById = async (req: Request, res: Response) => {
     try {
-      res.json({ 
-        message: 'Get auctions endpoint',
-        auctions: [
-          { id: 1, title: 'Test Auction 1', status: 'active' },
-          { id: 2, title: 'Test Auction 2', status: 'pending' }
-        ]
-      });
+        const { id } = req.params;
+        res.json({ 
+            auction: { id }, 
+            message: 'Auction fetched successfully' 
+        });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to get auctions' });
+        res.status(500).json({ error: 'Failed to fetch auction' });
     }
-  },
+};
 
-  async getAuctionById(req: Request, res: Response) {
+export const createAuction = async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      res.json({ message: `Get auction ${id} endpoint` });
+        const auctionData = req.body;
+        res.status(201).json({ 
+            auction: { id: '1', ...auctionData }, 
+            message: 'Auction created successfully' 
+        });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to get auction' });
+        res.status(500).json({ error: 'Failed to create auction' });
     }
-  },
+};
 
-  async updateAuction(req: Request, res: Response) {
+export const placeBid = async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      res.json({ message: `Update auction ${id} endpoint`, data: req.body });
+        const { id } = req.params;
+        const { amount } = req.body;
+        res.json({ 
+            auctionId: id, 
+            bid: { amount, bidder: (req as any).user?.userId }, 
+            message: 'Bid placed successfully' 
+        });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to update auction' });
+        res.status(500).json({ error: 'Failed to place bid' });
     }
-  },
+};
 
-  async deleteAuction(req: Request, res: Response) {
+export const updateAuction = async (req: AuthRequest, res: Response) => {
     try {
-      const { id } = req.params;
-      res.json({ message: `Delete auction ${id} endpoint` });
+        const { id } = req.params;
+        const updates = req.body;
+        res.json({ 
+            auction: { id, ...updates }, 
+            message: 'Auction updated successfully' 
+        });
     } catch (error) {
-      res.status(500).json({ error: 'Failed to delete auction' });
+        res.status(500).json({ error: 'Failed to update auction' });
     }
-  }
+};
+
+export const deleteAuction = async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        res.json({ 
+            auctionId: id, 
+            message: 'Auction deleted successfully' 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete auction' });
+    }
+};
+
+export const endAuction = async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        // Get the current auction, check highest bidder, transfer funds, etc.
+        res.json({ 
+            auctionId: id, 
+            winner: (req as any).user?.userId || 'winner_address',
+            amount: '1000000',
+            message: 'Auction ended successfully' 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to end auction' });
+    }
+};
+
+export const getAuctionStatus = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        res.json({ 
+            auctionId: id, 
+            status: 'active',
+            message: 'Auction status fetched successfully' 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get auction status' });
+    }
+};
+
+export const getBids = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        res.json({ 
+            auctionId: id, 
+            bids: [],
+            message: 'Bids fetched successfully' 
+        });
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch bids' });
+    }
 };

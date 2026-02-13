@@ -1,10 +1,11 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { coreumService } from './services/blockchain/coreum.service';
+import authRoutes from './routes/auth.routes';
+import auctionRoutes from './routes/auction.routes';
 import blockchainRoutes from './routes/blockchain.routes';
+import coreumService from './services/blockchain/coreum.service';
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
@@ -14,100 +15,46 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
-// Initialize blockchain connection
-async function initializeBlockchain() {
-    try {
-        const mnemonic = process.env.COREUM_MNEMONIC;
-        
-        if (!mnemonic) {
-            console.warn('⚠️  COREUM_MNEMONIC not set in .env file');
-            console.warn('   Blockchain features will be disabled');
-            return false;
-        }
-        
-        console.log('🔄 Initializing blockchain connection...');
-        await coreumService.initialize(mnemonic);
-        
-        const walletInfo = coreumService.getWalletInfo();
-        console.log(`💰 Backend Wallet: ${walletInfo.address}`);
-        
-        const health = await coreumService.healthCheck();
-        if (health.healthy) {
-            console.log(`✅ Blockchain connected. Block height: ${health.blockHeight}`);
-            return true;
-        } else {
-            console.warn(`⚠️  Blockchain health check failed: ${health.error}`);
-            return false;
-        }
-        
-    } catch (error: any) {
-        console.error('❌ Failed to initialize blockchain:', error.message);
-        return false;
-    }
-}
-
 // Routes
-app.get('/health', (_req, res) => {
-    res.json({
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        service: 'phoenixpme-backend',
-        blockchain: coreumService.getWalletInfo().isInitialized ? 'connected' : 'disabled'
-    });
-});
-
-// Blockchain API routes
+app.use('/api/auth', authRoutes);
+app.use('/api/auctions', auctionRoutes);
 app.use('/api/blockchain', blockchainRoutes);
 
-// Simple auction endpoints
-app.get('/api/auctions', (_req, res) => {
-    res.json([
-        { 
-            id: 1, 
-            item: 'Gold Bar 1oz', 
-            price: '1000.00',
-            seller: 'testcore1seller123...',
-            status: 'active',
-            token: 'TESTUSD'
-        },
-        { 
-            id: 2, 
-            item: 'Silver Coin 2024', 
-            price: '50.75',
-            seller: 'testcore1seller456...',
-            status: 'active',
-            token: 'TESTUSD'
+// Health check with Coreum testnet info
+app.get('/health', async (req, res) => {
+    const isConnected = coreumService.isConnected();
+    const address = coreumService.getAddress();
+    
+    res.json({ 
+        status: 'healthy', 
+        timestamp: new Date().toISOString(),
+        service: 'phoenixpme-backend',
+        version: '1.0.0',
+        blockchain: {
+            network: 'coreum-testnet-1',
+            node: process.env.COREUM_NODE || 'https://full-node.testnet-1.coreum.dev:26657',
+            chain_id: process.env.COREUM_CHAIN_ID || 'coreum-testnet-1',
+            connected: isConnected,
+            address: address || null,
+            denom: process.env.COREUM_DENOM || 'utestcore',
+            testusd: {
+                denom: process.env.TESTUSD_DENOM || 'utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6',
+                contract: process.env.TESTUSD_CONTRACT || null
+            }
         }
-    ]);
-});
-
-app.post('/api/auctions', async (_req, res) => {
-    try {
-        res.json({ 
-            success: true, 
-            message: 'Auction creation simulated. Real blockchain auction coming soon.'
-        });
-    } catch (error: any) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Start server
-async function startServer() {
-    console.log('\n🚀 PhoenixPME Backend Server Starting...');
-    
-    // Initialize blockchain
-    const blockchainReady = await initializeBlockchain();
-    
-    app.listen(PORT, () => {
-        console.log(`\n✅ Server Started Successfully!`);
-        console.log(`📍 Port: ${PORT}`);
-        console.log(`🔗 Health: http://localhost:${PORT}/health`);
-        console.log(`💰 Wallet: http://localhost:${PORT}/api/blockchain/wallet`);
-        console.log(`📊 Blockchain: ${blockchainReady ? '✅ Connected' : '⚠️ Disabled'}`);
-        console.log(`\n💡 Tip: Fund your backend wallet at: https://faucet.testnet-1.coreum.dev`);
     });
+});
+
+// Auto-connect to Coreum testnet on startup
+if (process.env.COREUM_MNEMONIC) {
+    coreumService.connect().catch(console.error);
 }
 
-// Start the server
-startServer().catch(console.error);
+app.listen(PORT, () => {
+    console.log(`🚀 Backend server running on port ${PORT}`);
+    console.log(`📍 http://localhost:${PORT}`);
+    console.log(`📡 Health: http://localhost:${PORT}/health`);
+    console.log(`🔗 Coreum Testnet: ${process.env.COREUM_NODE || 'https://full-node.testnet-1.coreum.dev:26657'}`);
+});
+
+export default app;
