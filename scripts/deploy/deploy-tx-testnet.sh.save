@@ -1,0 +1,72 @@
+#!/bin/bash
+# PhoenixPME - TX Testnet Deployment Script
+# March 6, 2026 - TX Mainnet Launch
+set -e
+
+# ============================================
+# CONFIGURATION - CHANGE THESE ON LAUNCH DAY
+# ============================================
+CHAIN_ID="tx-testnet-1"  # Will change March 6
+RPC_URL="https://full-node.testnet-1.coreum.dev:26657"  # Replace with TX RPC
+DENOM="utestcore"  # Replace with "utx" after merger
+KEYRING_BACKEND="test"
+GAS_PRICE="0.25"
+FEE_AMOUNT="5000000"
+WASM_PATH="/home/greg/dev/TX/contracts/auction/target/wasm32-unknown-unknown/release/phoenix_auction.wasm"
+
+# ============================================
+# COLORS FOR OUTPUT
+# ============================================
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m'
+
+# ============================================
+# VALIDATE WASM FILE EXISTS
+# ============================================
+echo -e "${YELLOW}🔍 Validating contract...${NC}"
+if [ ! -f "$WASM_PATH" ]; then
+    echo -e "${RED}❌ WASM file not found at $WASM_PATH${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Contract found: $(basename $WASM_PATH)${NC}"
+echo -e "   Size: $(wc -c < $WASM_PATH | numfmt --to=iec) bytes"
+
+# ============================================
+# CHECK WALLET EXISTS
+# ============================================
+echo -e "${YELLOW}🔑 Checking wallet...${NC}"
+WALLET_ADDR=$(cored keys show treasury --address --keyring-backend $KEYRING_BACKEND 2>/dev/null || true)
+if [ -z "$WALLET_ADDR" ]; then
+    echo -e "${RED}❌ Wallet 'treasury' not found. Import it first.${NC}"
+    echo "   Run: cored keys add treasury --recover --keyring-backend $KEYRING_BACKEND"
+    exit 1
+fi
+echo -e "${GREEN}✅ Wallet: $WALLET_ADDR${NC}"
+
+# ============================================
+# CHECK BALANCE
+# ============================================
+echo -e "${YELLOW}💰 Checking balance...${NC}"
+BALANCE=$(cored query bank balances $WALLET_ADDR \
+  --node $RPC_URL \
+  --chain-id $CHAIN_ID \
+  --denom $DENOM \
+  --output json 2>/dev/null | jq -r '.amount // "0"')
+
+echo -e "   Balance: $BALANCE $DENOM"
+
+if [ "$BALANCE" -lt "$FEE_AMOUNT" ]; then
+    echo -e "${RED}❌ Insufficient balance. Need at least $FEE_AMOUNT $DENOM${NC}"
+    exit 1
+fi
+echo -e "${GREEN}✅ Sufficient funds${NC}"
+
+# ============================================
+# SIMULATE FIRST (DRY RUN)
+# ============================================
+echo -e "${YELLOW}🧪 Simulating deployment...${NC}"
+cored tx wasm store "$WASM_PATH" \
+  --from $WALLET_ADDR \
+  --chain-id $CHAIN_ID \
