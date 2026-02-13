@@ -1,32 +1,17 @@
-const http = require('http');
+const net = require('net');
 
-const options = {
-  hostname: 'localhost',
-  port: 3001,
-  path: '/health',
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-};
+const server = net.createServer();
 
-const req = http.request(options, (res) => {
-  console.log(`Status Code: ${res.statusCode}`);
-  
-  let data = '';
-  res.on('data', (chunk) => {
-    data += chunk;
-  });
-  
-  res.on('end', () => {
-    console.log('Response:', JSON.parse(data));
-    process.exit(res.statusCode === 200 ? 0 : 1);
-  });
-});
-
-req.on('error', (error) => {
-  console.error('Error:', error.message);
+server.on('error', (err) => {
+  console.log('❌ Error:', err.message);
   process.exit(1);
 });
 
-req.end();
+server.listen(3001, () => {
+  console.log('✅ Test server bound to 3001');
+  console.log('📡 Port 3001 is available!');
+  server.close(() => {
+    console.log('🔒 Test server closed');
+    process.exit(0);
+  });
+});

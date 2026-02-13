@@ -5,6 +5,8 @@ import authRoutes from './routes/auth.routes';
 import auctionRoutes from './routes/auction.routes';
 import blockchainRoutes from './routes/blockchain.routes';
 import coreumService from './services/blockchain/coreum.service';
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
 
 dotenv.config();
 
@@ -50,11 +52,22 @@ if (process.env.COREUM_MNEMONIC) {
     coreumService.connect().catch(console.error);
 }
 
-app.listen(PORT, () => {
-    console.log(`🚀 Backend server running on port ${PORT}`);
-    console.log(`📍 http://localhost:${PORT}`);
-    console.log(`📡 Health: http://localhost:${PORT}/health`);
-    console.log(`🔗 Coreum Testnet: ${process.env.COREUM_NODE || 'https://full-node.testnet-1.coreum.dev:26657'}`);
-});
+// Swagger API Documentation
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.0',
+    info: {
+      title: 'PhoenixPME API',
+      version: '1.0.0',
+      description: 'Backend API for Phoenix Precious Metals Exchange',
+    },
+    servers: [{ url: 'http://localhost:3001' }],
+  },
+  apis: ['./src/docs/*.ts'],
+};
+
+const specs = swaggerJsdoc(swaggerOptions);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+
 
 export default app;
