@@ -3,6 +3,12 @@ use thiserror::Error;
 
 #[derive(Error, Debug, PartialEq)]
 pub enum ContractError {
+    #[error("No funds sent")]
+    NoFunds {},
+    
+    #[error("No funds to release")]
+    NoFundsToRelease {},
+
     #[error("{0}")]
     Std(#[from] StdError),
 
