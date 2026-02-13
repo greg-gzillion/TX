@@ -1,0 +1,20 @@
+{
+  "alice": {
+    "name": "alice",
+    "address": "testcore1mocaliceaddress11111",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon",
+    "balance": "1000000"
+  },
+  "bob": {
+    "name": "bob",
+    "address": "testcore1mocbobaddress22222",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon",
+    "balance": "2000000"
+  },
+  "charlie": {
+    "name": "charlie",
+    "address": "testcore1mockcharlieaddress33333",
+    "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon",
+    "balance": "3000000"
+  }
+}

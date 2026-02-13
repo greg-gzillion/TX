@@ -1,0 +1,6 @@
+{
+  "name": "treasury",
+  "address": "testcore1mocktreasuryaddress12345",
+  "mnemonic": "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon",
+  "balance": "10000000"
+}
