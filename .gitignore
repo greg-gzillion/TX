@@ -33,3 +33,7 @@ cored-new
 /tools/blockchain/wasmd
 .env
 .env.*
+*.backup
+*.backup.*
+src.backup.*
+target/
