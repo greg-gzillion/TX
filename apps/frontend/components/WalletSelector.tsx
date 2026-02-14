@@ -9,13 +9,17 @@ declare global {
   }
 }
 
+interface WalletSelectorProps {
+  onConnect?: (address: string) => void;
+}
+
 interface WalletInfo {
   address: string;
   chainId: string;
   walletType: 'keplr' | 'leap' | null;
 }
 
-export default function WalletConnector() {
+export default function WalletSelector({ onConnect }: WalletSelectorProps) {
   const [wallet, setWallet] = useState<WalletInfo>({
     address: '',
     chainId: '',
@@ -89,6 +93,11 @@ export default function WalletConnector() {
       localStorage.setItem('wallet_address', accounts[0].address);
       localStorage.setItem('wallet_type', 'keplr');
       
+      // Call onConnect callback if provided - FIXED: moved to correct location
+      if (onConnect) {
+        onConnect(accounts[0].address);
+      }
+      
     } catch (error) {
       console.error('Failed to connect Keplr:', error);
       alert('Failed to connect wallet. Check console for details.');
@@ -150,6 +159,11 @@ export default function WalletConnector() {
 
       localStorage.setItem('wallet_address', accounts[0].address);
       localStorage.setItem('wallet_type', 'leap');
+
+      // Call onConnect callback if provided
+      if (onConnect) {
+        onConnect(accounts[0].address);
+      }
 
     } catch (error) {
       console.error('Failed to connect Leap:', error);
@@ -222,4 +236,3 @@ export default function WalletConnector() {
     </div>
   );
 }
-
