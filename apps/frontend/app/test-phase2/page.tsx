@@ -1,14 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import MetalSelector from './MetalSelector';
-import FormTypeSelector from './FormTypeSelector';  // Changed from './forms/phase2/FormTypeSelector'
-import WeightInput from './WeightInput';
-import PuritySelector from './PuritySelector';      // Changed from './forms/phase2/PuritySelector'
-import CertificationInput from './CertificationInput';
-import SerialNumberInput from './SerialNumberInput'; // Changed from './forms/phase2/SerialNumberInput'
-import ImageUploader from './ImageUploader';
-import PriceCalculator from './PriceCalculator';
+import FormTypeSelector from '../FormTypeSelector';
+import PuritySelector from '../PuritySelector';
+import SerialNumberInput from '../SerialNumberInput';
 
 export default function TestForm() {
   const [formType, setFormType] = useState<'coin' | 'round' | 'bar' | 'jewelry' | 'other'>('coin');
@@ -22,22 +17,22 @@ export default function TestForm() {
       <div className="space-y-6">
         <div className="border p-4 rounded">
           <FormTypeSelector value={formType} onChange={setFormType} />
-          <p>Selected: {formType}</p>
+          <p className="mt-2">Selected: {formType}</p>
         </div>
         
         <div className="border p-4 rounded">
           <PuritySelector metalType="Gold" value={purity} onChange={setPurity} />
-          <p>Purity: {purity}</p>
+          <p className="mt-2">Purity: {purity}</p>
         </div>
         
         <div className="border p-4 rounded">
           <SerialNumberInput value={serial} onChange={setSerial} />
-          <p>Serial: {serial}</p>
+          <p className="mt-2">Serial: {serial}</p>
         </div>
         
         <div className="bg-green-50 p-4 rounded border border-green-200">
           <h2 className="font-bold text-green-800">✅ Phase 2 Components Working!</h2>
-          <p className="text-green-600">All 5 components are ready for Phase 3.</p>
+          <p className="text-green-600">All 3 components are rendering correctly.</p>
         </div>
       </div>
     </div>

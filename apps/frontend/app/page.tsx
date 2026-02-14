@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import WalletSelector from '../components/WalletSelector';
+import Link from 'next/link';
 
 export default function Home() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
@@ -14,7 +15,14 @@ export default function Home() {
 
       <div style={{ marginTop: '2rem', padding: '1rem', border: '1px solid #ccc' }}>
         <h3>Wallet Connection Test</h3>
-        
+      <div className="mt-8 text-center">
+         <Link 
+          href="/auctions"
+           className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+            >
+           View Auctions
+          </Link>
+        </div>        
         {/* Wallet Selector Component */}
         <WalletSelector onWalletChange={setWalletAddress} />
         

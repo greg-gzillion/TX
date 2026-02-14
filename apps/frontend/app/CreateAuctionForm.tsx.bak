@@ -7,7 +7,7 @@ import WeightInput from './WeightInput';
 import PuritySelector from './PuritySelector';
 import CertificationInput from './CertificationInput';
 import SerialNumberInput from './SerialNumberInput';
-import ImageUpload from './ImageUpload';
+import ImageUploader from './ImageUploader';
 import PriceCalculator from './PriceCalculator';
 
 // Define the exact type that CertificationInput expects
@@ -18,7 +18,7 @@ type CertificationType = {
   certNumber?: string;
 };
 
-export default function CreateAuctionForm() {
+export default function CreateAuctionForm() {  // ← THIS WAS MISSING!
   // Basic Info
   const [metalType, setMetalType] = useState<'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other'>('Gold');
   const [formType, setFormType] = useState<'coin' | 'round' | 'bar' | 'jewelry' | 'other'>('coin');
@@ -132,7 +132,7 @@ export default function CreateAuctionForm() {
                 <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
               </div>
               <div>
-                <ImageUpload onImagesChange={setImages} />
+                <ImageUploader onImagesChange={setImages} />
               </div>
             </div>
           </section>
@@ -201,3 +201,4 @@ export default function CreateAuctionForm() {
     </div>
   );
 }
+
