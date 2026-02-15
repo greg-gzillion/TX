@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import MetalSelector from './MetalSelector';
 import FormTypeSelector from './FormTypeSelector';
 import WeightInput from './WeightInput';
@@ -9,6 +10,7 @@ import CertificationInput from './CertificationInput';
 import SerialNumberInput from './SerialNumberInput';
 import ImageUpload from './ImageUpload';
 import PriceCalculator from './PriceCalculator';
+import { auctionClient } from '../lib/contracts/auction-client';
 
 // Define the exact type that CertificationInput expects
 type CertificationType = {
@@ -19,6 +21,9 @@ type CertificationType = {
 };
 
 export default function CreateAuctionForm() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
   // Basic Info
   const [metalType, setMetalType] = useState<'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other'>('Gold');
   const [formType, setFormType] = useState<'coin' | 'round' | 'bar' | 'jewelry' | 'other'>('coin');
@@ -50,10 +55,31 @@ export default function CreateAuctionForm() {
   const [startingPrice, setStartingPrice] = useState<number>(0);
   const [buyNowPrice, setBuyNowPrice] = useState<number | undefined>(undefined);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
+  
+  try {
+    // Validate starting price
+    if (startingPrice <= 0) {
+      alert('Starting price must be greater than 0');
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Create auction description from form data
+    const description = `${metalType} ${formType} - ${weight} ${weightUnit} at ${purity} purity`;
     
+    // Create auction using the client
+    const auctionId = await auctionClient.createAuction(
+      description,
+      startingPrice.toString(),
+      7 // 7 days duration
+    );
+    
+    // Save additional metadata to localStorage
     const auctionData = {
+      id: auctionId,
       metalType,
       formType,
       weight,
@@ -61,18 +87,28 @@ export default function CreateAuctionForm() {
       purity,
       certification,
       serialNumber,
-      images: images.length,
+      imageCount: images.length,
       estimatedValue,
       startingPrice,
       buyNowPrice,
       createdAt: new Date().toISOString()
     };
     
-    localStorage.setItem('auction_draft', JSON.stringify(auctionData));
+    localStorage.setItem(`auction_${auctionId}`, JSON.stringify(auctionData));
     
     console.log('Auction created:', auctionData);
-    alert(`Auction created! Estimated value: $${estimatedValue.toFixed(2)}`);
-  };
+    alert(`✅ Auction #${auctionId} created successfully!`);
+    
+    // Redirect to the new auction page
+    router.push(`/auctions/${auctionId}`);
+    
+  } catch (error) {
+    console.error('Error creating auction:', error);
+    alert('Failed to create auction: ' + (error as Error).message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -98,22 +134,24 @@ export default function CreateAuctionForm() {
           </section>
 
           {/* Step 2: Weight & Purity */}
-          <section className="bg-white p-6 rounded-xl border shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">2. Weight & Purity</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <WeightInput
-                  weight={weight}
-                  unit={weightUnit}
-                  onWeightChange={setWeight}
-                  onUnitChange={setWeightUnit}
-                />
-              </div>
-              <div>
-                <PuritySelector metalType={metalType} value={purity} onChange={setPurity} />
-              </div>
-            </div>
-          </section>
+            <section className="bg-white p-6 rounded-xl border shadow-sm">
+  <h2 className="text-xl font-semibold text-gray-900 mb-6">2. Weight & Purity</h2>
+  <div className="grid md:grid-cols-2 gap-6">
+    <div>
+      <WeightInput
+        value={weight}
+        unit={weightUnit}
+        onChange={(newValue, newUnit) => {
+          setWeight(newValue);
+          setWeightUnit(newUnit);
+        }}
+      />
+    </div>
+    <div>
+      <PuritySelector metalType={metalType} value={purity} onChange={setPurity} />
+    </div>
+  </div>
+            </section>
 
           {/* Step 3: Certification */}
           <section className="bg-white p-6 rounded-xl border shadow-sm">
@@ -154,7 +192,7 @@ export default function CreateAuctionForm() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Starting Price</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Starting Price (TEST)</label>
                 <input
                   type="number"
                   value={startingPrice}
@@ -164,6 +202,7 @@ export default function CreateAuctionForm() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                   placeholder="Minimum 10 TEST"
                   required
+                  disabled={isSubmitting}
                 />
               </div>
               <div>
@@ -176,6 +215,7 @@ export default function CreateAuctionForm() {
                   step="0.01"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
                   placeholder="Optional instant buy"
+                  disabled={isSubmitting}
                 />
               </div>
             </div>
@@ -190,9 +230,12 @@ export default function CreateAuctionForm() {
               </div>
               <button
                 type="submit"
-                className="px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
+                disabled={isSubmitting}
+                className={`px-8 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               >
-                Create Auction Listing
+                {isSubmitting ? 'Creating...' : 'Create Auction Listing'}
               </button>
             </div>
           </div>

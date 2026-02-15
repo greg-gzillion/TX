@@ -1,4 +1,5 @@
-﻿// lib/contracts/auction-client.ts - COMPLETE WORKING VERSION
+﻿// lib/contracts/auction-client.ts
+
 export interface Auction {
   id: number;
   seller: string;
@@ -16,10 +17,95 @@ export interface Auction {
   created_at: number;
 }
 
-export class AuctionClient {
-  // CREATE AUCTION
-  async createAuction(itemDescription: string, startingPrice: string, durationDays: number): Promise<number> {
-    console.log("Creating auction:", { itemDescription, startingPrice, durationDays });
+export interface Bid {
+  bidder: string;
+  amount: string;
+  timestamp: number;
+}
+
+// Real contract client (for production)
+class RealAuctionClient {
+  private contractAddress: string = "";
+  private rpcEndpoint: string = "https://full-node.testnet-1.coreum.dev:26657";
+  
+  constructor(contractAddress: string) {
+    this.contractAddress = contractAddress;
+  }
+
+  async createAuction(
+    itemDescription: string, 
+    startingPrice: string, 
+    durationDays: number
+  ): Promise<number> {
+    console.log("📡 Creating auction on blockchain...");
+    
+    // TODO: Replace with actual contract call
+    // This will be implemented when you have the contract deployed
+    
+    // For now, return mock ID
+    return Math.floor(Math.random() * 1000) + 1;
+  }
+
+  async placeBid(auctionId: number, bidAmount: string): Promise<boolean> {
+    console.log(`📡 Placing bid of ${bidAmount} on auction ${auctionId}...`);
+    
+    // TODO: Replace with actual contract call
+    
+    return true;
+  }
+
+  async endAuction(auctionId: number): Promise<{winner: string, amount: string}> {
+    console.log(`📡 Ending auction ${auctionId}...`);
+    
+    // TODO: Replace with actual contract call
+    
+    return {
+      winner: "testcore1...winner",
+      amount: "0"
+    };
+  }
+
+  async releaseToSeller(auctionId: number): Promise<boolean> {
+    console.log(`📡 Releasing funds for auction ${auctionId}...`);
+    
+    // TODO: Replace with actual contract call
+    
+    return true;
+  }
+
+  async getAuction(id: number): Promise<Auction | null> {
+    console.log(`📡 Fetching auction ${id} from blockchain...`);
+    
+    // TODO: Replace with actual query
+    
+    return null;
+  }
+
+  async listAuctions(): Promise<Auction[]> {
+    console.log("📡 Fetching auctions from blockchain...");
+    
+    // TODO: Replace with actual query
+    
+    return [];
+  }
+
+  async getUserAuctions(userAddress: string): Promise<Auction[]> {
+    console.log(`📡 Fetching auctions for user ${userAddress}...`);
+    
+    // TODO: Replace with actual query
+    
+    return [];
+  }
+}
+
+// Mock client (for development)
+export class MockAuctionClient {
+  async createAuction(
+    itemDescription: string, 
+    startingPrice: string, 
+    durationDays: number
+  ): Promise<number> {
+    console.log("🔄 [MOCK] Creating auction:", { itemDescription, startingPrice, durationDays });
     
     const auctions = this.getAuctions();
     const newId = auctions.length + 1;
@@ -40,9 +126,8 @@ export class AuctionClient {
     return newId;
   }
 
-  // PLACE BID
   async placeBid(auctionId: number, bidAmount: string): Promise<boolean> {
-    console.log(`Placing bid ${bidAmount} on auction ${auctionId}`);
+    console.log(`🔄 [MOCK] Placing bid ${bidAmount} on auction ${auctionId}`);
     
     const auctions = this.getAuctions();
     const auctionIndex = auctions.findIndex(a => a.id === auctionId);
@@ -70,7 +155,6 @@ export class AuctionClient {
     return true;
   }
 
-  // END AUCTION (seller can end)
   async endAuction(auctionId: number): Promise<{winner: string, amount: string}> {
     const auctions = this.getAuctions();
     const auctionIndex = auctions.findIndex(a => a.id === auctionId);
@@ -80,7 +164,6 @@ export class AuctionClient {
       throw new Error("Only seller can end auction");
     }
     
-    // Determine winner
     let winner = "No bids placed";
     let winningAmount = "0";
     
@@ -89,20 +172,15 @@ export class AuctionClient {
       winningAmount = auctions[auctionIndex].current_bid!.amount;
     }
     
-    // Update auction
     auctions[auctionIndex].status = "Ended";
     auctions[auctionIndex].winner = winner;
     auctions[auctionIndex].winning_amount = winningAmount;
     
     this.saveAuctions(auctions);
     
-    return {
-      winner: winner,
-      amount: winningAmount
-    };
+    return { winner, amount: winningAmount };
   }
 
-  // RELEASE FUNDS TO SELLER (after auction ends)
   async releaseToSeller(auctionId: number): Promise<boolean> {
     const auctions = this.getAuctions();
     const auctionIndex = auctions.findIndex(a => a.id === auctionId);
@@ -112,11 +190,10 @@ export class AuctionClient {
       throw new Error("Auction must be ended first");
     }
     
-    // Check if there was a winner
     if (auctions[auctionIndex].winner && auctions[auctionIndex].winner !== "No bids placed") {
-      console.log(`💰 Transferring ${auctions[auctionIndex].winning_amount} TEST from ${auctions[auctionIndex].winner} to ${auctions[auctionIndex].seller}`);
+      console.log(`💰 [MOCK] Transferring ${auctions[auctionIndex].winning_amount} TEST from ${auctions[auctionIndex].winner} to ${auctions[auctionIndex].seller}`);
     } else {
-      console.log("ℹ️ No bids placed, no funds to transfer");
+      console.log("ℹ️ [MOCK] No bids placed, no funds to transfer");
     }
     
     auctions[auctionIndex].status = "Completed";
@@ -125,18 +202,15 @@ export class AuctionClient {
     return true;
   }
 
-  // GET SINGLE AUCTION
   async getAuction(id: number): Promise<Auction | null> {
     const auctions = this.getAuctions();
     return auctions.find(a => a.id === id) || null;
   }
 
-  // LIST ALL AUCTIONS
   async listAuctions(): Promise<Auction[]> {
     return this.getAuctions();
   }
 
-  // GET USER'S AUCTIONS
   async getUserAuctions(userAddress: string): Promise<Auction[]> {
     const auctions = this.getAuctions();
     return auctions.filter(a => 
@@ -145,7 +219,6 @@ export class AuctionClient {
     );
   }
 
-  // PRIVATE HELPERS
   private getAuctions(): Auction[] {
     return JSON.parse(localStorage.getItem("phoenix_auctions") || "[]");
   }
@@ -154,3 +227,20 @@ export class AuctionClient {
     localStorage.setItem("phoenix_auctions", JSON.stringify(auctions));
   }
 }
+
+// Factory to create the right client based on environment
+export function createAuctionClient(useMock: boolean = true, contractAddress?: string) {
+  if (useMock) {
+    console.log("🔄 Using MOCK auction client");
+    return new MockAuctionClient();
+  } else {
+    if (!contractAddress) {
+      throw new Error("Contract address required for real client");
+    }
+    console.log("📡 Using REAL auction client");
+    return new RealAuctionClient(contractAddress);
+  }
+}
+
+// Default export for easy imports
+export const auctionClient = createAuctionClient(true); // Start with mock
