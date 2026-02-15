@@ -2,21 +2,51 @@
 
 This directory will contain wireframes and design assets for the PhoenixPME interface.
 
-## Current Tasks
-- Create basic wireframes for all user flows
-- Design mobile-first interface
-- Establish design system (colors, typography, components)
+## Current Status
+✅ Directory structure created
+🔄 Wireframe creation in progress
+
+## Design Guidelines
+- **Mobile-first approach** - All designs should work on mobile first, then scale up
+- **Accessibility** - WCAG 2.1 AA compliance target
+- **Consistent components** - Reusable design system
 
 ## Wireframes Needed
-1. Marketplace/homepage
-2. Auction creation wizard
-3. Auction detail page
-4. User dashboard
-5. Settlement flow
-6. Settings page
+| Priority | Wireframe | Status |
+|----------|-----------|--------|
+| 🔴 HIGH | Marketplace/homepage | ⏳ Not Started |
+| 🔴 HIGH | Auction creation wizard | ⏳ Not Started |
+| 🔴 HIGH | Auction detail page | ⏳ Not Started |
+| 🟡 MEDIUM | User dashboard | ⏳ Not Started |
+| 🟡 MEDIUM | Settlement flow | ⏳ Not Started |
+| 🟢 LOW | Settings page | ⏳ Not Started |
 
 ## Tools
-- Figma (preferred)
-- Adobe XD
-- Pen/paper scans
-- Any design tool that exports to PNG/SVG
+- **Figma** (preferred) - Collaborative design
+- **Adobe XD** - Alternative option
+- **Pen/paper scans** - Quick ideation
+- **Export format**: PNG/SVG for web assets
+
+## File Naming Convention
+
+wireframe_[page-name]_v[version].[extension]
+Example: wireframe_auction-creation_v1.fig
+
+
+## Design System Components
+- Colors (to be defined)
+- Typography (to be defined)
+- Spacing grid (to be defined)
+- Component library (to be defined)
+
+## Next Steps
+1. Create basic wireframes for high-priority pages
+2. Review and iterate
+3. Convert to high-fidelity designs
+4. Export assets for development
+
+---
+
+*This document will be updated as wireframes are created.*
+
+*Last updated: February 14, 2026*
