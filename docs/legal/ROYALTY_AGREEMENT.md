@@ -6,7 +6,7 @@
 2. **LICENSEE:** Any individual or entity using PhoenixPME software for commercial purposes
 
 ### EFFECTIVE DATE:
-February 2026
+February 14, 2026
 
 ### JURISDICTION AND GOVERNING LAW:
 This Agreement shall be governed by and construed in accordance with the laws of the State of Colorado, United States of America.
@@ -15,7 +15,7 @@ This Agreement shall be governed by and construed in accordance with the laws of
 1. **"Software"** means Phoenix Precious Metals Exchange (PhoenixPME) version 1.0 and all associated code
 2. **"Commercial Use"** means using the Software to generate revenue, process transactions, or operate a business
 3. **"Royalty Fee"** means the percentage of transaction value payable to Licensor
-4. **"Developer Wallet"** means the Coreum blockchain address: core1mj58cdfrkc8uyunw2rna3wvkatdjfhd6lwtu0m
+4. **"Developer Wallet"** means the Coreum blockchain address: `core1mj58cdfrkc8uyunw2rna3wvkatdjfhd6lwtu0m`
 
 ### ROYALTY FEE SCHEDULE:
 The following royalty fee structure shall apply:
