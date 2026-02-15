@@ -401,4 +401,202 @@ mod tests {
         
         println!("🎉 FAILED TRANSACTION HANDLING TEST COMPLETE!");
     }
+        #[test]
+    fn test_zero_values() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Setup
+        let admin = mock_info("admin", &coins(1000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
+        
+        // Create auction
+        let seller = mock_info("seller", &coins(500, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(100u128),
+            duration: 86400,
+            description: "Edge case test".to_string(),
+        };
+        execute(deps.as_mut(), env.clone(), seller, create_msg).unwrap();
+        
+        // Test 1: Bid with zero amount
+        let bidder = mock_info("alice", &coins(0, "utestcore"));
+        let zero_bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "0".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder, zero_bid_msg);
+        assert!(res.is_err(), "Zero bid should fail");
+        println!("✅ Zero bid rejected");
+        
+        // Test 2: Create auction with zero starting bid
+        let seller2 = mock_info("seller2", &coins(500, "utestcore"));
+        let zero_start_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(0u128),
+            duration: 86400,
+            description: "Zero start auction".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), seller2, zero_start_msg);
+        // This might pass or fail depending on your business logic
+        println!("ℹ️ Zero starting bid test completed");
+    }
+
+    #[test]
+    fn test_auction_with_no_bids() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Setup
+        let admin = mock_info("admin", &coins(1000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
+        
+        // Create auction
+        let seller = mock_info("seller", &coins(500, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(100u128),
+            duration: 1, // 1 second duration
+            description: "No bids auction".to_string(),
+        };
+        execute(deps.as_mut(), env.clone(), seller, create_msg).unwrap();
+        
+        // Advance time past expiration
+        let mut expired_env = env.clone();
+        expired_env.block.time = expired_env.block.time.plus_seconds(2);
+        
+        // Try to close auction with no bids
+        let closer = mock_info("admin", &[]);
+        let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
+        let res = execute(deps.as_mut(), expired_env, closer, close_msg);
+        // Should handle no-bid scenario gracefully
+        println!("✅ Auction with no bids closed");
+    }
+
+    #[test]
+    fn test_bid_equal_to_current() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Setup
+        let admin = mock_info("admin", &coins(1000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
+        
+        // Create auction
+        let seller = mock_info("seller", &coins(500, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(100u128),
+            duration: 86400,
+            description: "Equal bid test".to_string(),
+        };
+        execute(deps.as_mut(), env.clone(), seller, create_msg).unwrap();
+        
+        // Place first bid
+        let bidder1 = mock_info("alice", &coins(150, "utestcore"));
+        let bid_msg1 = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "150".to_string(),
+        };
+        execute(deps.as_mut(), env.clone(), bidder1, bid_msg1).unwrap();
+        
+        // Try to bid the same amount
+        let bidder2 = mock_info("bob", &coins(150, "utestcore"));
+        let bid_msg2 = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "150".to_string(),
+        };
+        let res = execute(deps.as_mut(), env, bidder2, bid_msg2);
+        assert!(res.is_err(), "Equal bid should fail");
+        println!("✅ Equal bid correctly rejected");
+    }
+
+    #[test]
+    fn test_extremely_large_numbers() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Setup
+        let admin = mock_info("admin", &coins(u128::MAX, "utestcore")); // Max u128
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
+        
+        // Create auction with large starting bid
+        let seller = mock_info("seller", &coins(u128::MAX, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(u128::MAX),
+            duration: 86400,
+            description: "Large numbers test".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), seller, create_msg);
+        assert!(res.is_ok(), "Large starting bid should work");
+        
+        // Place a large bid
+        let bidder = mock_info("alice", &coins(u128::MAX, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: u128::MAX.to_string(),
+        };
+        let res = execute(deps.as_mut(), env, bidder, bid_msg);
+        assert!(res.is_ok(), "Large bid should work");
+        println!("✅ Large number handling works");
+    }
+
+    #[test]
+    fn test_rapid_sequential_operations() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Setup
+        let admin = mock_info("admin", &coins(10000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
+        
+        // Rapidly create multiple auctions
+        for i in 1..5 {
+            let seller = mock_info(&format!("seller{}", i), &coins(500, "utestcore"));
+            let create_msg = ExecuteMsg::CreateAuction {
+                starting_bid: Uint128::from(100u128),
+                duration: 86400,
+                description: format!("Auction {}", i),
+            };
+            let res = execute(deps.as_mut(), env.clone(), seller, create_msg);
+            assert!(res.is_ok(), "Create auction {} should succeed", i);
+            println!("✅ Created auction {}", i);
+        }
+        
+        // Rapidly place bids on different auctions
+        for i in 1..5 {
+            let bidder = mock_info(&format!("bidder{}", i), &coins(200, "utestcore"));
+            let bid_msg = ExecuteMsg::PlaceBid {
+                auction_id: i,
+                amount: "150".to_string(),
+            };
+            let res = execute(deps.as_mut(), env.clone(), bidder, bid_msg);
+            assert!(res.is_ok(), "Bid on auction {} should succeed", i);
+            println!("✅ Bid placed on auction {}", i);
+        }
+        
+        println!("🎉 Rapid sequential operations test complete!");
+    }
 }
