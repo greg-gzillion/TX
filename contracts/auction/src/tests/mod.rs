@@ -1,7 +1,7 @@
 #[cfg(test)]
 mod tests {
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
-    use cosmwasm_std::{coins};
+    use cosmwasm_std::{coins, Uint128};
     
     use crate::contract::{instantiate, execute, query};
     use crate::msg::{InstantiateMsg, ExecuteMsg, QueryMsg};
@@ -28,7 +28,6 @@ mod tests {
         let env = mock_env();
         let info = mock_info("bidder", &coins(1000, "utestcore"));
 
-        // First instantiate
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
@@ -36,14 +35,12 @@ mod tests {
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
 
-        // Place a bid
         let bid_msg = ExecuteMsg::PlaceBid {
             auction_id: 1,
             amount: "100".to_string(),
         };
         
         let res = execute(deps.as_mut(), env, info, bid_msg);
-        // This may fail if auction doesn't exist, but at least it compiles
         println!("Bid result: {:?}", res);
     }
 
@@ -53,7 +50,6 @@ mod tests {
         let env = mock_env();
         let info = mock_info("creator", &coins(1000, "utestcore"));
 
-        // First instantiate
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
@@ -61,7 +57,6 @@ mod tests {
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
 
-        // Close auction
         let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
         let res = execute(deps.as_mut(), env, info, close_msg);
         println!("Close result: {:?}", res);
@@ -73,7 +68,6 @@ mod tests {
         let env = mock_env();
         let info = mock_info("winner", &coins(1000, "utestcore"));
 
-        // First instantiate
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
@@ -81,7 +75,6 @@ mod tests {
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
 
-        // Claim winnings
         let claim_msg = ExecuteMsg::ClaimWinnings { auction_id: 1 };
         let res = execute(deps.as_mut(), env, info, claim_msg);
         println!("Claim result: {:?}", res);
@@ -92,7 +85,6 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
 
-        // First instantiate
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
@@ -101,7 +93,6 @@ mod tests {
         let info = mock_info("creator", &[]);
         instantiate(deps.as_mut(), env.clone(), info, instantiate_msg).unwrap();
 
-        // Query auction
         let query_msg = QueryMsg::GetAuction { auction_id: 1 };
         let res = query(deps.as_ref(), env, query_msg);
         println!("Query result: {:?}", res);
@@ -112,7 +103,6 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
 
-        // First instantiate
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
@@ -121,9 +111,72 @@ mod tests {
         let info = mock_info("creator", &[]);
         instantiate(deps.as_mut(), env.clone(), info, instantiate_msg).unwrap();
 
-        // Query high bid
         let query_msg = QueryMsg::GetHighBid { auction_id: 1 };
         let res = query(deps.as_ref(), env, query_msg);
         println!("High bid result: {:?}", res);
+    }
+
+    #[test]
+    fn test_end_to_end_auction_flow() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Step 1: Instantiate contract
+        let admin = mock_info("admin", &coins(1000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        let res = instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 1: Contract instantiated");
+        
+        // Step 2: Create auction
+        let seller = mock_info("seller", &coins(500, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(100u128),
+            duration: 86400,
+            description: "1oz Gold Eagle".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), seller, create_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 2: Auction created");
+        
+        // Step 3: Place first bid
+        let bidder1 = mock_info("alice", &coins(150, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "150".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder1, bid_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 3: First bid placed (150)");
+        
+        // Step 4: Place higher bid
+        let bidder2 = mock_info("bob", &coins(200, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "200".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder2, bid_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 4: Higher bid placed (200)");
+        
+        // Step 5: Close auction
+        let closer = mock_info("admin", &[]);
+        let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
+        let res = execute(deps.as_mut(), env.clone(), closer, close_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 5: Auction closed");
+        
+        // Step 6: Claim winnings
+        let winner = mock_info("bob", &[]);
+        let claim_msg = ExecuteMsg::ClaimWinnings { auction_id: 1 };
+        let res = execute(deps.as_mut(), env, winner, claim_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 6: Winner claimed funds");
+        
+        println!("🎉 END-TO-END AUCTION FLOW COMPLETE!");
     }
 }
