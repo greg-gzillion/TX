@@ -3,7 +3,7 @@ mod tests {
     use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
     use cosmwasm_std::{coins};
     
-    // Import from the crate directly - no nested modules needed
+    // Import from the crate root - these should now work
     use phoenix_auction::contract::{instantiate, execute, query};
     use phoenix_auction::msg::{InstantiateMsg, ExecuteMsg, QueryMsg};
 

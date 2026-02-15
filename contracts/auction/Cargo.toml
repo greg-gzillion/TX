@@ -16,6 +16,7 @@ thiserror = "1.0"
 
 [dev-dependencies]
 cosmwasm-schema = "1.1"
+phoenix-auction = { path = "." }
 
 [profile.release]
 opt-level = "z"
@@ -23,3 +24,7 @@ lto = true
 codegen-units = 1
 panic = "abort"
 overflow-checks = true
+
+#[[test]]
+#name = "integration"
+#path = "tests/integration_tests.rs"

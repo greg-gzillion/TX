@@ -428,6 +428,7 @@ dependencies = [
  "cosmwasm-std",
  "cw-storage-plus",
  "cw2",
+ "phoenix-auction",
  "schemars",
  "serde",
  "thiserror",

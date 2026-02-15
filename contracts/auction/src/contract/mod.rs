@@ -6,10 +6,10 @@ use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
 
 #[entry_point]
 pub fn instantiate(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    msg: InstantiateMsg,
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    _msg: InstantiateMsg,
 ) -> Result<Response, ContractError> {
     // Your instantiate logic here
     Ok(Response::new())
@@ -43,31 +43,31 @@ pub fn query(
 
 // Execute handlers
 fn execute_place_bid(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    auction_id: u64,
-    amount: String,
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    _auction_id: u64,
+    _amount: String,
 ) -> Result<Response, ContractError> {
     // TODO: Implement bid logic
     Ok(Response::new())
 }
 
 fn execute_close_auction(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    auction_id: u64,
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    _auction_id: u64,
 ) -> Result<Response, ContractError> {
     // TODO: Implement close logic
     Ok(Response::new())
 }
 
 fn execute_claim_winnings(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    auction_id: u64,
+    _deps: DepsMut,
+    _env: Env,
+    _info: MessageInfo,
+    _auction_id: u64,
 ) -> Result<Response, ContractError> {
     // TODO: Implement claim logic
     Ok(Response::new())
@@ -75,18 +75,18 @@ fn execute_claim_winnings(
 
 // Query handlers
 fn query_auction(
-    deps: Deps,
-    env: Env,
-    auction_id: u64,
+    _deps: Deps,
+    _env: Env,
+    _auction_id: u64,
 ) -> StdResult<Binary> {
     // TODO: Implement auction query
     Ok(Binary::default())
 }
 
 fn query_high_bid(
-    deps: Deps,
-    env: Env,
-    auction_id: u64,
+    _deps: Deps,
+    _env: Env,
+    _auction_id: u64,
 ) -> StdResult<Binary> {
     // TODO: Implement high bid query
     Ok(Binary::default())
