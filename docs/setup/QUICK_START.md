@@ -5,16 +5,17 @@
 The project has been successfully reorganized into a clean structure.
 
 ## Directory Structure
+
 ```
-coreum-pme/
-├── contracts/          # Smart contracts (Rust/CosmWasm)
-├── apps/              # Applications
-│   ├── frontend/      # React/Next.js UI
-│   └── backend/       # Node.js/Express API
-├── docs/              # Documentation
-├── scripts/           # Utility scripts
-└── config/            # Configuration
-```
+TX/ # Note: repository is named "TX", not "coreum-pme"
+├── contracts/ # Smart contracts (Rust/CosmWasm)
+├── apps/ # Applications
+│ ├── frontend/ # React/Next.js UI
+│ └── backend/ # Node.js/Express API
+├── docs/ # Documentation
+├── scripts/ # Utility scripts
+└── tests/ # Test suites
+
 
 ## Start Development
 
@@ -22,15 +23,12 @@ Open TWO separate terminal windows/tabs:
 
 **Terminal 1 - Backend API:**
 ```bash
-cd ~/coreum-pme
-./start_backend.sh
-```
+cd ~/TX
+./scripts/start_backend.sh
 
 **Terminal 2 - Frontend App:**
-```bash
-cd ~/coreum-pme
-./start_frontend.sh
-```
+cd ~/TX
+./scripts/start_frontend.sh
 
 ## URLs
 - Frontend: http://localhost:3000
@@ -46,6 +44,6 @@ cd ~/coreum-pme
 
 **To verify setup:**
 ```bash
-cd ~/coreum-pme
-./quick_test.sh
+cd ~/TX
+./scripts/quick_test.sh   # Note: you may need to create this script
 ```
