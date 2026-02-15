@@ -11,3 +11,9 @@
 ## Smart Contract Enforcement
 - Fees automated in code
 - Publicly verifiable on blockchain
+
+---
+
+*This is the authoritative fee model. All other documents should reference this.*
+
+*Last updated: February 14, 2026*
