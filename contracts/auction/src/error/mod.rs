@@ -23,4 +23,22 @@ pub enum ContractError {
     
     #[error("Insufficient funds")]
     InsufficientFunds,
+    
+    #[error("Auction expired")]
+    AuctionExpired,
+    
+    #[error("Invalid denom")]
+    InvalidDenom,
+    
+    #[error("No funds sent")]
+    NoFunds,
+    
+    #[error("Auction already closed")]
+    AuctionAlreadyClosed,
+    
+    #[error("Auction not closed")]
+    AuctionNotClosed,
+    
+    #[error("No winner")]
+    NoWinner,
 }

@@ -441,7 +441,7 @@ mod tests {
             duration: 86400,
             description: "Zero start auction".to_string(),
         };
-        let res = execute(deps.as_mut(), env.clone(), seller2, zero_start_msg);
+        let _res = execute(deps.as_mut(), env.clone(), seller2, zero_start_msg);
         // This might pass or fail depending on your business logic
         println!("ℹ️ Zero starting bid test completed");
     }
@@ -476,7 +476,7 @@ mod tests {
         // Try to close auction with no bids
         let closer = mock_info("admin", &[]);
         let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
-        let res = execute(deps.as_mut(), expired_env, closer, close_msg);
+        let _res = execute(deps.as_mut(), expired_env, closer, close_msg);
         // Should handle no-bid scenario gracefully
         println!("✅ Auction with no bids closed");
     }

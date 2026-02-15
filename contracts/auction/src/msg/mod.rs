@@ -1,4 +1,4 @@
-use cosmwasm_std::Uint128;
+use cosmwasm_std::{Uint128, Addr};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -42,4 +42,10 @@ pub struct AuctionResponse {
     pub active: bool,
     pub highest_bidder: String,
     pub highest_bid: String,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct BidResponse {
+    pub bidder: Option<Addr>,
+    pub amount: Uint128,
 }
