@@ -321,4 +321,84 @@ mod tests {
         // Note: In a real implementation, you would query the insurance pool
         // balance and verify it equals 5.5 (or whatever the fee amount should be)
     }
+        #[test]
+    fn test_failed_transaction_handling() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Setup: Instantiate contract
+        let admin = mock_info("admin", &coins(1000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
+        
+        // Create auction
+        let seller = mock_info("seller", &coins(500, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(100u128),
+            duration: 86400,
+            description: "Failed transaction test".to_string(),
+        };
+        execute(deps.as_mut(), env.clone(), seller, create_msg).unwrap();
+        
+        // TEST 1: Try to bid on non-existent auction
+        let bidder = mock_info("alice", &coins(150, "utestcore"));
+        let bad_bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 999, // Non-existent auction
+            amount: "150".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder, bad_bid_msg);
+        assert!(res.is_err(), "Bid on non-existent auction should fail");
+        println!("✅ Test 1 passed: Non-existent auction rejected");
+        
+        // TEST 2: Try to bid with insufficient funds
+        let bidder2 = mock_info("bob", &coins(50, "utestcore")); // Only has 50
+        let low_bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "150".to_string(), // Trying to bid 150 with only 50
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder2, low_bid_msg);
+        assert!(res.is_err(), "Bid with insufficient funds should fail");
+        println!("✅ Test 2 passed: Insufficient funds rejected");
+        
+        // Place a valid bid first
+        let bidder3 = mock_info("charlie", &coins(200, "utestcore"));
+        let good_bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "150".to_string(),
+        };
+        execute(deps.as_mut(), env.clone(), bidder3, good_bid_msg).unwrap();
+        
+        // TEST 3: Try to bid lower than current highest
+        let bidder4 = mock_info("dave", &coins(200, "utestcore"));
+        let lower_bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "100".to_string(), // Lower than current 150
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder4, lower_bid_msg);
+        assert!(res.is_err(), "Lower bid should fail");
+        println!("✅ Test 3 passed: Lower bid rejected");
+        
+        // TEST 4: Try to close auction that's already closed
+        let closer = mock_info("admin", &[]);
+        let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
+        execute(deps.as_mut(), env.clone(), closer.clone(), close_msg).unwrap();
+        
+        let double_close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
+        let res = execute(deps.as_mut(), env.clone(), closer, double_close_msg);
+        assert!(res.is_err(), "Closing already closed auction should fail");
+        println!("✅ Test 4 passed: Double close rejected");
+        
+        // TEST 5: Try to claim winnings as non-winner
+        let fake_winner = mock_info("mallory", &[]);
+        let claim_msg = ExecuteMsg::ClaimWinnings { auction_id: 1 };
+        let res = execute(deps.as_mut(), env, fake_winner, claim_msg);
+        assert!(res.is_err(), "Non-winner claiming should fail");
+        println!("✅ Test 5 passed: Non-winner claim rejected");
+        
+        println!("🎉 FAILED TRANSACTION HANDLING TEST COMPLETE!");
+    }
 }

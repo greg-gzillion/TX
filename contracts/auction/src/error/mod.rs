@@ -20,4 +20,7 @@ pub enum ContractError {
 
     #[error("Invalid amount format")]
     InvalidAmount,
+    
+    #[error("Insufficient funds")]
+    InsufficientFunds,
 }
