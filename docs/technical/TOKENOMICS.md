@@ -40,23 +40,7 @@ This is a starting point for discussion. The final tokenomics will be:
 3.  **Implemented only after the core protocol is live, stable, and has a user base.**
 
 **No token sale is planned.** The goal is to *earn* a community through a working product, not to *sell* a concept.
-## How You Would Earn Tokens (Examples)
-- **Trading:** Earning points for successful buys and sells on the platform.
-- **Liquidity Provision:** Providing liquidity to settlement pairs (e.g., XRP/COREUM bridges).
-- **Community Work:** Curating listings, contributing to documentation, moderating forums.
-- **Bounty Completion:** Finishing specific technical or community tasks.
 
-## Governance Powers
-Holding `PHNX` tokens would allow you to vote on:
-1.  **Fee Changes:** Proposals to initiate or adjust the protocol fee (0% → 1.1% → 1.1%).
-2.  **Treasury Spending:** All grant proposals and budget allocations.
-3.  **Technical Upgrades:** Changes to core protocol parameters or smart contracts.
-4.  **Community Initiatives:** Funding for marketing, events, or educational content.
+---
 
-## Next Steps
-This is a starting point for discussion. The final tokenomics will be:
-1.  Debated publicly in community forums.
-2.  Drafted into a formal proposal.
-3.  **Implemented only after the core protocol is live, stable, and has a user base.**
-
-**No token sale is planned.** The goal is to *earn* a community through a working product, not to *sell* a concept.
+*Last updated: February 14, 2026*

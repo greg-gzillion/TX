@@ -16,11 +16,15 @@ This Phoenix PME project has been reorganized and prepared for deployment on the
 3. **Future**: Native TX blockchain deployment
 
 ## 📅 Status
-- Project reorganized: $(date +"%Y-%m-%d")
+- Project reorganized: 2026-02-14
 - Ready for TX blockchain deployment
 - Maintains full legal continuity from original Phoenix PME
+- **TX Mainnet Launch**: March 6, 2026 (20 days)
 
 ## 🌐 Resources
-- TX Announcement: [Reference TX merger details]
-- Coreum: https://www.coreum.com
-- Sologenic: https://sologenic.org
+- [TX Announcement (Official)](https://tx.com/announcement)
+- [Coreum Documentation](https://docs.coreum.com)
+- [Sologenic](https://sologenic.org)
+
+## 📞 Contact
+For TX integration inquiries: gjf20842@gmail.com
