@@ -147,3 +147,15 @@ All legal documents have been transferred and remain in effect.
 - All open source licenses preserved
 - Contributor agreements maintained
 - Legal documentation transferred intact
+
+## 🔍 Keywords
+- TX Blockchain
+- Coreum
+- Sologenic
+- CosmWasm Smart Contracts
+- Precious Metals Trading
+- Gold & Silver Auctions
+- Real World Assets (RWA)
+- Decentralized Exchange (DEX)
+- Escrow Service
+- Peer-to-Peer Marketplace
