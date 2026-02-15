@@ -132,15 +132,6 @@ auction/
 | `phoenix-auction/` | Phoenix-specific auction logic | 🟡 In Progress |
 | `phoenix-escrow/` | Escrow contract for funds | ✅ COMPLETE |
 
-#### 2.3 Auction Variants
-| Contract | Purpose | Status |
-|----------|---------|--------|
-| `auction-guaranteed/` | Auctions with guaranteed payouts | 🟡 In Progress |
-| `auction-simple/` | Minimal auction implementation | 🟡 In Progress |
-| `auction-working/` | Working reference implementation | 🟡 In Progress |
-| `phoenix-auction/` | Phoenix-specific auction logic | 🟡 In Progress |
-| `phoenix-escrow/` | Escrow contract for funds | ✅ COMPLETE |
-
 #### 2.4 Key Contract Files
 - `build_and_deploy.sh` - Contract compilation
 - `deploy_coreum.sh` - Testnet deployment
@@ -238,11 +229,13 @@ tests/
 ### **Mock Wallet System:**
 | Wallet | Address | Balance | Role |
 |--------|---------|---------|------|
-| Treasury | `testcore1mocktreasuryaddress12345` | 10,000,000 | Admin |
+| Treasury | `testcore1mocktreasuryaddress12345` | 13,000,000 | Admin |
 | Deployer | `testcore1mockdeployeraddress67890` | 5,000,000 | Deployment |
-| Alice | `testcore1mocaliceaddress11111` | 1,000,000 | Test User |
-| Bob | `testcore1mocbobaddress22222` | 2,000,000 | Test User |
-| Charlie | `testcore1mockcharlieaddress33333` | 3,000,000 | Test User |
+| Insurance | `testcore1mockinsurancepool66666` | 0 | Pool |
+| Seller | `testcore1xa352f6gtgc4g7c9rrdgl4wn9vaw9r25v47jen` | 5,000,000 | REAL - Can list items |
+| Alice | `testcore14qkw9fplr9xplfl5qwz8rr8f3uxhja8yuf0z6l` | 1,000,000 | REAL - Can bid |
+| Bob | `testcore1afmlm9ra7m555vurve6ek4754rnv7max2hl6en` | 2,000,000 | REAL - Can bid |
+| Charlie | `testcore1urvw6ta906qphvvrmcuwwxy3z2fqns56er2agu` | 3,000,000 | REAL - Can bid |
 
 ### **Test Results:**
 
@@ -343,6 +336,3 @@ Insurance Module (Standalone Service)
 - 🔄 Auction contract: In progress
 
 ---
-
-*Document maintained by Greg - Last updated: February 13, 2026 (End of Day)*
-
