@@ -1,3 +1,10 @@
 # Security Policy
-Report vulnerabilities to: security@yourdomain.com (or use GitHub Issues)
-We take security seriously and will respond to reports promptly.
+
+## Supported Versions
+| Version | Supported |
+|---------|-----------|
+| 0.2.x   | ✅ |
+| < 0.2   | ❌ |
+
+## Reporting a Vulnerability
+Email: gjf20842@gmail.com
