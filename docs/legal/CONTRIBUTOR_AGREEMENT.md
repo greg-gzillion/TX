@@ -1,5 +1,4 @@
-﻿# CONTRIBUTOR_AGREEMENT.md
-# PhoenixPME Contributor License Agreement
+﻿# PhoenixPME Contributor License Agreement
 
 ## AGREEMENT
 By submitting code, documentation, or other contributions to PhoenixPME, you agree:
@@ -39,4 +38,7 @@ You acknowledge that:
 By submitting a pull request or contributing code, you electronically sign this agreement.
 
 ---
+
 *This protects both contributors and the project while maintaining clear ownership structure.*
+
+*Last updated: February 14, 2026*
