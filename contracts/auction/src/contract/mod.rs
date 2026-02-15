@@ -1,6 +1,6 @@
 use cosmwasm_std::{
     entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
-    to_binary, Addr, BankMsg, coins,
+    to_json_binary, Addr, BankMsg, coins,
 };
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, AuctionResponse, BidResponse};
@@ -316,7 +316,7 @@ pub fn query(
                 highest_bidder: auction.highest_bidder.map(|a| a.to_string()).unwrap_or_default(),
                 highest_bid: auction.current_bid.to_string(),
             };
-            to_binary(&response)
+            to_json_binary(&response)
         }
         QueryMsg::GetHighBid { auction_id } => {
             let auction = AUCTIONS.load(deps.storage, auction_id)?;
@@ -324,7 +324,7 @@ pub fn query(
                 bidder: auction.highest_bidder,
                 amount: auction.current_bid,
             };
-            to_binary(&response)
+            to_json_binary(&response)
         }
     }
 }

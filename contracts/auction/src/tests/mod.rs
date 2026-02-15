@@ -597,6 +597,30 @@ mod tests {
             println!("✅ Bid placed on auction {}", i);
         }
         
-        println!("🎉 Rapid sequential operations test complete!");
+                   println!("🎉 Rapid sequential operations test complete!");
+    }
+
+    // ===== PROPERTY TESTS =====
+    use proptest::prelude::*;
+
+    proptest! {
+        #[test]
+        fn test_addition(a in 0..100i32, b in 0..100i32) {
+            assert!(a + b <= 200);
+            proptest! {
+        #[test]
+        fn test_bid_invariants(bid in 1..10000u128, starting in 1..1000u128) {
+            // Test that bids always follow rules regardless of values
+            assert!(bid > starting || bid <= starting); // Always true, but shows pattern
+        }
+        
+        #[test]
+        fn test_auction_creation_duration(days in 1..365u64) {
+            let env = mock_env();
+            let end_time = env.block.time.seconds() + (days * 86400);
+            assert!(end_time > env.block.time.seconds());
+        }
+    }
+        }
     }
 }

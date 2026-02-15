@@ -1,0 +1,23 @@
+[package]
+name = "phoenix-auction-fuzz"
+version = "0.0.1"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+phoenix-auction = { path = ".." }
+
+[dependencies.cosmwasm-std]
+version = "1.1"
+default-features = false
+
+[[bin]]
+name = "auction_fuzz"
+path = "fuzz_targets/auction_fuzz.rs"
+test = false
+doc = false
+bench = false
