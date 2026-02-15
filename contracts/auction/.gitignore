@@ -1,0 +1,37 @@
+# Build artifacts
+/target/
+/binaryen-*/
+
+# Backups
+/archives/
+*backup*/
+
+# Generated files
+*.wasm
+*.wat
+!src/*.rs
+
+# IDE
+.vscode/
+.idea/
+
+# Temp
+*.tmp
+*.log
+# Build artifacts
+/target/
+/binaryen-*/
+/artifacts/
+
+# Generated files
+*.wasm
+*.wat
+!src/*.rs
+
+# IDE
+.vscode/
+.idea/
+
+# Temp
+*.tmp
+*.log

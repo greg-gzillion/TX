@@ -1,0 +1,158 @@
+#[cfg(test)]
+mod tests {
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use cosmwasm_std::{coins, from_binary, Uint128, StdError};
+    use phoenix_auction::contract::{execute, instantiate, query};
+    use phoenix_auction::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+
+    #[test]
+    fn test_instantiate() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        let info = mock_info("creator", &coins(1000, "utestcore"));
+        
+        let msg = InstantiateMsg {
+            owner: Some("creator".to_string()),
+            minimum_bid: Uint128::from(100u128),
+            auction_duration: 86400,
+            start_time: None,
+            description: "Test Auction".to_string(),
+            asset_id: "asset123".to_string(),
+            reserve_price: Some(Uint128::from(200u128)),
+            buy_now_price: Some(Uint128::from(500u128)),
+        };
+        
+        let res = instantiate(deps.as_mut(), env, info, msg);
+        assert!(res.is_ok());
+    }
+
+    #[test]
+    fn test_place_bid() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let instantiate_msg = InstantiateMsg {
+            owner: Some("creator".to_string()),
+            minimum_bid: Uint128::from(100u128),
+            auction_duration: 86400,
+            start_time: None,
+            description: "Test Auction".to_string(),
+            asset_id: "asset123".to_string(),
+            reserve_price: Some(Uint128::from(200u128)),
+            buy_now_price: Some(Uint128::from(500u128)),
+        };
+        
+        let info = mock_info("creator", &coins(1000, "utestcore"));
+        instantiate(deps.as_mut(), mock_env(), info, instantiate_msg).unwrap();
+        
+        let bidder_info = mock_info("bidder1", &coins(150, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid { auction_id: 0 };
+        
+        let res = execute(deps.as_mut(), mock_env(), bidder_info, bid_msg);
+        assert!(res.is_ok());
+    }
+
+    #[test]
+    fn test_bid_below_minimum_fails() {
+        let mut deps = mock_dependencies();
+        
+        let instantiate_msg = InstantiateMsg {
+            owner: Some("creator".to_string()),
+            minimum_bid: Uint128::from(100u128),
+            auction_duration: 86400,
+            start_time: None,
+            description: "Test Auction".to_string(),
+            asset_id: "asset123".to_string(),
+            reserve_price: Some(Uint128::from(200u128)),
+            buy_now_price: Some(Uint128::from(500u128)),
+        };
+        
+        let info = mock_info("creator", &coins(1000, "utestcore"));
+        instantiate(deps.as_mut(), mock_env(), info, instantiate_msg).unwrap();
+        
+        let bidder_info = mock_info("bidder1", &coins(50, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid { auction_id: 0 };
+        
+        let res = execute(deps.as_mut(), mock_env(), bidder_info, bid_msg);
+        assert!(res.is_err());
+    }
+
+    #[test]
+    fn test_buy_now() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let instantiate_msg = InstantiateMsg {
+            owner: Some("creator".to_string()),
+            minimum_bid: Uint128::from(100u128),
+            auction_duration: 86400,
+            start_time: None,
+            description: "Test Auction".to_string(),
+            asset_id: "asset123".to_string(),
+            reserve_price: Some(Uint128::from(200u128)),
+            buy_now_price: Some(Uint128::from(500u128)),
+        };
+        
+        let info = mock_info("creator", &coins(1000, "utestcore"));
+        instantiate(deps.as_mut(), mock_env(), info, instantiate_msg).unwrap();
+        
+        let buyer_info = mock_info("buyer", &coins(500, "utestcore"));
+        let buy_msg = ExecuteMsg::BuyNow { auction_id: 0 };
+        
+        let res = execute(deps.as_mut(), mock_env(), buyer_info, buy_msg);
+        assert!(res.is_ok());
+    }
+
+    #[test]
+    fn test_cancel_auction() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let instantiate_msg = InstantiateMsg {
+            owner: Some("creator".to_string()),
+            minimum_bid: Uint128::from(100u128),
+            auction_duration: 86400,
+            start_time: None,
+            description: "Test Auction".to_string(),
+            asset_id: "asset123".to_string(),
+            reserve_price: Some(Uint128::from(200u128)),
+            buy_now_price: Some(Uint128::from(500u128)),
+        };
+        
+        let info = mock_info("creator", &coins(1000, "utestcore"));
+        instantiate(deps.as_mut(), mock_env(), info, instantiate_msg).unwrap();
+        
+        let cancel_info = mock_info("creator", &[]);
+        let cancel_msg = ExecuteMsg::CancelAuction { auction_id: 0 };
+        
+        let res = execute(deps.as_mut(), mock_env(), cancel_info, cancel_msg);
+        assert!(res.is_ok());
+    }
+
+    #[test]
+    fn test_multiple_bids() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let instantiate_msg = InstantiateMsg {
+            owner: Some("creator".to_string()),
+            minimum_bid: Uint128::from(100u128),
+            auction_duration: 86400,
+            start_time: None,
+            description: "Test Auction".to_string(),
+            asset_id: "asset123".to_string(),
+            reserve_price: Some(Uint128::from(200u128)),
+            buy_now_price: Some(Uint128::from(500u128)),
+        };
+        
+        let info = mock_info("creator", &coins(1000, "utestcore"));
+        instantiate(deps.as_mut(), mock_env(), info, instantiate_msg).unwrap();
+        
+        let bidder1_info = mock_info("bidder1", &coins(150, "utestcore"));
+        execute(deps.as_mut(), mock_env(), bidder1_info, ExecuteMsg::PlaceBid { auction_id: 0 }).unwrap();
+        
+        let bidder2_info = mock_info("bidder2", &coins(200, "utestcore"));
+        let res = execute(deps.as_mut(), mock_env(), bidder2_info, ExecuteMsg::PlaceBid { auction_id: 0 });
+        assert!(res.is_ok());
+    }
+}
