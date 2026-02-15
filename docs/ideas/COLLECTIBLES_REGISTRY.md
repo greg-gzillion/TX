@@ -12,3 +12,13 @@ Blockchain-based inventory system for graded collectibles
 
 ## Status: IDEA PHASE
 Will start AFTER PhoenixPME MVP launch
+
+## Timeline
+- **Target**: Post-MVP (after March 6, 2026)
+- **Prerequisite**: PhoenixPME auction platform stable
+- **Dependencies**: NFT smart contracts, grading API integrations
+
+## Why Separate?
+- Avoids feature creep in MVP
+- Focuses current development on core auction functionality
+- Allows specialized development later
