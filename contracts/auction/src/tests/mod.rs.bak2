@@ -11,11 +11,13 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
         let info = mock_info("creator", &coins(1000, "utestcore"));
+
         let msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
+
         let res = instantiate(deps.as_mut(), env, info, msg);
         assert!(res.is_ok());
     }
@@ -25,17 +27,21 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
         let info = mock_info("bidder", &coins(1000, "utestcore"));
+
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
+
         let bid_msg = ExecuteMsg::PlaceBid {
             auction_id: 1,
             amount: "100".to_string(),
         };
-        let _res = execute(deps.as_mut(), env, info, bid_msg);
+        
+        let res = execute(deps.as_mut(), env, info, bid_msg);
+        println!("Bid result: {:?}", res);
     }
 
     #[test]
@@ -43,14 +49,17 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
         let info = mock_info("creator", &coins(1000, "utestcore"));
+
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
+
         let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
-        let _res = execute(deps.as_mut(), env, info, close_msg);
+        let res = execute(deps.as_mut(), env, info, close_msg);
+        println!("Close result: {:?}", res);
     }
 
     #[test]
@@ -58,44 +67,53 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
         let info = mock_info("winner", &coins(1000, "utestcore"));
+
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
+
         let claim_msg = ExecuteMsg::ClaimWinnings { auction_id: 1 };
-        let _res = execute(deps.as_mut(), env, info, claim_msg);
+        let res = execute(deps.as_mut(), env, info, claim_msg);
+        println!("Claim result: {:?}", res);
     }
 
     #[test]
     fn test_query_auction() {
         let mut deps = mock_dependencies();
         let env = mock_env();
-        let info = mock_info("creator", &[]);
+
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
+        let info = mock_info("creator", &[]);
         instantiate(deps.as_mut(), env.clone(), info, instantiate_msg).unwrap();
+
         let query_msg = QueryMsg::GetAuction { auction_id: 1 };
-        let _res = query(deps.as_ref(), env, query_msg);
+        let res = query(deps.as_ref(), env, query_msg);
+        println!("Query result: {:?}", res);
     }
 
     #[test]
     fn test_query_high_bid() {
         let mut deps = mock_dependencies();
         let env = mock_env();
-        let info = mock_info("creator", &[]);
+
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
             insurance_pool: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
+        let info = mock_info("creator", &[]);
         instantiate(deps.as_mut(), env.clone(), info, instantiate_msg).unwrap();
+
         let query_msg = QueryMsg::GetHighBid { auction_id: 1 };
-        let _res = query(deps.as_ref(), env, query_msg);
+        let res = query(deps.as_ref(), env, query_msg);
+        println!("High bid result: {:?}", res);
     }
 
     #[test]
@@ -103,6 +121,92 @@ mod tests {
         let mut deps = mock_dependencies();
         let env = mock_env();
         
+        // Step 1: Instantiate contract
+        let admin = mock_info("admin", &coins(1000, "utestcore"));
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+            insurance_pool: "pool".to_string(),
+            token_denom: "utestcore".to_string(),
+        };
+        let res = instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 1: Contract instantiated");
+        
+        // Step 2: Create auction
+        let seller = mock_info("seller", &coins(500, "utestcore"));
+        let create_msg = ExecuteMsg::CreateAuction {
+            starting_bid: Uint128::from(100u128),
+            duration: 86400,
+            description: "1oz Gold Eagle".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), seller, create_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 2: Auction created");
+        
+        // Step 3: Place first bid
+        let bidder1 = mock_info("alice", &coins(150, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "150".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder1, bid_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 3: First bid placed (150)");
+        
+        // Step 4: Place higher bid
+        let bidder2 = mock_info("bob", &coins(200, "utestcore"));
+        let bid_msg = ExecuteMsg::PlaceBid {
+            auction_id: 1,
+            amount: "200".to_string(),
+        };
+        let res = execute(deps.as_mut(), env.clone(), bidder2, bid_msg);
+        assert!(res.is_ok());
+        println!("✅ Step 4: Higher bid placed (200)");
+        
+     #[cfg(test)]
+mod tests {
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use cosmwasm_std::{coins, Uint128};
+    
+    use crate::contract::{instantiate, execute, query};
+    use crate::msg::{InstantiateMsg, ExecuteMsg, QueryMsg};
+
+    #[test]
+    fn test_instantiate() {
+        // ... test code ...
+    }
+
+    #[test]
+    fn test_place_bid() {
+        // ... test code ...
+    }
+
+    #[test]
+    fn test_close_auction() {
+        // ... test code ...
+    }
+
+    #[test]
+    fn test_claim_winnings() {
+        // ... test code ...
+    }
+
+    #[test]
+    fn test_query_auction() {
+        // ... test code ...
+    }
+
+    #[test]
+    fn test_query_high_bid() {
+        // ... test code ...
+    }
+
+    #[test]
+    fn test_end_to_end_auction_flow() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // Step 1: Instantiate contract
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
@@ -111,6 +215,7 @@ mod tests {
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
         
+        // Step 2: Create auction
         let seller = mock_info("seller", &coins(500, "utestcore"));
         let create_msg = ExecuteMsg::CreateAuction {
             starting_bid: Uint128::from(100u128),
@@ -119,6 +224,7 @@ mod tests {
         };
         execute(deps.as_mut(), env.clone(), seller, create_msg).unwrap();
         
+        // Step 3: Place first bid
         let bidder1 = mock_info("alice", &coins(150, "utestcore"));
         let bid_msg = ExecuteMsg::PlaceBid {
             auction_id: 1,
@@ -126,6 +232,7 @@ mod tests {
         };
         execute(deps.as_mut(), env.clone(), bidder1, bid_msg).unwrap();
         
+        // Step 4: Place higher bid
         let bidder2 = mock_info("bob", &coins(200, "utestcore"));
         let bid_msg = ExecuteMsg::PlaceBid {
             auction_id: 1,
@@ -133,20 +240,27 @@ mod tests {
         };
         execute(deps.as_mut(), env.clone(), bidder2, bid_msg).unwrap();
         
+        // Step 5: Close auction
         let closer = mock_info("admin", &[]);
         let close_msg = ExecuteMsg::CloseAuction { auction_id: 1 };
         execute(deps.as_mut(), env.clone(), closer, close_msg).unwrap();
+        println!("✅ Step 5: Auction closed");
         
+        // Step 6: Claim winnings
         let winner = mock_info("bob", &[]);
         let claim_msg = ExecuteMsg::ClaimWinnings { auction_id: 1 };
         execute(deps.as_mut(), env, winner, claim_msg).unwrap();
-    }
+        println!("✅ Step 6: Winner claimed funds");
+        
+        println!("🎉 END-TO-END AUCTION FLOW COMPLETE!");
+    }  // ← This closes test_end_to_end_auction_flow
 
     #[test]
     fn test_multi_user_bidding() {
         let mut deps = mock_dependencies();
         let env = mock_env();
         
+        // Step 1: Instantiate contract
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
@@ -155,6 +269,7 @@ mod tests {
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
         
+        // Step 2: Create auction
         let seller = mock_info("seller", &coins(500, "utestcore"));
         let create_msg = ExecuteMsg::CreateAuction {
             starting_bid: Uint128::from(100u128),
@@ -163,17 +278,25 @@ mod tests {
         };
         execute(deps.as_mut(), env.clone(), seller, create_msg).unwrap();
         
+        // Step 3: Multiple users place bids
         let bidders = vec!["alice", "bob", "charlie", "dave", "eve"];
+        let mut expected_highest = 100;
         
         for (i, bidder) in bidders.iter().enumerate() {
-            let bid_amount = 100 + (i as u128 * 50);
+            let bid_amount = 100 + (i as u128 * 50); // 100, 150, 200, 250, 300
             let bidder_info = mock_info(bidder, &coins(bid_amount, "utestcore"));
             let bid_msg = ExecuteMsg::PlaceBid {
                 auction_id: 1,
                 amount: bid_amount.to_string(),
             };
+            
             let res = execute(deps.as_mut(), env.clone(), bidder_info, bid_msg);
             assert!(res.is_ok(), "Bid from {} should succeed", bidder);
+            expected_highest = bid_amount;
+            println!("✅ {} bid {} - success", bidder, bid_amount);
         }
-    }
-}
+        
+        println!("🎉 Multi-user bidding test complete! Highest bid: {}", expected_highest);
+    }  // ← This closes test_multi_user_bidding
+
+}  // ← This closes mod tests
