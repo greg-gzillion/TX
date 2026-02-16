@@ -65,8 +65,6 @@ The foundation token for PhoenixPME auctions is now operational on Coreum testne
 
 ## Development
 
-## Development
-
 | Resource | Link |
 |----------|------|
 | **Repository** | [github.com/greg-gzillion/TX](https://github.com/greg-gzillion/TX) |
