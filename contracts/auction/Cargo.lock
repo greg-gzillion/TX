@@ -1138,7 +1138,7 @@ dependencies = [
  "cw2",
  "phoenix-auction",
  "proptest",
- "schemars 0.8.22",
+ "schemars 1.2.1",
  "serde",
  "thiserror",
 ]
