@@ -8,14 +8,14 @@ crate-type = ["cdylib"]
 
 [dependencies]
 cosmwasm-std = { version = "3.0.4", features = ["staking"] }
+cosmwasm-schema = "3.0.4"
 serde = { version = "1.0", features = ["derive"] }
-schemars = "1.2"
-cw-storage-plus = "1.2"
-cw2 = "1.1"
-thiserror = "1.0"
+schemars = "1.2.1"
+cw-storage-plus = "3.0.1"
+cw2 = "3.0.0"
+thiserror = "2.0.18"
 
 [dev-dependencies]
-cosmwasm-schema = "1.1"
 phoenix-auction = { path = "." }
 proptest = "1.10.0"
 
@@ -25,7 +25,3 @@ lto = true
 codegen-units = 1
 panic = "abort"
 overflow-checks = true
-
-#[[test]]
-#name = "integration"
-#path = "tests/integration_tests.rs"
