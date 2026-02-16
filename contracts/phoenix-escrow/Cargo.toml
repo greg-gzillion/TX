@@ -14,7 +14,7 @@ backtraces = ["cosmwasm-std/backtraces"]
 cosmwasm-std = { version = "1.5.0", features = ["staking"] }
 cosmwasm-storage = { version = "1.5.0" }
 cw-storage-plus = "1.1.0"
-cw2 = "1.1.0" 
+cw2 = "3.0.0" 
 schemars = "0.8"
 serde = { version = "1", features = ["derive"] }
 thiserror = "1.0"
