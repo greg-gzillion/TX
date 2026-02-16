@@ -883,6 +883,7 @@ dependencies = [
  "cw-storage-plus",
  "cw-utils",
  "cw2",
+ "phoenix-escrow",
  "schemars 1.2.1",
  "serde",
  "thiserror 2.0.18",

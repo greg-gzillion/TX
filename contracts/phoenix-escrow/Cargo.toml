@@ -20,7 +20,7 @@ cw-utils = "3.0.0"
 cosmwasm-schema = "3.0.4"
 
 [dev-dependencies]
-cosmwasm-schema = { version = "3.0.3" }
+phoenix-escrow = { path = "." }
 
 [profile.release]
 opt-level = 3
@@ -32,6 +32,3 @@ codegen-units = 1
 panic = 'abort'
 incremental = false
 overflow-checks = true
-
-[profile.release.build-override]
-opt-level = 3
