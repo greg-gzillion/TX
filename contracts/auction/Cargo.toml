@@ -8,12 +8,16 @@ crate-type = ["cdylib"]
 
 [dependencies]
 cosmwasm-std = { version = "3.0.4", features = ["staking"] }
+cosmwasm-schema = "3.0.4"
 serde = { version = "1.0", features = ["derive"] }
 schemars = "1.2.1"
 cw-storage-plus = "3.0.1"
 cw2 = "3.0.0"
 thiserror = "2.0.18"
+<<<<<<< HEAD
+=======
 cosmwasm-schema = "3.0.4"
+>>>>>>> 5621046acd2772641322bf17e9c7e32b936ee556
 
 [dev-dependencies]
 phoenix-auction = { path = "." }
@@ -23,4 +27,8 @@ opt-level = "z"
 lto = true
 codegen-units = 1
 panic = "abort"
+<<<<<<< HEAD
 overflow-checks = true
+=======
+overflow-checks = true
+>>>>>>> 5621046acd2772641322bf17e9c7e32b936ee556
