@@ -1,7 +1,6 @@
 use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult, Uint128,
-    to_json_binary, Addr, BankMsg, coins,
-};
+    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
+    to_json_binary, Addr, BankMsg, coins, Uint128,};
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, AuctionResponse, BidResponse};
 use crate::state::{Config, Auction, Bid, AUCTIONS, CONFIG, AUCTION_COUNT};
