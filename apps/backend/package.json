@@ -15,7 +15,7 @@
     "@cosmjs/proto-signing": "^0.38.1",
     "@cosmjs/stargate": "^0.38.1",
     "@nestjs/swagger": "^11.2.6",
-    "@prisma/client": "6.19.2",
+    "@prisma/client": "7.4.0",
     "@types/decimal.js": "^7.4.3",
     "@types/nodemailer": "^7.0.9",
     "bcryptjs": "^3.0.3",
