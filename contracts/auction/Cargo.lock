@@ -353,7 +353,21 @@ version = "1.5.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5526ea839acb47bbf8fff031ed9aad86e74d43f77b089255417328c3664367d5"
 dependencies = [
- "cosmwasm-schema-derive",
+ "cosmwasm-schema-derive 1.5.11",
+ "schemars 0.8.22",
+ "serde",
+ "serde_json",
+ "thiserror",
+]
+
+[[package]]
+name = "cosmwasm-schema"
+version = "3.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c656f492d3b1b6adc9d6fd5894dd381a060da50ec4a0fd0363db413fba5a573"
+dependencies = [
+ "cosmwasm-schema-derive 3.0.4",
+ "cw-schema",
  "schemars 0.8.22",
  "serde",
  "serde_json",
@@ -369,6 +383,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "cosmwasm-schema-derive"
+version = "3.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d8454339d110cf03c3423326b5680539eab57600c34322fd1256d87cf5082b8"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.116",
 ]
 
 [[package]]
@@ -560,7 +585,7 @@ version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c6c120b24fbbf5c3bedebb97f2cc85fbfa1c3287e09223428e7e597b5293c1fa"
 dependencies = [
- "cosmwasm-schema",
+ "cosmwasm-schema 1.5.11",
  "cosmwasm-std 1.5.11",
  "cw-storage-plus",
  "schemars 0.8.22",
@@ -1132,7 +1157,7 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 name = "phoenix-auction"
 version = "0.1.0"
 dependencies = [
- "cosmwasm-schema",
+ "cosmwasm-schema 3.0.4",
  "cosmwasm-std 3.0.4",
  "cw-storage-plus",
  "cw2",
