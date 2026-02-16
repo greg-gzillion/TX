@@ -125,13 +125,13 @@ fn execute_place_bid(
     let bid_amount = info.funds[0].amount;
     
     // Check minimum bid
-    if bid_amount < auction.starting_price {
+    if bid_amount < auction.starting_price.into() {
         return Err(ContractError::BidTooLow {});
     }
     
     // Check if higher than current highest bid
     if let Some(highest_bid) = &auction.highest_bid {
-        if bid_amount <= highest_bid.amount {
+        if bid_amount <= highest_bid.amount.into() {
             return Err(ContractError::BidTooLow {});
         }
     }
@@ -139,7 +139,7 @@ fn execute_place_bid(
     // Create bid record
     let bid = Bid {
         bidder: info.sender.clone(),
-        amount: bid_amount,
+        amount: Uint128::try_from(bid_amount).unwrap(),
         timestamp: env.block.time.seconds(),
     };
     
@@ -184,7 +184,7 @@ fn execute_buy_now(
         .ok_or(ContractError::NoBuyNowPrice {})?;
     
     // Validate funds
-    if info.funds.is_empty() || info.funds[0].amount < buy_now_price {
+    if info.funds.is_empty() || info.funds[0].amount < buy_now_price.into() {
         return Err(ContractError::InsufficientFunds {});
     }
     
