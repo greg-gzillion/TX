@@ -11,7 +11,7 @@ library = []
 
 [dependencies]
 cosmwasm-std = { version = "3.0.4", features = ["staking"] }
-cw-storage-plus = "3.0.1"  # This must be v3, not v1
+cw-storage-plus = "3.0.1"
 cw2 = "3.0.0"
 schemars = "1.2.1"
 serde = { version = "1.0", features = ["derive"] }
