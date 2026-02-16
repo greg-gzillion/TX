@@ -1,16 +1,14 @@
-use cosmwasm_std::{Uint128, Addr};
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
+use cosmwasm_std::{Addr, Uint128};
+use cosmwasm_schema::cw_serde;
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct InstantiateMsg {
     pub admin: String,
     pub insurance_pool: String,
     pub token_denom: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum ExecuteMsg {
     CreateAuction {
         starting_bid: Uint128,
@@ -29,14 +27,13 @@ pub enum ExecuteMsg {
     },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum QueryMsg {
     GetAuction { auction_id: u64 },
     GetHighBid { auction_id: u64 },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct AuctionResponse {
     pub auction_id: u64,
     pub active: bool,
@@ -44,7 +41,7 @@ pub struct AuctionResponse {
     pub highest_bid: String,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct BidResponse {
     pub bidder: Option<Addr>,
     pub amount: Uint128,
