@@ -1,17 +1,15 @@
 use cosmwasm_std::{Addr, Uint128};
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
+use cosmwasm_schema::cw_serde;
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct InstantiateMsg {
     pub admin: String,
     pub fee_percentage: u64,
     pub fee_address: String,
-    pub require_kyc: Option<bool>,  // Simple KYC flag
+    pub require_kyc: Option<bool>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum ExecuteMsg {
     CreateAuction {
         item_id: String,
@@ -35,8 +33,6 @@ pub enum ExecuteMsg {
     ReleaseFunds {
         auction_id: u64,
     },
-    
-    // Simple KYC functions
     VerifyUser {
         address: String,
     },
@@ -45,8 +41,7 @@ pub enum ExecuteMsg {
     },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum QueryMsg {
     Config {},
     Auction { id: u64 },
@@ -62,7 +57,7 @@ pub enum QueryMsg {
     IsVerified { address: String },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct ConfigResponse {
     pub admin: Addr,
     pub fee_percentage: u64,
@@ -70,18 +65,18 @@ pub struct ConfigResponse {
     pub require_kyc: bool,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct AuctionResponse {
     pub id: u64,
     pub auction: crate::state::Auction,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct ListAuctionsResponse {
     pub auctions: Vec<AuctionResponse>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct ListCompletedAuctionsResponse {
     pub auctions: Vec<AuctionResponse>,
 }
