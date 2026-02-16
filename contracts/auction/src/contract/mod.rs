@@ -154,7 +154,7 @@ fn execute_place_bid(
     let sent_funds = info.funds.iter().find(|c| c.denom == config.token_denom);
     
     match sent_funds {
-        Some(coin) if coin.amount < bid_amount_u128 => {
+        Some(coin) if coin.amount < bid_amount_u128.into() => {
             return Err(ContractError::InsufficientFunds {});
         }
         None => {
