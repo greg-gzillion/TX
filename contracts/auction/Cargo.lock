@@ -555,6 +555,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "cw-storage-plus"
+version = "3.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75d840d773b4ffd60ff005375e5e15e4be4fda54620574e861bfbb61a074f353"
+dependencies = [
+ "cosmwasm-std 3.0.4",
+ "schemars 0.8.22",
+ "serde",
+]
+
+[[package]]
 name = "cw2"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -562,7 +573,7 @@ checksum = "c6c120b24fbbf5c3bedebb97f2cc85fbfa1c3287e09223428e7e597b5293c1fa"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std 1.5.11",
- "cw-storage-plus",
+ "cw-storage-plus 1.2.0",
  "schemars 0.8.22",
  "semver",
  "serde",
@@ -1134,7 +1145,7 @@ version = "0.1.0"
 dependencies = [
  "cosmwasm-schema",
  "cosmwasm-std 3.0.4",
- "cw-storage-plus",
+ "cw-storage-plus 3.0.1",
  "cw2",
  "phoenix-auction",
  "proptest",
