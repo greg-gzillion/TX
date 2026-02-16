@@ -64,12 +64,11 @@ The foundation token for PhoenixPME auctions is now operational on Coreum testne
 ---
 
 ## Development
-
 | Resource | Link |
 |----------|------|
-| **Repository** | [github.com/greg-gzillion/TX](https://github.com/greg-gzillion/TX) |
-| **Developer** | Greg ([@greg-gzillion](https://github.com/greg-gzillion)) |
-| **Contact** | gjf20842@gmail.com |
+| Repository | [github.com/greg-gzillion/TX](https://github.com/greg-gzillion/TX) |
+| Developer | Greg ([@greg-gzillion](https://github.com/greg-gzillion)) |
+| Contact | gjf20842@gmail.com |
 
 ---
 
