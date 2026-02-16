@@ -1,7 +1,7 @@
 use cosmwasm_std::StdError;
 use thiserror::Error;
 
-#[derive(Error, Debug, PartialEq)]
+#[derive(Error, Debug)]
 pub enum ContractError {
     #[error("No funds sent")]
     NoFunds {},
@@ -42,7 +42,6 @@ pub enum ContractError {
     #[error("Auction already has bids")]
     AuctionHasBids {},
     
-    // KYC errors
     #[error("KYC verification required")]
     KycRequired {},
     
