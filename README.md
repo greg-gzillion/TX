@@ -159,3 +159,12 @@ All legal documents have been transferred and remain in effect.
 - Decentralized Exchange (DEX)
 - Escrow Service
 - Peer-to-Peer Marketplace
+
+## 📋 Legal & Compliance
+
+**IMPORTANT:** Please read before using PhoenixPME
+
+- [Terms of Service](TERMS_OF_SERVICE.md) - Platform usage agreement
+- [Privacy Policy](PRIVACY_POLICY.md) - How your data is handled
+- [Risk Disclosure](docs/legal/compliance/RISK_DISCLOSURE.md) - Important risks
+- [Insurance Disclaimer](docs/legal/compliance/INSURANCE_DISCLAIMER.md) - Insurance status
