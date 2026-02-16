@@ -173,7 +173,7 @@ app.get('/api/profile', (req, res) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
   return res.status(404).json({
     success: false,
     error: 'Route not found',
@@ -189,6 +189,11 @@ app.use((err: any, req: any, res: any, next: any) => {
     error: 'Internal server error'
   });
 });
+// Debug logs - place these BEFORE app.listen
+console.log('2. Express app created');
+console.log('3. Middleware configured');
+console.log('4. Routes defined');
+console.log('5. Attempting to start server on port', PORT);
 
 // Start server
 app.listen(PORT, () => {
@@ -207,4 +212,4 @@ app.listen(PORT, () => {
   GET  /api/auctions          - List auctions
   GET  /api/profile           - User profile (protected)
   `);
-});
+});export default app;
