@@ -1,5 +1,8 @@
 # Phoenix PME Dual License System
 
+**Last Updated:** February 2026  
+**Author:** Greg Frank (individual developer)
+
 ## 📋 Overview
 Phoenix PME offers two licensing tracks to accommodate different use cases:
 
@@ -13,68 +16,67 @@ Phoenix PME offers two licensing tracks to accommodate different use cases:
 - ✅ Academic/research projects  
 - ✅ Open source contributions
 - ✅ Testing/experimentation
-- ✅ You agree to open source modifications
+- ✅ You agree to open source your modifications
 
 ### Choose **Commercial License** if:
 - ✅ Business/commercial deployment
 - ✅ Revenue generation from platform
-- ✅ Proprietary modifications
-- ✅ No open source requirement
-- ✅ Commercial support needed
+- ✅ You want proprietary modifications
+- ✅ You prefer not to open source your changes
+- ✅ You want support or custom terms
 
 ## 💰 Fee & Compensation Structure
 
 ### GPL v3.0 License:
 - **License Fee**: $0
-- **Protocol Fees**: Apply normally (1.1% to insurance pool)
-- **Developer Stake**: 10% ownership in insurance pool
+- **Protocol Fees**: 1.1% to insurance pool (hardcoded in smart contracts)
+- **Developer Stake**: 10% of insurance pool allocated to developer
 - **Modifications**: Must be open sourced under GPL v3.0
 
 ### Commercial License:
 - **License Fee**: Negotiated (minimum $1,000/year)
-- **Royalty**: [1.1% - 2.0%] of transaction volume
-- **Protocol Fees**: Still apply to insurance pool
+- **Royalty**: 1.1% - 2.0% of transaction volume (negotiated)
+- **Protocol Fees**: 1.1% to insurance pool still applies
 - **Developer Stake**: 10% ownership in insurance pool maintained
-- **Support**: Included (terms in Schedule B)
+- **Support**: Custom terms available
 
-## 🛡️ Key Protections for Developer (Greg)
+## 🛡️ Developer Protections (Transparent Disclosure)
 
-### 1. Intellectual Property Protection
-- Copyright remains with Greg (@greg-gzillion)
-- Patents filed on novel mechanisms
-- Trademark protection for "Phoenix PME"
+### 1. Intellectual Property
+- Copyright held by Greg Frank (@greg-gzillion)
+- No patents have been filed (disclosed)
+- No trademark registrations currently (common law rights only)
 
-### 2. Insurance Pool Stake Protection
-- **Guaranteed 10% ownership** in insurance pool
-- Stake cannot be diluted without consent
-- Voting rights on pool governance
-- Profit participation from pool investments
+### 2. Insurance Pool Stake
+- **10% developer allocation** from insurance fees
+- Stake accumulates in pool over time
+- Voting rights: [To be defined - currently developer-controlled]
+- Profit participation: [To be defined - pool governance TBD]
 
-### 3. Protocol-Level Protections
-- 1.1% fee hardcoded in smart contracts
-- Developer address immutable in contract
-- Insurance pool address immutable
-- Fee allocation verified on-chain
+### 3. Protocol-Level Features
+- 1.1% fee encoded in smart contracts
+- Developer address set at deployment
+- Insurance pool address set at deployment
+- Fee allocation visible on-chain
 
-### 4. Legal Protections
-- Colorado jurisdiction (developer-friendly)
-- Arbitration clause for disputes
-- Attorney fees for enforcement
+### 4. Dispute Resolution
+- Colorado jurisdiction (developer's location)
+- Negotiation → Mediation → Arbitration
+- Attorney fees may be awarded
 - Injunctive relief available
 
-### 5. Audit & Verification Rights
-- Right to audit transaction records
-- Blockchain transparency for verification
-- Quarterly compliance reports
-- Smart contract upgrade veto for fee changes
+### 5. Verification Rights
+- On-chain data is publicly verifiable
+- No private audit rights needed (blockchain is transparent)
+- Smart contract logic is visible to all
 
 ## 📞 Contact for Commercial License
 Email: gjf20842@gmail.com  
 Subject: Phoenix PME Commercial License Inquiry  
-Response Time: 48 hours
+Response Time: Usually within 48 hours
 
 ## ⚖️ Legal Framework
 - Governing Law: Colorado, USA
-- Jurisdiction: Denver County Courts
+- Jurisdiction: Denver County, Colorado
 - Language: English
-- Effective: February 2026
+- Effective Date: February 2026

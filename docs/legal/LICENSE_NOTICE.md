@@ -1,7 +1,8 @@
 # License Notice
 
 ## Open Source License: GNU GPL v3.0
-This software is licensed under the GNU General Public License v3.0.
+This software is licensed under the 
+[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.txt).
 
 ## What this means:
 1. You are free to use, modify, and distribute this software

@@ -1,5 +1,18 @@
 ﻿# PHOENIXPME INTELLECTUAL PROPERTY LICENSE AGREEMENT
 
+**IMPORTANT NOTE ABOUT OPEN SOURCE LICENSING:**
+
+The PhoenixPME software is also available under the **GNU General Public License v3.0**.
+This commercial license is OPTIONAL and intended for businesses that:
+- Want to avoid GPL's open source requirements for modifications
+- Need custom support or terms
+- Prefer a direct contractual relationship
+
+**You are free to use the software under GPL v3.0 without this agreement.**
+This agreement only applies if you choose to enter into it.
+
+---
+
 **THIS AGREEMENT** is made effective as of February 14, 2026.
 
 **BETWEEN:**

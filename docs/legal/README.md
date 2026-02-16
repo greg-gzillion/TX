@@ -1,16 +1,19 @@
 # Legal Documentation
 
 ## Primary License
-- **LICENSE** (root directory): GNU General Public License v3.0
+- **`/LICENSE`** : GNU General Public License v3.0 (full text)
 
-## Additional Notices
-- LICENSE_NOTICE.md: Brief explanation of GPL v3.0
+## Summary
+This software is open source under GPL v3.0. You are free to use,
+modify, and distribute it under the terms of that license.
 
-## For Commercial Use
-As the copyright holder (@greg-gzillion), commercial arrangements are separate from open source licensing.
+## Commercial Use
+As the copyright holder (@greg-gzillion, gjf20842@gmail.com), I also offer commercial options
+separate from the GPL license. This is standard practice for open source
+projects (similar to MySQL, Redis, etc.).
 
-Contact: gjf20842@gmail.com for:
+**Contact:** gjf20842@gmail.com for:
 - Enterprise licensing
-- Hosted service (PhoenixPME.com with 1.1% fee)
+- Hosted PhoenixPME service (1.1% fee)
 - White-label solutions
 - Custom development

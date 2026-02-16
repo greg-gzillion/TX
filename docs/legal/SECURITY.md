@@ -40,8 +40,8 @@ The following are out of scope:
 - Denial of service attacks
 
 ## Security Features
-- **Smart Contracts**: All contracts are tested (5/5 tests passing)
-- **Wallet Integration**: Multi-wallet support with secure connection handling
+- **Smart Contracts**: All contracts are tested 
+**Wallet Integration**: Multi-wallet support with secure connection handling
 - **Insurance Pool**: 1.1% fee mechanism with 10% developer stake
 
 ## Bug Bounty

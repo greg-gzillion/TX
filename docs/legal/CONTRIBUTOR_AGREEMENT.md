@@ -1,44 +1,60 @@
 ﻿# PhoenixPME Contributor License Agreement
 
+**Last Updated:** February 14, 2026
+**Version:** 1.0
+
 ## AGREEMENT
-By submitting code, documentation, or other contributions to PhoenixPME, you agree:
+By submitting code, documentation, or other contributions to PhoenixPME ("the Project"), you agree to the following terms:
 
 ## 1. LICENSE GRANT
-You grant the project maintainer (Greg @greg-gzillion) a perpetual, worldwide, non-exclusive, royalty-free license to:
-- Use, reproduce, modify, and distribute your contributions
-- Sublicense contributions under GPL-3.0 or commercial terms
-- Combine with other software
+You grant the project maintainer (Greg Frank, @greg-gzillion) and any future maintainers a perpetual, worldwide, non-exclusive, royalty-free license to:
+- Use, reproduce, prepare derivative works of, publicly display, and distribute your contributions
+- Sublicense contributions under the project's existing licenses (GPL-3.0 and commercial options)
+- Combine your contributions with other software
 
-## 2. OWNERSHIP CLARIFICATION
-- You retain copyright to your contributions
-- Project maintainer controls overall project direction
-- No transfer of project ownership occurs
-- Your contributions become part of PhoenixPME under GPL-3.0
+## 2. OWNERSHIP AND RIGHTS
+- **You retain copyright** and all rights to your contributions
+- You grant the rights described in Section 1
+- This does **not** transfer ownership of the project
+- Your contributions become part of PhoenixPME under the project's existing licenses
 
-## 3. REPRESENTATIONS
-You represent that:
-- You have the right to contribute the code
-- Contributions are your original work
-- You are not violating any employer or third-party rights
-- You disclose any potential conflicts
+## 3. REPRESENTATIONS AND WARRANTIES
+You represent and warrant that:
+- You have the full right and authority to grant these rights
+- Your contributions are your original work
+- You are not violating any employer, contractor, or third-party agreements
+- You will disclose any potential conflicts of interest
+- To your knowledge, your contributions do not infringe any third-party rights
 
-## 4. NO COMPENSATION
+## 4. COMPENSATION
 Contributions are voluntary unless:
-- Specifically contracted for payment
-- Part of a bounty program
-- Covered by written agreement
+- You have a separate written agreement with the project maintainer
+- You are participating in a formal bounty program
+- Other compensation is explicitly agreed in writing
 
-## 5. GOVERNANCE ACKNOWLEDGMENT
+## 5. GOVERNANCE
 You acknowledge that:
-- Greg (@greg-gzillion) maintains final decision authority
-- Architectural decisions rest with project maintainer
-- Feature priorities determined by project roadmap
+- The project maintainer (Greg Frank) has final decision authority
+- Architectural and roadmap decisions rest with the maintainer
+- Acceptance of contributions is at the maintainer's discretion
+- Future governance changes may occur
 
-## 6. SIGNATURE
-By submitting a pull request or contributing code, you electronically sign this agreement.
+## 6. TERMINATION
+- This agreement applies to all your past and future contributions
+- You may stop contributing at any time
+- Rights granted for existing contributions are perpetual and irrevocable
+
+## 7. GOVERNING LAW
+- This agreement is governed by Colorado law
+- Any disputes shall be resolved in Denver County courts
+
+## 8. SIGNATURE
+By submitting a pull request, creating an issue, or contributing code through any means, you electronically sign this agreement.
 
 ---
 
-*This protects both contributors and the project while maintaining clear ownership structure.*
+**This is a legally binding agreement.** If you do not agree, do not contribute.
+
+**Questions?** Contact: gjf20842@gmail.com
 
 *Last updated: February 14, 2026*
