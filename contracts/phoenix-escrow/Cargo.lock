@@ -322,40 +322,16 @@ dependencies = [
 
 [[package]]
 name = "cosmwasm-schema"
-version = "1.5.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5526ea839acb47bbf8fff031ed9aad86e74d43f77b089255417328c3664367d5"
-dependencies = [
- "cosmwasm-schema-derive 1.5.11",
- "schemars 0.8.22",
- "serde",
- "serde_json",
- "thiserror 1.0.69",
-]
-
-[[package]]
-name = "cosmwasm-schema"
 version = "3.0.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7e2ae3a4dd5fcabc94f43cc7118a5d7412d4f9ac2a08776e7be0bc0397aa37e6"
 dependencies = [
- "cosmwasm-schema-derive 3.0.3",
+ "cosmwasm-schema-derive",
  "cw-schema",
  "schemars 0.8.22",
  "serde",
  "serde_json",
  "thiserror 1.0.69",
-]
-
-[[package]]
-name = "cosmwasm-schema-derive"
-version = "1.5.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10f41b99f41f840765d02ae858956bb52af910755976312082e90493c67db512"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
 ]
 
 [[package]]
@@ -563,12 +539,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "cw-storage-plus"
+version = "3.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75d840d773b4ffd60ff005375e5e15e4be4fda54620574e861bfbb61a074f353"
+dependencies = [
+ "cosmwasm-std 3.0.3",
+ "schemars 0.8.22",
+ "serde",
+]
+
+[[package]]
 name = "cw-utils"
 version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8667e96f2c65cf7f4c6c66bfd6ee46909c40827bc1caea0409234e34f03cf061"
 dependencies = [
- "cosmwasm-schema 3.0.3",
+ "cosmwasm-schema",
  "cosmwasm-std 3.0.3",
  "schemars 0.8.22",
  "serde",
@@ -577,17 +564,17 @@ dependencies = [
 
 [[package]]
 name = "cw2"
-version = "1.1.2"
+version = "3.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6c120b24fbbf5c3bedebb97f2cc85fbfa1c3287e09223428e7e597b5293c1fa"
+checksum = "50582114ab739724c25a27cea1785351f2b5fea7968214302e0023ee2c0e8b39"
 dependencies = [
- "cosmwasm-schema 1.5.11",
- "cosmwasm-std 1.5.11",
- "cw-storage-plus",
+ "cosmwasm-schema",
+ "cosmwasm-std 3.0.3",
+ "cw-storage-plus 3.0.1",
  "schemars 0.8.22",
  "semver",
  "serde",
- "thiserror 1.0.69",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -1079,10 +1066,10 @@ checksum = "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a"
 name = "phoenix-escrow"
 version = "1.1.0"
 dependencies = [
- "cosmwasm-schema 3.0.3",
+ "cosmwasm-schema",
  "cosmwasm-std 1.5.11",
  "cosmwasm-storage",
- "cw-storage-plus",
+ "cw-storage-plus 1.2.0",
  "cw-utils",
  "cw2",
  "schemars 0.8.22",
