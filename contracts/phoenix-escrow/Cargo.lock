@@ -1085,7 +1085,7 @@ dependencies = [
  "cw-storage-plus",
  "cw-utils",
  "cw2",
- "schemars 0.8.22",
+ "schemars 1.2.1",
  "serde",
  "thiserror 1.0.69",
 ]
