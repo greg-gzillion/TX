@@ -172,15 +172,14 @@ app.get('/api/profile', (req, res) => {
   });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
+// 404 handler - correct syntax
+app.use((req, res) => {
   return res.status(404).json({
     success: false,
     error: 'Route not found',
     path: req.originalUrl,
   });
 });
-
 // Error handler
 app.use((err: any, req: any, res: any, next: any) => {
   console.error('Server error:', err);
