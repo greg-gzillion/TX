@@ -1,0 +1,41 @@
+# PhoenixPME Licensing
+
+This software is available under a **dual-license model**. Please refer to the appropriate documentation below:
+
+## 📜 License Options
+
+### 1. Open Source License (GPLv3 with Phoenix PME Carve-Out)
+For open source, academic, and personal use:
+- Full GNU GPL v3.0 terms apply
+- Special provisions protect Insurance Pool economics
+- See: [`docs/legal/LICENSE_GPLv3_WITH_CARVEOUT.md`](docs/legal/LICENSE_GPLv3_WITH_CARVEOUT.md)
+
+### 2. Commercial License
+For business/commercial deployment without GPL requirements:
+- Custom terms with royalty structure
+- Includes support and consulting
+- See: [`docs/legal/COMMERCIAL_TERMS_PART1.md`](docs/legal/COMMERCIAL_TERMS_PART1.md) (Financial)
+- See: [`docs/legal/COMMERCIAL_TERMS_PART2.md`](docs/legal/COMMERCIAL_TERMS_PART2.md) (Legal)
+
+## 🤝 Contributor Agreement
+All contributors must agree to:
+- [`docs/legal/CONTRIBUTOR_AGREEMENT.md`](docs/legal/CONTRIBUTOR_AGREEMENT.md)
+
+## 📚 Full Legal Documentation
+All legal documents are maintained in the [`docs/legal/`](docs/legal/) directory:
+- `DUAL_LICENSE.md` - Overview of licensing options
+- `FEE_MODEL.md` - Fee structure documentation
+- `ROYALTY_AGREEMENT.md` - Royalty terms
+- `FACTUAL_LEGAL_STATUS.md` - Copyright and trademark status
+- `HONEST_NOTICE.md` - Legal transparency notice
+
+## 📞 Commercial Inquiries
+For commercial licensing, support, or custom agreements:
+**Email:** gjf20842@gmail.com  
+**Response Time:** 48 hours
+
+---
+
+*This file serves as an index to the complete legal documentation. All terms are fully detailed in the referenced documents.*
+
+*Last updated: February 15, 2026*
