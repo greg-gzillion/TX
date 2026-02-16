@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import WalletSelector from '../components/WalletSelector';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const [redirecting, setRedirecting] = useState(false);
+  const router = useRouter();
+
+  // Auto-navigate when wallet connects
+  useEffect(() => {
+    if (walletAddress && !redirecting) {
+      setRedirecting(true);
+      // Short delay to show the address then redirect
+      setTimeout(() => {
+        router.push('/auctions');
+      }, 1500); // 1.5 seconds so user sees confirmation
+    }
+  }, [walletAddress, redirecting, router]);
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -15,14 +29,17 @@ export default function Home() {
 
       <div style={{ marginTop: '2rem', padding: '1rem', border: '1px solid #ccc' }}>
         <h3>Wallet Connection Test</h3>
-      <div className="mt-8 text-center">
-         <Link 
-          href="/auctions"
-           className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
-            >
-           View Auctions
+        
+        {/* Manual navigation button */}
+        <div className="mt-8 text-center" style={{ marginBottom: '1rem' }}>
+          <Link 
+            href="/auctions"
+            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition"
+          >
+            View Auctions
           </Link>
-        </div>        
+        </div>     
+        
         {/* Wallet Selector Component */}
         <WalletSelector onWalletChange={setWalletAddress} />
         
@@ -34,7 +51,9 @@ export default function Home() {
             borderRadius: '4px' 
           }}>
             <p style={{ fontSize: '0.875rem', margin: 0 }}>
-              <strong>✅ TESTCORE Treasury address:</strong>
+              <strong>
+                {redirecting ? '✅ Redirecting to auctions...' : '✅ TESTCORE Treasury address:'}
+              </strong>
             </p>
             <p style={{ 
               fontFamily: 'monospace', 
