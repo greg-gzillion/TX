@@ -4,10 +4,13 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import auctionRoutes from './routes/auction.routes';
 import blockchainRoutes from './routes/blockchain.routes';
+import priceRoutes from './routes/price.routes';
 import coreumService from './services/blockchain/coreum.service';
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
+import { initPriceOracle } from './services/priceOracle';
 
+// Load environment variables FIRST
 dotenv.config();
 
 const app = express();
@@ -21,6 +24,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/auctions', auctionRoutes);
 app.use('/api/blockchain', blockchainRoutes);
+app.use('/api/prices', priceRoutes);  // Add price routes
 
 // Health check with Coreum testnet info
 app.get('/health', async (req, res) => {
@@ -52,6 +56,9 @@ if (process.env.COREUM_MNEMONIC) {
     coreumService.connect().catch(console.error);
 }
 
+// Initialize price oracle (starts daily updates)
+initPriceOracle().catch(console.error);
+
 // Swagger API Documentation
 const swaggerOptions = {
   definition: {
@@ -68,6 +75,5 @@ const swaggerOptions = {
 
 const specs = swaggerJsdoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
-
 
 export default app;

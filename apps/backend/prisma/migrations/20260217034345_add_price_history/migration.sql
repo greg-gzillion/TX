@@ -1,0 +1,11 @@
+-- CreateTable
+CREATE TABLE "PriceHistory" (
+    "id" SERIAL NOT NULL,
+    "gold" DOUBLE PRECISION NOT NULL,
+    "silver" DOUBLE PRECISION NOT NULL,
+    "platinum" DOUBLE PRECISION NOT NULL,
+    "palladium" DOUBLE PRECISION NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "PriceHistory_pkey" PRIMARY KEY ("id")
+);

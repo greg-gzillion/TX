@@ -5,42 +5,50 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String    @id @default(cuid())
+  email     String    @unique
   password  String
   name      String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  auctions  Auction[]
+  bids      Bid[]
+}
+
+model PriceHistory {
+  id        Int      @id @default(autoincrement())
+  gold      Float
+  silver    Float
+  platinum  Float
+  palladium Float
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  auctions Auction[]
-  bids     Bid[]
 }
 
 model Auction {
-  id          String   @id @default(cuid())
-  itemId      String
-  sellerId    String
-  seller      User     @relation(fields: [sellerId], references: [id])
-  reservePrice Float
-  buyNowPrice Float?
-  highestBid  Float?
+  id            String   @id @default(cuid())
+  itemId        String
+  sellerId      String
+  reservePrice  Float
+  buyNowPrice   Float?
+  highestBid    Float?
   highestBidder String?
-  startTime   DateTime
-  endTime     DateTime
-  status      String   @default("active")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  
-  bids Bid[]
+  startTime     DateTime
+  endTime       DateTime
+  status        String   @default("active")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  seller        User     @relation(fields: [sellerId], references: [id])
+  bids          Bid[]
 }
 
 model Bid {
   id        String   @id @default(cuid())
   auctionId String
-  auction   Auction  @relation(fields: [auctionId], references: [id])
   bidderId  String
-  bidder    User     @relation(fields: [bidderId], references: [id])
   amount    Float
   createdAt DateTime @default(now())
+  auction   Auction  @relation(fields: [auctionId], references: [id])
+  bidder    User     @relation(fields: [bidderId], references: [id])
 }
