@@ -7,6 +7,7 @@
     "test:coverage": "jest --coverage",
     "start": "node dist/server-entry.js",
     "dev": "nodemon server.ts",
+    "prebuild": "npx prisma generate --schema=./prisma/schema.prisma",
     "build": "tsc"
   },
   "dependencies": {
