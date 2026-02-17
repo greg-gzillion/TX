@@ -1,6 +1,17 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  log: ['error', 'warn'],
+  errorFormat: 'pretty'
+});
+
+// Test the connection immediately
+prisma.$connect()
+  .then(() => console.log('✅ Database connected successfully'))
+  .catch((e) => {
+    console.error('❌ Database connection failed:', e);
+    process.exit(1);
+  });
 
 // Metal types supported
 export type MetalType = 'gold' | 'silver' | 'platinum' | 'palladium';
