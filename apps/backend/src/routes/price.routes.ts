@@ -1,13 +1,12 @@
 import { Router } from 'express';
-import { getSpotPrice, getPriceDifference } from '../services/priceOracle';
+import { getSpotPrice, priceCache } from '../services/priceOracle';
 
 const router = Router();
 
 // Get current spot prices
 router.get('/', async (req, res) => {
   try {
-    const { gold, silver, platinum, palladium, lastUpdated } = 
-      await import('../services/priceOracle').then(m => m.priceCache);
+    const { gold, silver, platinum, palladium, lastUpdated } = priceCache;
     
     res.json({
       success: true,
@@ -34,7 +33,7 @@ router.get('/:metal', async (req, res) => {
       data: {
         metal,
         price,
-        lastUpdated: (await import('../services/priceOracle')).priceCache.lastUpdated
+        lastUpdated: priceCache.lastUpdated
       }
     });
   } catch (error) {
