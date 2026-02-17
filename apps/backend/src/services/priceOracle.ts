@@ -1,19 +1,37 @@
 import { PrismaClient } from '@prisma/client'
 import { withAccelerate } from '@prisma/extension-accelerate'
 
-// Create a base client
+// Create a base client with proper configuration
 const prisma = new PrismaClient({
-  log: ['error', 'warn'],
+  log: ['error', 'warn', 'info', 'query'],
   errorFormat: 'pretty'
 }).$extends(withAccelerate())
 
 // Test the connection immediately
-prisma.$connect()
-  .then(() => console.log('✅ Database connected successfully'))
-  .catch((e: Error) => {
-    console.error('❌ Database connection failed:', e)
-    process.exit(1)
-  })
+async function testConnection() {
+  try {
+    console.log('🔍 Testing database connection...');
+    console.log('DATABASE_URL present:', !!process.env.DATABASE_URL);
+    console.log('DATABASE_URL first 20 chars:', process.env.DATABASE_URL?.substring(0, 20) + '...');
+    
+    await prisma.$connect();
+    console.log('✅ Database connected successfully');
+    
+    // Test a simple query
+    const result = await prisma.$queryRaw`SELECT 1 as test`;
+    console.log('✅ Query test successful:', result);
+    
+  } catch (error) {
+    console.error('❌ Database connection failed:');
+    console.error('Error name:', (error as Error).name);
+    console.error('Error message:', (error as Error).message);
+    console.error('Full error:', error);
+    process.exit(1);
+  }
+}
+
+// Run the connection test
+testConnection();
 
 // Metal types supported
 export type MetalType = 'gold' | 'silver' | 'platinum' | 'palladium';
@@ -48,8 +66,6 @@ export async function fetchSpotPrices(): Promise<{
   palladium: number;
 }> {
   try {
-    // Note: You'll need a real API key for production
-    // This is a mock implementation for now
     const response = await fetch('https://api.kitco.com/metals/prices', {
       headers: {
         'Accept': 'application/json'
@@ -85,7 +101,7 @@ export async function fetchSpotPrices(): Promise<{
       };
     }
     
-    // Ultimate fallback (should never happen in production)
+    // Ultimate fallback
     return {
       gold: 1950,
       silver: 28,
@@ -176,7 +192,7 @@ export async function initPriceOracle() {
       
       setTimeout(async () => {
         await updateSpotPrices();
-        scheduleDaily(); // Reschedule for next day
+        scheduleDaily();
       }, msUntilTarget);
     };
     
