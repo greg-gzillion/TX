@@ -18,6 +18,7 @@
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
     "@prisma/engines": "^7.4.0",
+    "@prisma/extension-accelerate": "^2.0.2",
     "@types/decimal.js": "^7.4.3",
     "@types/nodemailer": "^7.0.10",
     "bcryptjs": "^3.0.3",
