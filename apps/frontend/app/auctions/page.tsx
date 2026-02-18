@@ -1,4 +1,4 @@
-import { AuctionList } from '../AuctionList';
+import { AuctionList } from '@/components/auctions/AuctionList';
 import Link from 'next/link';
 
 export default function AuctionsPage() {
