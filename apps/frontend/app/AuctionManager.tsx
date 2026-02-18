@@ -10,7 +10,7 @@ export function AuctionManager() {
   const [actionLoading, setActionLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<"all" | "my" | "bidding">("all");
 
-  const client = new AuctionClient();
+  const client = auctionClient;  // Remove 'new' and fix capitalization
   const userAddress = "testcore1mj58cdfrkc8uyunw2rna3wvkatdjfhd6f6spqd";
 
   useEffect(() => {
