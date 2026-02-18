@@ -23,7 +23,7 @@ export function AuctionCreator() {
 
     setLoading(true);
     try {
-      const client = new AuctionClient();
+      const client = new auctionClient();
       const id = await client.createAuction(
         desc,
         price,
