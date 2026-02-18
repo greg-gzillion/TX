@@ -1,4 +1,4 @@
-﻿// components/AuctionCreator.tsx - UPDATED VERSION
+// components/AuctionCreator.tsx - UPDATED VERSION
 "use client";
 
 import { useState } from "react";
@@ -22,24 +22,23 @@ export function AuctionCreator() {
     }
 
     setLoading(true);
-    try {
-      const client = new auctionClient();
-      const id = await client.createAuction(
-        desc,
-        price,
-        parseInt(days)
-      );
-      setAuctionId(id);
-      alert(`✅ Auction created! ID: ${id}`);
-      setItemDescription("");
-      setStartingPrice("100");
-      setDurationDays("7");
-    } catch (error: any) {
-      alert(`❌ Error: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+try {
+  const client = auctionClient;  // Use existing instance
+  const id = await client.createAuction(
+    desc,
+    price,
+    parseInt(days)
+  );
+  setAuctionId(id);
+  alert(`✅ Auction created! ID: ${id}`);
+  setItemDescription("");
+  setStartingPrice("100");
+  setDurationDays("7");
+} catch (error: any) {
+  alert(`❌ Error: ${error.message}`);
+} finally {
+  setLoading(false);
+}
 
   return (
     <div className="p-4 border rounded-lg">
@@ -95,3 +94,4 @@ export function AuctionCreator() {
     </div>
   );
 }
+
