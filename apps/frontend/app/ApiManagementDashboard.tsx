@@ -1,59 +1,12 @@
 import React from 'react';
 import { 
-  // Charts & Analytics
-  BarChart3, 
-  TrendingUp, 
-  PieChart, 
-  LineChart, 
-  BarChart,
-  
-  // Data & Metrics
-  Users, 
-  DollarSign, 
-  ShoppingBag, 
-  Calendar,
-  
-  // Actions & Controls
-  Download,
-  Upload,
-  Filter, 
-  RefreshCw, 
-  Search,
-  Copy,
-  Edit,
-  Trash2,
-  Eye,
-  EyeOff,
-  MoreVertical,
-  Settings,
-  Plus,           // <-- Adding Plus
-  Minus,
-  
-  // Navigation & UI
-  ChevronDown,
-  ChevronUp,
-  ChevronLeft,
-  ChevronRight,
-  Menu,
-  X,
-  
-  // Status & Indicators
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Key,
-  Lock,
-  Unlock,
-  Shield,
-  Cpu,            // <-- Already added
-  
-  // Misc
-  ExternalLink,
-  Globe,
-  Mail,
-  Phone,
-  MapPin
+  BarChart3, TrendingUp, PieChart, LineChart, BarChart,
+  Users, DollarSign, ShoppingBag, Calendar,
+  Download, Upload, Filter, RefreshCw, Search, Copy, Edit, Trash2,
+  Eye, EyeOff, MoreVertical, Settings, Plus, Minus,
+  ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Menu, X,
+  AlertCircle, CheckCircle, XCircle, Clock, Key, Lock, Unlock, Shield, Cpu,
+  ExternalLink, Globe, Mail, Phone, MapPin
 } from 'lucide-react';
 export interface ApiKey {
   id: string;
