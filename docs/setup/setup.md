@@ -1,3 +1,7 @@
+
+## 📝 **Updated `setup.md`:**
+
+```markdown
 # PhoenixPME Setup Guide
 
 ## 🌐 Live Cloud Version (No Setup Required!)
@@ -6,6 +10,7 @@ The application is already deployed:
 
 | Service | URL | Status |
 |---------|-----|--------|
+| **Live Frontend** | `https://phoenix-frontend-seven.vercel.app` | ✅ Active |
 | **Live API** | `https://phoenix-api-756y.onrender.com` | ✅ Active |
 | **Health Check** | `https://phoenix-api-756y.onrender.com/health` | ✅ Online |
 | **Metal Prices** | `https://phoenix-api-756y.onrender.com/api/prices` | ✅ Live Data |
@@ -36,19 +41,18 @@ Keplr wallet (install from keplr.app)
 🚀 Quick Setup
 
 Backend
-bash
 cd apps/backend
 npm install
 npm start
 # Runs on http://localhost:3001
 
 Frontend
-bash
 cd apps/frontend
 npm install
 npm run dev
 # Runs on http://localhost:3000
 
+Verification
 # Check live API
 curl https://phoenix-api-756y.onrender.com/health
 
@@ -56,4 +60,4 @@ curl https://phoenix-api-756y.onrender.com/health
 curl http://localhost:3001/health
 
 Last Updated: February 17, 2026
-Live API: https://phoenix-api-756y.onrender.com
+Live Frontend: https://phoenix-frontend-seven.vercel.app
