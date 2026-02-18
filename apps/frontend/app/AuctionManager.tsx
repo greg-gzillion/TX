@@ -2,8 +2,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { AuctionClient, Auction } from "@/lib/contracts/auction-client";
-
+import { auctionClient, Auction } from "@/lib/contracts/auction-client";
 export function AuctionManager() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [selectedAuction, setSelectedAuction] = useState<Auction | null>(null);
