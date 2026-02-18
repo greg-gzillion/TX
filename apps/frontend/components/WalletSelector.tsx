@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/Button';
 
 declare global {
   interface Window {
@@ -34,22 +35,34 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
   const BECH32_PREFIX = 'testcore';
   const COIN_TYPE = 990;
 
-  // ==================== KEPLR CONNECTION ====================
-  const connectKeplr = async () => {
-    if (!window.keplr) {
-      alert('Please install Keplr extension');
-      return;
-    }
+  // Check if Keplr is installed
+  const isKeplrInstalled = () => {
+    return typeof window !== 'undefined' && !!window.keplr;
+  };
 
+  // Check if Leap is installed
+  const isLeapInstalled = () => {
+    return typeof window !== 'undefined' && !!window.leap;
+  };
+
+  // Connect to Keplr
+  const connectKeplr = async () => {
     setLoading(true);
     try {
-      // Suggest the chain if not already added
+      if (!window.keplr) {
+        alert('Please install Keplr extension');
+        window.open('https://www.keplr.app', '_blank');
+        return;
+      }
+
       await window.keplr.experimentalSuggestChain({
         chainId: CHAIN_ID,
         chainName: CHAIN_NAME,
         rpc: RPC_ENDPOINT,
         rest: REST_ENDPOINT,
-        bip44: { coinType: COIN_TYPE },
+        bip44: {
+          coinType: COIN_TYPE,
+        },
         bech32Config: {
           bech32PrefixAccAddr: BECH32_PREFIX,
           bech32PrefixAccPub: `${BECH32_PREFIX}pub`,
@@ -58,28 +71,36 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
           bech32PrefixConsAddr: `${BECH32_PREFIX}valcons`,
           bech32PrefixConsPub: `${BECH32_PREFIX}valconspub`,
         },
-        currencies: [{
-          coinDenom: 'TESTCORE',
-          coinMinimalDenom: 'utestcore',
-          coinDecimals: 6,
-        }],
-        feeCurrencies: [{
-          coinDenom: 'TESTCORE',
-          coinMinimalDenom: 'utestcore',
-          coinDecimals: 6,
-          gasPriceStep: { low: 0.0625, average: 0.25, high: 0.5 },
-        }],
+        currencies: [
+          {
+            coinDenom: 'TESTCORE',
+            coinMinimalDenom: 'utestcore',
+            coinDecimals: 6,
+            coinGeckoId: 'coreum',
+          },
+        ],
+        feeCurrencies: [
+          {
+            coinDenom: 'TESTCORE',
+            coinMinimalDenom: 'utestcore',
+            coinDecimals: 6,
+            coinGeckoId: 'coreum',
+          },
+        ],
         stakeCurrency: {
           coinDenom: 'TESTCORE',
           coinMinimalDenom: 'utestcore',
           coinDecimals: 6,
+          coinGeckoId: 'coreum',
+        },
+        gasPriceStep: {
+          low: 0.01,
+          average: 0.025,
+          high: 0.03,
         },
       });
 
-      // Enable the chain
       await window.keplr.enable(CHAIN_ID);
-      
-      // Get the signer and accounts
       const offlineSigner = window.keplr.getOfflineSigner(CHAIN_ID);
       const accounts = await offlineSigner.getAccounts();
 
@@ -89,38 +110,37 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
         walletType: 'keplr'
       });
 
-      // Store in localStorage
-      localStorage.setItem('wallet_address', accounts[0].address);
-      localStorage.setItem('wallet_type', 'keplr');
-      
-      // Call onConnect callback if provided - FIXED: moved to correct location
       if (onConnect) {
         onConnect(accounts[0].address);
       }
-      
+
+      console.log('Connected to Keplr:', accounts[0].address);
     } catch (error) {
-      console.error('Failed to connect Keplr:', error);
-      alert('Failed to connect wallet. Check console for details.');
+      console.error('Error connecting to Keplr:', error);
+      alert('Failed to connect to Keplr');
     } finally {
       setLoading(false);
     }
   };
 
-  // ==================== LEAP CONNECTION ====================
+  // Connect to Leap
   const connectLeap = async () => {
-    if (!window.leap) {
-      alert('Please install Leap wallet extension');
-      return;
-    }
-
     setLoading(true);
     try {
+      if (!window.leap) {
+        alert('Please install Leap wallet');
+        window.open('https://www.leapwallet.io', '_blank');
+        return;
+      }
+
       await window.leap.experimentalSuggestChain({
         chainId: CHAIN_ID,
         chainName: CHAIN_NAME,
         rpc: RPC_ENDPOINT,
         rest: REST_ENDPOINT,
-        bip44: { coinType: COIN_TYPE },
+        bip44: {
+          coinType: COIN_TYPE,
+        },
         bech32Config: {
           bech32PrefixAccAddr: BECH32_PREFIX,
           bech32PrefixAccPub: `${BECH32_PREFIX}pub`,
@@ -129,21 +149,32 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
           bech32PrefixConsAddr: `${BECH32_PREFIX}valcons`,
           bech32PrefixConsPub: `${BECH32_PREFIX}valconspub`,
         },
-        currencies: [{
-          coinDenom: 'TESTCORE',
-          coinMinimalDenom: 'utestcore',
-          coinDecimals: 6,
-        }],
-        feeCurrencies: [{
-          coinDenom: 'TESTCORE',
-          coinMinimalDenom: 'utestcore',
-          coinDecimals: 6,
-          gasPriceStep: { low: 0.0625, average: 0.25, high: 0.5 },
-        }],
+        currencies: [
+          {
+            coinDenom: 'TESTCORE',
+            coinMinimalDenom: 'utestcore',
+            coinDecimals: 6,
+            coinGeckoId: 'coreum',
+          },
+        ],
+        feeCurrencies: [
+          {
+            coinDenom: 'TESTCORE',
+            coinMinimalDenom: 'utestcore',
+            coinDecimals: 6,
+            coinGeckoId: 'coreum',
+          },
+        ],
         stakeCurrency: {
           coinDenom: 'TESTCORE',
           coinMinimalDenom: 'utestcore',
           coinDecimals: 6,
+          coinGeckoId: 'coreum',
+        },
+        gasPriceStep: {
+          low: 0.01,
+          average: 0.025,
+          high: 0.03,
         },
       });
 
@@ -157,80 +188,89 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
         walletType: 'leap'
       });
 
-      localStorage.setItem('wallet_address', accounts[0].address);
-      localStorage.setItem('wallet_type', 'leap');
-
-      // Call onConnect callback if provided
       if (onConnect) {
         onConnect(accounts[0].address);
       }
 
+      console.log('Connected to Leap:', accounts[0].address);
     } catch (error) {
-      console.error('Failed to connect Leap:', error);
-      alert('Failed to connect wallet. Check console for details.');
+      console.error('Error connecting to Leap:', error);
+      alert('Failed to connect to Leap');
     } finally {
       setLoading(false);
     }
   };
 
-  // ==================== DISCONNECT ====================
+  // Disconnect wallet
   const disconnect = () => {
-    setWallet({ address: '', chainId: '', walletType: null });
-    localStorage.removeItem('wallet_address');
-    localStorage.removeItem('wallet_type');
+    setWallet({
+      address: '',
+      chainId: '',
+      walletType: null
+    });
+    if (onConnect) {
+      onConnect('');
+    }
   };
 
-  // ==================== RESTORE SESSION ====================
-  useEffect(() => {
-    const savedAddress = localStorage.getItem('wallet_address');
-    const savedType = localStorage.getItem('wallet_type');
-    if (savedAddress && savedType) {
-      setWallet({
-        address: savedAddress,
-        chainId: CHAIN_ID,
-        walletType: savedType as 'keplr' | 'leap'
-      });
-    }
-  }, []);
-
-  // ==================== RENDER ====================
   return (
-    <div className="p-4 border rounded-lg bg-white shadow-sm">
-      <h3 className="text-lg font-semibold mb-4">Wallet Connection</h3>
-      
-      {wallet.address ? (
-        <div>
-          <div className="bg-green-50 p-3 rounded">
-            <p className="text-sm text-green-700 mb-1">
-              ✅ Connected with {wallet.walletType}
-            </p>
-            <p className="font-mono text-xs break-all">{wallet.address}</p>
-            <p className="text-xs text-gray-500 mt-2">{wallet.chainId}</p>
-          </div>
-          <button
-            onClick={disconnect}
-            className="mt-4 w-full px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-          >
-            Disconnect
-          </button>
+    <div className="flex items-center space-x-4">
+      {!wallet.address ? (
+        <div className="flex space-x-2">
+          {isKeplrInstalled() && (
+            <Button
+              onClick={connectKeplr}
+              variant="gold"
+              size="md"
+              isLoading={loading}
+            >
+              Connect Keplr
+            </Button>
+          )}
+          {isLeapInstalled() && (
+            <Button
+              onClick={connectLeap}
+              variant="primary"
+              size="md"
+              isLoading={loading}
+            >
+              Connect Leap
+            </Button>
+          )}
+          {!isKeplrInstalled() && !isLeapInstalled() && (
+            <div className="flex space-x-2">
+              <Button
+                onClick={() => window.open('https://www.keplr.app', '_blank')}
+                variant="outline"
+                size="sm"
+              >
+                Install Keplr
+              </Button>
+              <Button
+                onClick={() => window.open('https://www.leapwallet.io', '_blank')}
+                variant="outline"
+                size="sm"
+              >
+                Install Leap
+              </Button>
+            </div>
+          )}
         </div>
       ) : (
-        <div className="space-y-2">
-          <button
-            onClick={connectKeplr}
-            disabled={loading}
-            className="w-full px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-blue-300 transition"
+        <div className="flex items-center space-x-3">
+          <div className="text-sm">
+            <span className="text-gray-500">Connected: </span>
+            <span className="font-mono text-gray-900">
+              {wallet.address.slice(0, 8)}...{wallet.address.slice(-6)}
+            </span>
+          </div>
+          <Button
+            onClick={disconnect}
+            variant="outline"
+            size="sm"
           >
-            {loading ? 'Connecting...' : 'Connect Keplr'}
-          </button>
-          
-          <button
-            onClick={connectLeap}
-            disabled={loading}
-            className="w-full px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-purple-300 transition"
-          >
-            {loading ? 'Connecting...' : 'Connect Leap'}
-          </button>
+            Disconnect
+          </Button>
         </div>
       )}
     </div>
