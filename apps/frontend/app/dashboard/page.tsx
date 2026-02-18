@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import WalletSelector from '../../components/WalletSelector';
+import WalletSelector from '@/components/layout/WalletSelector';
 import { AuctionList } from '../AuctionList';
 import CreateAuctionModal from '../../components/CreateAuctionModal';
 import { useWallet } from '../../lib/wallet-context';
