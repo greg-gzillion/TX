@@ -2,10 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import WalletSelector from '@/components/layout/WalletSelector';
-import { AuctionList } from '../AuctionList';
+
 import CreateAuctionModal from '../../components/CreateAuctionModal';
 import { useWallet } from '../../lib/wallet-context';
-
+import { AuctionList } from '@/components/auctions/AuctionList';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function DashboardPage() {
