@@ -61,7 +61,17 @@ The foundation token for PhoenixPME auctions is now operational on Coreum testne
 | Blockchain | Coreum (CosmWasm) | - |
 | Insurance Services | Various | 3200-3204 |
 
----
+## 🚀 Try It Now!
+
+### Live Demo
+API: https://phoenix-api-756y.onrender.com
+Prices: https://phoenix-api-756y.onrender.com/api/prices
+
+### Quick Local Setup
+```bash
+git clone https://github.com/greg-gzillion/TX.git
+cd TX
+# Follow the quick start guide in docs/setup/
 
 ## Development
 | Resource | Link |
