@@ -65,6 +65,21 @@ router.get('/:metal', async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch spot price' });
   }
+})
+router.get('/migrate', async (req, res) => {
+  try {
+    const { exec } = require('child_process');
+    exec('npx prisma migrate deploy', { cwd: process.cwd() }, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return res.status(500).json({ error: error.message, stderr });
+      }
+      res.json({ stdout, stderr });
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
+
 
 export default router;
