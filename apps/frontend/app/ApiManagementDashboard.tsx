@@ -41,6 +41,7 @@ import {
   XCircle,
   Clock,
   Key,           // <-- Adding Key
+  Cpu,
   Lock,
   Unlock,
   Shield,
