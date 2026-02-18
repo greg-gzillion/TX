@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { auctionClient } from "@/lib/contracts/auction-client";
+
 export function AuctionCreator() {
   const [itemDescription, setItemDescription] = useState("1 oz Gold Bar");
   const [startingPrice, setStartingPrice] = useState("100");
@@ -11,11 +12,10 @@ export function AuctionCreator() {
   const [auctionId, setAuctionId] = useState<number | null>(null);
 
   const handleCreate = async () => {
-    // SIMPLER VALIDATION - just trim whitespace
     const desc = itemDescription.trim();
     const price = startingPrice.trim();
     const days = durationDays.trim();
-    
+
     if (!desc || !price || !days) {
       alert("Please fill all fields");
       return;
@@ -23,7 +23,7 @@ export function AuctionCreator() {
 
     setLoading(true);
     try {
-      const client = auctionClient;  // NO 'new' keyword!
+      const client = auctionClient;
       const id = await client.createAuction(
         desc,
         price,
@@ -39,11 +39,12 @@ export function AuctionCreator() {
     } finally {
       setLoading(false);
     }
+  };
 
   return (
     <div className="p-4 border rounded-lg">
       <h3 className="text-lg font-bold mb-3">Create Auction</h3>
-      
+
       <div className="space-y-3">
         <div>
           <label className="block text-sm mb-1">Item Description</label>
@@ -55,7 +56,7 @@ export function AuctionCreator() {
             className="w-full p-2 border rounded"
           />
         </div>
-        
+
         <div>
           <label className="block text-sm mb-1">Starting Price (TEST)</label>
           <input
@@ -66,7 +67,7 @@ export function AuctionCreator() {
             min="1"
           />
         </div>
-        
+
         <div>
           <label className="block text-sm mb-1">Duration (Days)</label>
           <input
@@ -78,7 +79,7 @@ export function AuctionCreator() {
             max="30"
           />
         </div>
-        
+
         <button
           onClick={handleCreate}
           disabled={loading}
@@ -86,7 +87,7 @@ export function AuctionCreator() {
         >
           {loading ? "Creating..." : "Create Auction"}
         </button>
-        
+
         {auctionId && (
           <p className="text-green-600">Auction ID: {auctionId}</p>
         )}
