@@ -1,4 +1,5 @@
-const API_BASE_URL = 'http://localhost:3001/api';
+// lib/api.ts
+const API_BASE_URL = 'https://phoenix-api-756y.onrender.com/api';
 
 export interface CreateAuctionData {
   title: string;
@@ -8,6 +9,28 @@ export interface CreateAuctionData {
   weight?: number;
   purity?: number;
   endTime: string;
+}
+
+export interface Auction {
+  id: number;
+  title: string;
+  currentBid: number;
+  timeLeft: string;
+  bids: number;
+  metal: 'gold' | 'silver' | 'platinum' | 'palladium';
+  image?: string;
+  description?: string;
+  startingPrice?: number;
+  endTime?: string;
+  seller?: string;
+}
+
+export interface PriceData {
+  gold: number;
+  silver: number;
+  platinum: number;
+  palladium: number;
+  lastUpdated: string;
 }
 
 class ApiService {
@@ -33,6 +56,15 @@ class ApiService {
     }
 
     return headers;
+  }
+
+  // Price endpoints
+  async getPrices(): Promise<PriceData> {
+    const response = await fetch(`${API_BASE_URL}/prices`, {
+      headers: this.getHeaders(),
+    });
+    const data = await response.json();
+    return data.data;
   }
 
   // Auth endpoints
@@ -75,7 +107,7 @@ class ApiService {
     return response.json();
   }
 
-  async getAuctions(filters?: { metalType?: string; status?: string }) {
+  async getAuctions(filters?: { metalType?: string; status?: string }): Promise<{ success: boolean; data: Auction[] }> {
     const params = new URLSearchParams();
     if (filters?.metalType) params.append('metalType', filters.metalType);
     if (filters?.status) params.append('status', filters.status);
@@ -101,6 +133,54 @@ class ApiService {
       body: JSON.stringify({ amount }),
     });
     return response.json();
+  }
+
+  // Helper for mock data until auction endpoints are ready
+  async getMockAuctions(): Promise<Auction[]> {
+    const prices = await this.getPrices();
+    
+    return [
+      {
+        id: 1,
+        title: '1oz Gold Bar - 999.9 Fine',
+        currentBid: prices.gold,
+        timeLeft: '2h 15m',
+        bids: 12,
+        metal: 'gold',
+        description: 'PAMP Suisse gold bar in original assay card',
+        endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 2,
+        title: '10oz Silver Bar',
+        currentBid: prices.silver * 10,
+        timeLeft: '1d 3h',
+        bids: 8,
+        metal: 'silver',
+        description: 'Engelhard silver bar, serial number visible',
+        endTime: new Date(Date.now() + 27 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 3,
+        title: '1oz Platinum Bar',
+        currentBid: prices.platinum,
+        timeLeft: '3h 45m',
+        bids: 5,
+        metal: 'platinum',
+        description: 'Valcambi platinum bar in sealed package',
+        endTime: new Date(Date.now() + 3.75 * 60 * 60 * 1000).toISOString(),
+      },
+      {
+        id: 4,
+        title: '1oz Palladium Bar',
+        currentBid: prices.palladium,
+        timeLeft: '4h 20m',
+        bids: 3,
+        metal: 'palladium',
+        description: 'PAMP palladium bar with certificate',
+        endTime: new Date(Date.now() + 4.33 * 60 * 60 * 1000).toISOString(),
+      }
+    ];
   }
 }
 
