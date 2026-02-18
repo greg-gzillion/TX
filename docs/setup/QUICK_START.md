@@ -1,5 +1,27 @@
 # Phoenix PME - Quick Start Guide
+# Phoenix PME - Quick Start Guide
+## 🚧 Important Note About Smart Contracts
+## 🚧 Critical Timeline Information
 
+**The current Coreum testnet (v3.x) is NOT compatible with our smart contracts (built for v5.0+).**
+
+### 📅 March 6, 2026 - TX TESTNET LAUNCHES
+**This is when REAL TESTING BEGINS, NOT mainnet launch.**
+
+On March 6:
+- ✅ TX unified testnet goes live
+- ✅ Smart contracts CAN be deployed
+- ✅ Real testing of auctions/bids starts
+- ⏳ Mainnet is still weeks/months away
+
+### What This Means For You:
+- **Now:** Use the live UI with mock data
+- **March 6+:** Help test real contracts on testnet
+- **Future:** Mainnet launch after successful testing
+
+**We're not launching March 6 - we're STARTING REAL TESTING March 6.**
+
+**Why?** TX (Coreum + Sologenic merger) launches March 6 with unified v6.0 testnet and backward compatibility. Your contracts will work immediately.
 ## Project Status: ✅ **LIVE!** Deployed on Render & Vercel
 
 This guide will help you get PhoenixPME running locally OR connect to the live cloud deployment.
@@ -113,3 +135,4 @@ Version: 3.0
 Live Frontend: https://phoenix-frontend-seven.vercel.app
 Live API: https://phoenix-api-756y.onrender.com
 Author: Greg (@greg-gzillion)
+

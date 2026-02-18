@@ -1,5 +1,23 @@
 # PhoenixPME - Precious Metals Exchange on TX Blockchain
 
+## 📍 Current Status (as of Feb 18, 2026)
+
+### ✅ Working Now:
+- Live frontend/backend infrastructure
+- Real-time metal prices
+- Wallet connection (Keplr/Leap)
+- Full UI/UX experience
+- TESTUSD token transfers
+
+### 🚧 In Progress:
+- Smart contract testing (starts March 6)
+- Real auction creation
+- On-chain bid placement
+- Insurance pool accumulation
+
+### 📅 March 6, 2026:
+TX testnet launches - REAL TESTING BEGINS!
+
 **Target Chain:** TX (Coreum + Sologenic Merger)  
 **Status:** 🚀 **LIVE!** Deployed on Render & Vercel
 
