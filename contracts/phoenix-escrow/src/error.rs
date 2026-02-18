@@ -1,50 +1,26 @@
 use cosmwasm_std::StdError;
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub enum ContractError {
-    #[error("No funds sent")]
-    NoFunds {},
-    
-    #[error("No funds to release")]
-    NoFundsToRelease {},
-
     #[error("{0}")]
     Std(#[from] StdError),
 
     #[error("Unauthorized")]
     Unauthorized {},
-    
-    #[error("Auction not found")]
-    AuctionNotFound {},
-    
-    #[error("Auction already ended")]
-    AuctionEnded {},
-    
-    #[error("Bid too low")]
-    BidTooLow {},
-    
-    #[error("Reserve price not met")]
-    ReserveNotMet {},
-    
-    #[error("Buy now price not specified")]
-    NoBuyNowPrice {},
-    
-    #[error("Auction not active")]
-    AuctionNotActive {},
-    
-    #[error("Insufficient funds")]
-    InsufficientFunds {},
-    
-    #[error("Only creator can cancel")]
-    NotCreator {},
-    
-    #[error("Auction already has bids")]
-    AuctionHasBids {},
-    
-    #[error("KYC verification required")]
-    KycRequired {},
-    
-    #[error("Address is blacklisted")]
-    Blacklisted {},
+
+    #[error("Auction not found: {0}")]
+    AuctionNotFound(u64),
+
+    #[error("Auction not active: {0}")]
+    AuctionNotActive(u64),
+
+    #[error("Auction has ended: {0}")]
+    AuctionEnded(u64),
+
+    #[error("Auction not ended: {0}")]
+    AuctionNotEnded(u64),
+
+    #[error("Invalid input: {0}")]
+    InvalidInput(String),
 }

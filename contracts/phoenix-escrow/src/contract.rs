@@ -1,21 +1,14 @@
-use cosmwasm_std::{
+﻿use cosmwasm_std::{
     entry_point, Binary, Deps, DepsMut, Env, MessageInfo, 
-    Response, StdResult, Uint128, Addr, to_json_binary, BankMsg, coins
+    Response, StdResult, StdError, Uint128, BankMsg, to_json_binary, coins
 };
 use cw2::set_contract_version;
+use crate::msg::{InstantiateMsg, ExecuteMsg, QueryMsg};
+use crate::state::{AUCTION_COUNT, AUCTIONS, Auction, Bid, AuctionStatus, DEVELOPER_WALLET};
 
-use crate::error::ContractError;
-use crate::msg::{
-    ExecuteMsg, InstantiateMsg, QueryMsg, ConfigResponse, 
-    AuctionResponse
-};
-use crate::state::{
-    Config, Auction, Bid, AuctionStatus, 
-    CONFIG, AUCTIONS, AUCTION_COUNT, COMPLETED_AUCTIONS, KYC_VERIFIED
-};
-
+// Version info for contract migration
 const CONTRACT_NAME: &str = "crates.io:phoenix-escrow";
-const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
+const CONTRACT_VERSION: &str = "1.0.0";
 
 #[entry_point]
 pub fn instantiate(
@@ -23,25 +16,17 @@ pub fn instantiate(
     _env: Env,
     _info: MessageInfo,
     msg: InstantiateMsg,
-) -> Result<Response, ContractError> {
+) -> StdResult<Response> {
+    // Set contract version
     set_contract_version(deps.storage, CONTRACT_NAME, CONTRACT_VERSION)?;
-
-    let admin = deps.api.addr_validate(&msg.admin)?;
-    let fee_address = deps.api.addr_validate(&msg.fee_address)?;
     
-    let config = Config {
-        admin: admin.clone(),
-        fee_percentage: msg.fee_percentage,
-        fee_address,
-        require_kyc: msg.require_kyc.unwrap_or(false),
-    };
+    // Initialize auction count to 0
+    AUCTION_COUNT.save(deps.storage, &0)?;
     
-    CONFIG.save(deps.storage, &config)?;
-    AUCTION_COUNT.save(deps.storage, &0u64)?;
-
     Ok(Response::new()
         .add_attribute("method", "instantiate")
-        .add_attribute("admin", admin))
+        .add_attribute("admin", msg.admin)
+        .add_attribute("developer_wallet", DEVELOPER_WALLET))
 }
 
 #[entry_point]
@@ -50,394 +35,371 @@ pub fn execute(
     env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
-) -> Result<Response, ContractError> {
+) -> StdResult<Response> {
     match msg {
         ExecuteMsg::CreateAuction {
             item_id,
+            description,
             starting_price,
             reserve_price,
-            buy_now_price,
             duration_hours,
         } => execute_create_auction(
             deps, env, info, 
-            item_id, starting_price, reserve_price, buy_now_price, 
-            duration_hours,
+            item_id, description, starting_price, 
+            reserve_price, duration_hours
         ),
         ExecuteMsg::PlaceBid { auction_id } => {
-            // Check KYC if required
-            let config = CONFIG.load(deps.storage)?;
-            if config.require_kyc {
-                let is_verified = KYC_VERIFIED.may_load(deps.storage, &info.sender)?
-                    .unwrap_or(false);
-                if !is_verified {
-                    return Err(ContractError::KycRequired {});
-                }
-            }
             execute_place_bid(deps, env, info, auction_id)
         },
-        ExecuteMsg::BuyNow { auction_id } => execute_buy_now(deps, env, info, auction_id),
-        ExecuteMsg::EndAuction { auction_id } => execute_end_auction(deps, env, info, auction_id),
-        ExecuteMsg::CancelAuction { auction_id } => execute_cancel_auction(deps, env, info, auction_id),
-        ExecuteMsg::ReleaseFunds { auction_id } => execute_release_funds(deps, env, info, auction_id),
-        
-        // KYC functions
-        ExecuteMsg::VerifyUser { address } => {
-            let addr = deps.api.addr_validate(&address)?;
-            execute_verify_user(deps, info, addr)
+        ExecuteMsg::EndAuction { auction_id } => {
+            execute_end_auction(deps, env, info, auction_id)
         },
-        ExecuteMsg::RevokeVerification { address } => {
-            let addr = deps.api.addr_validate(&address)?;
-            execute_revoke_verification(deps, info, addr)
+        ExecuteMsg::ReleaseEscrow { auction_id } => {
+            execute_release_escrow(deps, env, info, auction_id)
+        },
+        ExecuteMsg::CancelAuction { auction_id } => {
+            execute_cancel_auction(deps, env, info, auction_id)
         },
     }
 }
 
-// ============================================================
-// BID FUNCTIONS
-// ============================================================
+#[entry_point]
+pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
+    match msg {
+        QueryMsg::GetAuction { auction_id } => {
+            let auction = AUCTIONS.load(deps.storage, auction_id)?;
+            to_json_binary(&auction)
+        },
+        QueryMsg::GetActiveAuctions {} => {
+            let count = AUCTION_COUNT.load(deps.storage)?;
+            let mut active_auctions = Vec::new();
+            
+            for i in 0..count {
+                if let Ok(auction) = AUCTIONS.load(deps.storage, i) {
+                    if auction.status == AuctionStatus::Active {
+                        active_auctions.push(auction);
+                    }
+                }
+            }
+            
+            to_json_binary(&active_auctions)
+        },
+        QueryMsg::GetAuctionCount {} => {
+            let count = AUCTION_COUNT.load(deps.storage)?;
+            to_json_binary(&count)
+        },
+    }
+}
+
+// ==================== EXECUTION FUNCTIONS ====================
+fn execute_create_auction(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    item_id: String,
+    description: String,
+    starting_price: Uint128,
+    reserve_price: Option<Uint128>,
+    duration_hours: u64,
+) -> StdResult<Response> {
+    // Get next auction ID
+    let auction_id = AUCTION_COUNT.load(deps.storage)?;
+    
+    // Create auction
+    let auction = Auction {
+        seller: info.sender.to_string(),
+        item_id,
+        description,
+        starting_price,
+        reserve_price,
+        start_time: env.block.time.seconds(),
+        end_time: env.block.time.seconds() + (duration_hours * 3600),
+        current_bid: None,
+        bids: vec![],
+        status: AuctionStatus::Active,
+        escrow_released: false,
+    };
+    
+    // Save auction
+    AUCTIONS.save(deps.storage, auction_id, &auction)?;
+    
+    // Increment counter
+    AUCTION_COUNT.save(deps.storage, &(auction_id + 1))?;
+    
+    Ok(Response::new()
+        .add_attribute("method", "create_auction")
+        .add_attribute("auction_id", auction_id.to_string())
+        .add_attribute("seller", info.sender.to_string()))
+}
 
 fn execute_place_bid(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
     auction_id: u64,
-) -> Result<Response, ContractError> {
-    // Load the auction
+) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Validate auction is active
+    // Check if auction is active
     if auction.status != AuctionStatus::Active {
-        return Err(ContractError::AuctionNotActive {});
+        return Err(StdError::generic_err("Auction is not active"));
     }
     
     // Check if auction has ended
-    if env.block.time.seconds() > auction.ends_at {
+    if env.block.time.seconds() > auction.end_time {
         auction.status = AuctionStatus::Ended;
         AUCTIONS.save(deps.storage, auction_id, &auction)?;
-        return Err(ContractError::AuctionEnded {});
+        return Err(StdError::generic_err("Auction has ended"));
     }
     
-    // Validate funds were sent
-    if info.funds.is_empty() {
-        return Err(ContractError::NoFunds {});
+    // Get bid amount from sent funds
+    let funds = info.funds;
+    if funds.len() != 1 {
+        return Err(StdError::generic_err("Must send exactly one coin type"));
     }
     
-    let bid_amount = info.funds[0].amount;
+    let bid_amount = funds[0].amount;
+    let bid_denom = funds[0].denom.clone();
     
-    // Check minimum bid
-    if bid_amount < auction.starting_price.into() {
-        return Err(ContractError::BidTooLow {});
-    }
-    
-    // Check if higher than current highest bid
-    if let Some(highest_bid) = &auction.highest_bid {
-        if bid_amount <= highest_bid.amount.into() {
-            return Err(ContractError::BidTooLow {});
+    // Validate bid (must be at least starting price for first bid)
+    if let Some(current_bid) = &auction.current_bid {
+        if bid_amount <= current_bid.amount {
+            return Err(StdError::generic_err("Bid must be higher than current bid"));
+        }
+    } else {
+        // First bid must be at least starting price
+        if bid_amount < auction.starting_price {
+            return Err(StdError::generic_err("Bid must be at least starting price"));
         }
     }
     
-    // Create bid record
+    // Create bid
     let bid = Bid {
-        bidder: info.sender.clone(),
-        amount: Uint128::try_from(bid_amount).unwrap(),
+        bidder: info.sender.to_string(),
+        amount: bid_amount,
         timestamp: env.block.time.seconds(),
     };
     
-    // Add to bids list
-    auction.bids.push(bid.clone());
-    auction.highest_bid = Some(bid);
+    // Update auction
+    let mut messages = vec![];
+    
+    if let Some(previous_bid) = auction.current_bid.take() {
+        // Clone the bidder address before moving
+        let bidder_address = previous_bid.bidder.clone();
+        let bid_amount_value = previous_bid.amount;
+        
+        // Return previous bid to previous bidder
+        messages.push(BankMsg::Send {
+            to_address: bidder_address,
+            amount: coins(bid_amount_value.u128(), &bid_denom),
+        });
+        
+        auction.bids.push(previous_bid);
+    }
+    
+    auction.current_bid = Some(bid.clone());
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
     
     Ok(Response::new()
-        .add_attribute("action", "place_bid")
+        .add_messages(messages)
+        .add_attribute("method", "place_bid")
         .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("bidder", info.sender.to_string())
-        .add_attribute("amount", bid_amount.to_string()))
+        .add_attribute("bidder", bid.bidder)
+        .add_attribute("amount", bid.amount.to_string()))
 }
-
-// ============================================================
-// BUY NOW FUNCTIONS
-// ============================================================
-
-fn execute_buy_now(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    auction_id: u64,
-) -> Result<Response, ContractError> {
-    let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
-    
-    // Validate auction is active
-    if auction.status != AuctionStatus::Active {
-        return Err(ContractError::AuctionNotActive {});
-    }
-    
-    // Check if auction has ended
-    if env.block.time.seconds() > auction.ends_at {
-        auction.status = AuctionStatus::Ended;
-        AUCTIONS.save(deps.storage, auction_id, &auction)?;
-        return Err(ContractError::AuctionEnded {});
-    }
-    
-    // Check if buy now price exists
-    let buy_now_price = auction.buy_now_price
-        .ok_or(ContractError::NoBuyNowPrice {})?;
-    
-    // Validate funds
-    if info.funds.is_empty() || info.funds[0].amount < buy_now_price.into() {
-        return Err(ContractError::InsufficientFunds {});
-    }
-    
-    // Create bid record
-    let bid = Bid {
-        bidder: info.sender.clone(),
-        amount: buy_now_price,
-        timestamp: env.block.time.seconds(),
-    };
-    
-    // Complete the auction
-    auction.bids.push(bid.clone());
-    auction.highest_bid = Some(bid);
-    auction.status = AuctionStatus::Sold;
-    
-    // Save to auctions
-    AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    
-    // Also save to completed auctions
-    COMPLETED_AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    
-    Ok(Response::new()
-        .add_attribute("action", "buy_now")
-        .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("buyer", info.sender.to_string())
-        .add_attribute("amount", buy_now_price.to_string()))
-}
-
-// ============================================================
-// END AUCTION FUNCTIONS
-// ============================================================
 
 fn execute_end_auction(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
     auction_id: u64,
-) -> Result<Response, ContractError> {
+) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Check if auction has ended
-    if env.block.time.seconds() <= auction.ends_at {
-        return Err(ContractError::AuctionNotActive {});
+    // Only seller can end auction early
+    if info.sender.to_string() != auction.seller {
+        return Err(StdError::generic_err("Only seller can end auction"));
     }
     
-    // Can only end active auctions
     if auction.status != AuctionStatus::Active {
-        return Err(ContractError::AuctionEnded {});
+        return Err(StdError::generic_err("Auction is not active"));
     }
     
-    // Mark as ended
+    // Check if auction has already ended by time
+    if env.block.time.seconds() > auction.end_time {
+        auction.status = AuctionStatus::Ended;
+        AUCTIONS.save(deps.storage, auction_id, &auction)?;
+        return Ok(Response::new()
+            .add_attribute("method", "end_auction")
+            .add_attribute("auction_id", auction_id.to_string())
+            .add_attribute("reason", "time_expired"));
+    }
+    
     auction.status = AuctionStatus::Ended;
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
     
     Ok(Response::new()
-        .add_attribute("action", "end_auction")
+        .add_attribute("method", "end_auction")
         .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("ended_by", info.sender.to_string()))
+        .add_attribute("reason", "seller_ended_early"))
 }
 
-// ============================================================
-// CANCEL AUCTION FUNCTIONS
-// ============================================================
+fn execute_release_escrow(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    auction_id: u64,
+) -> StdResult<Response> {
+    let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
+    
+    // Check if escrow already released
+    if auction.escrow_released {
+        return Err(StdError::generic_err("Escrow already released"));
+    }
+    
+    // Only seller or admin can release escrow
+    if info.sender != auction.seller {
+        return Err(StdError::generic_err("Only seller can release escrow"));
+    }
+    
+    // Check if auction has ended
+    if auction.status != AuctionStatus::Ended && env.block.time.seconds() <= auction.end_time {
+        return Err(StdError::generic_err("Auction hasn'\''t ended yet"));
+    }
+    
+    // Mark auction as ended if not already
+    if auction.status == AuctionStatus::Active {
+        auction.status = AuctionStatus::Ended;
+    }
+    
+    // Process escrow release
+    let mut messages = vec![];
+    
+    if let Some(winning_bid) = &auction.current_bid {
+        // Check if reserve price is met
+        if let Some(reserve_price) = auction.reserve_price {
+            if winning_bid.amount < reserve_price {
+                auction.escrow_released = true;
+                AUCTIONS.save(deps.storage, auction_id, &auction)?;
+                
+                // Return funds to bidder
+                messages.push(BankMsg::Send {
+                    to_address: winning_bid.bidder.clone(),
+                    amount: coins(winning_bid.amount.u128(), "ucore"),
+                });
+                
+                return Ok(Response::new()
+                    .add_messages(messages)
+                    .add_attribute("method", "release_escrow")
+                    .add_attribute("auction_id", auction_id.to_string())
+                    .add_attribute("status", "reserve_not_met")
+                    .add_attribute("action", "funds_returned_to_bidder"));
+            }
+        }
+        
+        // Calculate 1% royalty fee
+        let royalty_fee = winning_bid.amount.multiply_ratio(1u128, 100u128);
+        let seller_amount = winning_bid.amount.checked_sub(royalty_fee)?;
+        
+        // Send royalty to developer wallet
+        messages.push(BankMsg::Send {
+            to_address: DEVELOPER_WALLET.to_string(),
+            amount: coins(royalty_fee.u128(), "ucore"),
+        });
+        
+        // Send remaining to seller
+        messages.push(BankMsg::Send {
+            to_address: auction.seller.clone(),
+            amount: coins(seller_amount.u128(), "ucore"),
+        });
+    } else {
+        // No bids, nothing to release
+        return Err(StdError::generic_err("No winning bid to release"));
+    }
+    
+    auction.escrow_released = true;
+    AUCTIONS.save(deps.storage, auction_id, &auction)?;
+    
+    Ok(Response::new()
+        .add_messages(messages)
+        .add_attribute("method", "release_escrow")
+        .add_attribute("auction_id", auction_id.to_string())
+        .add_attribute("status", "success"))
+}
 
 fn execute_cancel_auction(
     deps: DepsMut,
-    _env: Env,
+    env: Env,
     info: MessageInfo,
     auction_id: u64,
-) -> Result<Response, ContractError> {
+) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Only creator can cancel
-    if info.sender != auction.creator {
-        return Err(ContractError::NotCreator {});
+    // Only seller can cancel
+    if info.sender.to_string() != auction.seller {
+        return Err(StdError::generic_err("Only seller can cancel auction"));
     }
     
-    // Can only cancel active auctions
     if auction.status != AuctionStatus::Active {
-        return Err(ContractError::AuctionNotActive {});
+        return Err(StdError::generic_err("Auction is not active"));
     }
     
-    // Can't cancel if there are bids
-    if !auction.bids.is_empty() {
-        return Err(ContractError::AuctionHasBids {});
+    // Return any current bid
+    let mut messages = vec![];
+    if let Some(current_bid) = auction.current_bid.take() {
+        messages.push(BankMsg::Send {
+            to_address: current_bid.bidder,
+            amount: coins(current_bid.amount.u128(), "ucore"),
+        });
     }
     
-    // Cancel the auction
     auction.status = AuctionStatus::Cancelled;
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
     
     Ok(Response::new()
-        .add_attribute("action", "cancel_auction")
-        .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("cancelled_by", info.sender.to_string()))
+        .add_messages(messages)
+        .add_attribute("method", "cancel_auction")
+        .add_attribute("auction_id", auction_id.to_string()))
 }
 
-// ============================================================
-// RELEASE FUNDS FUNCTIONS
-// ============================================================
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use cosmwasm_std::{coins, from_json};
 
-fn execute_release_funds(
-    deps: DepsMut,
-    _env: Env,
-    info: MessageInfo,
-    auction_id: u64,
-) -> Result<Response, ContractError> {
-    let auction = AUCTIONS.load(deps.storage, auction_id)?;
-    
-    // Only creator can release funds
-    if info.sender != auction.creator {
-        return Err(ContractError::NotCreator {});
-    }
-    
-    // Auction must be sold
-    if auction.status != AuctionStatus::Sold {
-        return Err(ContractError::AuctionNotActive {});
-    }
-    
-    // Get highest bid
-    let highest_bid = auction.highest_bid
-        .ok_or(ContractError::NoFundsToRelease {})?;
-    
-    let amount = highest_bid.amount;
-    
-    Ok(Response::new()
-        .add_attribute("action", "release_funds")
-        .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("amount", amount.to_string())
-        .add_message(BankMsg::Send {
-            to_address: auction.creator.to_string(),
-            amount: coins(amount.u128(), "utestcore"),
-        }))
-}
-
-// KYC functions
-fn execute_verify_user(
-    deps: DepsMut,
-    info: MessageInfo,
-    address: Addr,
-) -> Result<Response, ContractError> {
-    let config = CONFIG.load(deps.storage)?;
-    if info.sender != config.admin {
-        return Err(ContractError::Unauthorized {});
-    }
-    
-    KYC_VERIFIED.save(deps.storage, &address, &true)?;
-    
-    Ok(Response::new()
-        .add_attribute("action", "verify_user")
-        .add_attribute("address", address)
-        .add_attribute("verified_by", info.sender))
-}
-
-fn execute_revoke_verification(
-    deps: DepsMut,
-    info: MessageInfo,
-    address: Addr,
-) -> Result<Response, ContractError> {
-    let config = CONFIG.load(deps.storage)?;
-    if info.sender != config.admin {
-        return Err(ContractError::Unauthorized {});
-    }
-    
-    KYC_VERIFIED.remove(deps.storage, &address);
-    
-    Ok(Response::new()
-        .add_attribute("action", "revoke_verification")
-        .add_attribute("address", address)
-        .add_attribute("revoked_by", info.sender))
-}
-
-// Existing auction functions (simplified)
-fn execute_create_auction(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    item_id: String,
-    starting_price: Uint128,
-    reserve_price: Option<Uint128>,
-    buy_now_price: Option<Uint128>,
-    duration_hours: u64,
-) -> Result<Response, ContractError> {
-    // Check KYC if required
-    let config = CONFIG.load(deps.storage)?;
-    if config.require_kyc {
-        let is_verified = KYC_VERIFIED.may_load(deps.storage, &info.sender)?
-            .unwrap_or(false);
-        if !is_verified {
-            return Err(ContractError::KycRequired {});
-        }
-    }
-    
-    let ends_at = env.block.time.seconds() + duration_hours * 3600;
-    
-    let auction = Auction {
-        creator: info.sender.clone(),
-        item_id,
-        starting_price,
-        reserve_price,
-        buy_now_price,
-        ends_at,
-        bids: vec![],
-        highest_bid: None,
-        status: AuctionStatus::Active,
-        created_at: env.block.time.seconds(),
-    };
-    
-    let auction_id = AUCTION_COUNT.load(deps.storage)?;
-    AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    AUCTION_COUNT.save(deps.storage, &(auction_id + 1))?;
-    
-    Ok(Response::new()
-        .add_attribute("action", "create_auction")
-        .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("creator", info.sender))
-}
-
-// ... (other auction functions would go here, simplified for now)
-
-#[entry_point]
-pub fn query(
-    deps: Deps,
-    _env: Env,
-    msg: QueryMsg,
-) -> StdResult<Binary> {
-    match msg {
-        QueryMsg::Config {} => {
-            let config = CONFIG.load(deps.storage)?;
-            let resp = ConfigResponse {
-                admin: config.admin,
-                fee_percentage: config.fee_percentage,
-                fee_address: config.fee_address,
-                require_kyc: config.require_kyc,
-            };
-            to_json_binary(&resp)
-        }
-        QueryMsg::Auction { id } => {
-            let auction = AUCTIONS.load(deps.storage, id)?;
-            let resp = AuctionResponse {
-                id,
-                auction,
-            };
-            to_json_binary(&resp)
-        }
-        QueryMsg::IsVerified { address } => {
-            let addr = deps.api.addr_validate(&address)?;
-            let is_verified = KYC_VERIFIED.may_load(deps.storage, &addr)?
-                .unwrap_or(false);
-            to_json_binary(&is_verified)
-        }
-        // ... (other queries)
-        _ => unimplemented!(),
+    #[test]
+    fn test_create_auction() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        let info = mock_info("seller123", &coins(0, "ucore"));
+        
+        // Instantiate contract
+        let msg = InstantiateMsg { admin: "admin123".to_string() };
+        let _res = instantiate(deps.as_mut(), env.clone(), info.clone(), msg).unwrap();
+        
+        // Create auction
+        let msg = ExecuteMsg::CreateAuction {
+            item_id: "gold_bar_1".to_string(),
+            description: "1oz Gold Bar".to_string(),
+            starting_price: Uint128::from(1000000u64), // 1 CORE = 1,000,000 ucore
+            reserve_price: Some(Uint128::from(1500000u64)),
+            duration_hours: 24,
+        };
+        
+        let res = execute(deps.as_mut(), env, info, msg).unwrap();
+        
+        // Verify response
+        assert_eq!(res.attributes[0].value, "create_auction");
+        assert_eq!(res.attributes[1].value, "0"); // First auction ID
+        
+        // Verify auction was saved
+        let query_msg = QueryMsg::GetAuction { auction_id: 0 };
+        let res = query(deps.as_ref(), mock_env(), query_msg).unwrap();
+        let auction: Auction = from_json(res).unwrap();
+        
+        assert_eq!(auction.seller, "seller123");
+        assert_eq!(auction.item_id, "gold_bar_1");
+        assert_eq!(auction.status, AuctionStatus::Active);
     }
 }
-
