@@ -1,37 +1,4 @@
-import { PrismaClient } from '@prisma/client'
-import { withAccelerate } from '@prisma/extension-accelerate'
-
-// Create a base client with proper configuration
-const prisma = new PrismaClient({
-  log: ['error', 'warn', 'info', 'query'],
-  errorFormat: 'pretty'
-}).$extends(withAccelerate())
-
-// Test the connection immediately
-async function testConnection() {
-  try {
-    console.log('🔍 Testing database connection...');
-    console.log('DATABASE_URL present:', !!process.env.DATABASE_URL);
-    console.log('DATABASE_URL first 20 chars:', process.env.DATABASE_URL?.substring(0, 20) + '...');
-    
-    await prisma.$connect();
-    console.log('✅ Database connected successfully');
-    
-    // Test a simple query
-    const result = await prisma.$queryRaw`SELECT 1 as test`;
-    console.log('✅ Query test successful:', result);
-    
-  } catch (error) {
-    console.error('❌ Database connection failed:');
-    console.error('Error name:', (error as Error).name);
-    console.error('Error message:', (error as Error).message);
-    console.error('Full error:', error);
-    process.exit(1);
-  }
-}
-
-// Run the connection test
-testConnection();
+import prisma from '../lib/prisma'
 
 // Metal types supported
 export type MetalType = 'gold' | 'silver' | 'platinum' | 'palladium';
