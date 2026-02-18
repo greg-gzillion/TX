@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if
@@ -14,6 +13,7 @@ const nextConfig: NextConfig = {
   },
 };
 
+export default nextConfig;
 export default nextConfig;
 const nextConfig: NextConfig = {
   // React strict mode (still valid)
