@@ -1,8 +1,35 @@
 'use client';
 
 import * as React from 'react';
-import { Key, Globe, Cpu, Shield, Eye, EyeOff, Copy, Trash2, Edit, Plus, RefreshCw, AlertCircle, Download, BarChart3, Clock, Users } from 'lucide-react';
-
+import { 
+  BarChart3, 
+  TrendingUp, 
+  Users, 
+  DollarSign, 
+  ShoppingBag, 
+  Calendar, 
+  Download,
+  Filter, 
+  RefreshCw, 
+  PieChart, 
+  LineChart, 
+  BarChart,
+  Search,  // <-- Add this
+  ChevronDown,
+  ChevronUp,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  Clock,
+  Eye,
+  EyeOff,
+  Copy,
+  ExternalLink,
+  MoreVertical,
+  Settings,
+  Trash2,
+  Edit
+} from 'lucide-react';
 export interface ApiKey {
   id: string;
   keyId: string;
