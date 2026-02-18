@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Key, Globe, Cpu, Shield, Eye, EyeOff, Copy, Trash2, Edit, Plus, RefreshCw, AlertCircle, BarChart3, Clock, Users } from 'lucide-react';
+import { Key, Globe, Cpu, Shield, Eye, EyeOff, Copy, Trash2, Edit, Plus, RefreshCw, AlertCircle, Download, BarChart3, Clock, Users } from 'lucide-react';
 
 export interface ApiKey {
   id: string;
