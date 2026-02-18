@@ -2,8 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { AuctionClient } from "@/lib/contracts/auction-client";
-
+import { auctionClient } from "@/lib/contracts/auction-client";
 export function AuctionCreator() {
   const [itemDescription, setItemDescription] = useState("1 oz Gold Bar");
   const [startingPrice, setStartingPrice] = useState("100");
