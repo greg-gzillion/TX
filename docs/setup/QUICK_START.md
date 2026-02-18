@@ -1,28 +1,41 @@
 # Phoenix PME - Quick Start Guide
 
-## Project Status: ✅ Reorganized & Ready
+## Project Status: ✅ **LIVE!** Deployed on Render
 
-This guide will help you get PhoenixPME running locally in just a few minutes.
-
----
-
-## 📋 **Prerequisites**
-
-Before starting, make sure you have:
-
-| Requirement | Version | Check Command |
-|-------------|---------|---------------|
-| Node.js | v18+ | `node --version` |
-| PostgreSQL | v14+ | `postgres --version` |
-| Git | latest | `git --version` |
-| Keplr Wallet | latest | Install from [keplr.app](https://www.keplr.app) |
+This guide will help you get PhoenixPME running locally OR connect to the live cloud deployment.
 
 ---
 
-## 🚀 **Quick Start (3 Terminals)**
+## 🚀 **Option 1: Use the Live Cloud Version (Easiest)**
 
-### **Terminal 1: Start Database**
-```bash
+No installation needed! The app is already deployed:
+
+| Service | URL | Status |
+|---------|-----|--------|
+| **Live API** | `https://phoenix-api-756y.onrender.com` | ✅ Active |
+| **Health Check** | `https://phoenix-api-756y.onrender.com/health` | ✅ Online |
+| **Metal Prices** | `https://phoenix-api-756y.onrender.com/api/prices` | ✅ Live Data |
+
+### **Current Metal Prices** (as of Feb 17, 2026)
+```json
+{
+  "gold": 4865.50,
+  "silver": 72.56,
+  "platinum": 2014.00,
+  "palladium": 1671.00
+}
+⚠️ Note: Free tier spins down after inactivity. First request may take 30-50 seconds.
+
+📋 Option 2: Run Locally
+Prerequisites
+Requirement	Version	Check Command
+Node.js	v18+	node --version
+PostgreSQL	v14+	postgres --version
+Git	latest	git --version
+Keplr Wallet	latest	Install from keplr.app
+🚀 Quick Start (3 Terminals)
+Terminal 1: Start Database
+bash
 # Start PostgreSQL (runs in background)
 sudo systemctl start postgresql
 
@@ -49,6 +62,7 @@ Expected output:
 📍 Port: 3001
 🔗 Health: http://localhost:3001/health
 Terminal 3: Start Frontend App
+bash
 # Navigate to frontend
 cd ~/dev/TX/apps/frontend
 
@@ -60,8 +74,6 @@ npm run dev
 ✅ Frontend will show "ready on http://localhost:3000" - KEEP THIS TERMINAL OPEN
 
 Expected output:
-
-text
 ready - started server on http://localhost:3000
 🎯 Using the Application
 Connect Wallet
@@ -109,20 +121,16 @@ Treasury	13,000,000 TESTUSD	Admin
 Deployer	5,000,000 TESTUSD	System
 Insurance	0 TESTUSD	Escrow
 ✅ Verify Everything is Working
-Open a fourth terminal and run:
-
 bash
-# Check backend health
+# Check live cloud API
+curl https://phoenix-api-756y.onrender.com/health
+curl https://phoenix-api-756y.onrender.com/api/prices
+
+# Check local backend (if running)
 curl http://localhost:3001/health
-
-# Check auctions endpoint
 curl http://localhost:3001/api/auctions
-
-# Check frontend is accessible
 curl -I http://localhost:3000
-All commands should return success responses.
-
-🛑 How to Shut Down
+🛑 How to Shut Down Local Instance
 Server	Action
 Frontend	Press Ctrl+C in Terminal 3
 Backend	Press Ctrl+C in Terminal 2
@@ -160,24 +168,24 @@ sudo -u postgres psql -c "\l" | grep phoenix
 # If missing, create it
 sudo -u postgres createdb phoenix
 📌 Important Notes
-Keep Terminals 2 and 3 open while using the app
+Live cloud version is free but may have cold starts (30-50s delay)
+
+Keep Terminals 2 and 3 open while using the app locally
 
 PostgreSQL runs in the background - no terminal needed
 
-Both servers must be running simultaneously
-
-Never close terminals while the app is in use
+Both servers must be running simultaneously for local dev
 
 The backend terminal will "hang" - THIS IS NORMAL
 
 🚀 Quick Commands Reference
 Action	Command
+Check live API	curl https://phoenix-api-756y.onrender.com/health
+Check live prices	curl https://phoenix-api-756y.onrender.com/api/prices
 Start database	sudo systemctl start postgresql
 Start backend	cd ~/dev/TX/apps/backend && npm start
 Start frontend	cd ~/dev/TX/apps/frontend && npm run dev
-Check backend	curl http://localhost:3001/health
-Check auctions	curl http://localhost:3001/api/auctions
-Check frontend	curl -I http://localhost:3000
+Check local backend	curl http://localhost:3001/health
 Stop everything	Ctrl+C in each terminal
 📚 Additional Resources
 Full Documentation
@@ -186,8 +194,11 @@ Architecture Overview
 
 Smart Contracts
 
-API Documentation (when backend is running)
+Live API Documentation
 
-Last Updated: February 16, 2026
-Version: 2.0
+GitHub Repository
+
+Last Updated: February 17, 2026
+Version: 2.1
+Live API: https://phoenix-api-756y.onrender.com
 Author: Greg (@greg-gzillion)
