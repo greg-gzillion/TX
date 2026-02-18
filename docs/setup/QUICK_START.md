@@ -24,15 +24,31 @@ No installation needed! The app is already deployed:
   "platinum": 2014.00,
   "palladium": 1671.00
 }
+
 ⚠️ Note: Free tier spins down after inactivity. First request may take 30-50 seconds.
+
 
 📋 Option 2: Run Locally
 Prerequisites
+
+# Install Dependencies
+### Frontend:
+```bash
+cd apps/frontend
+npm install
+
+## Install Dependencies
+
+Backend:
+cd apps/backend
+npm install
+
 Requirement	Version	Check Command
 Node.js	v18+	node --version
 PostgreSQL	v14+	postgres --version
 Git	latest	git --version
 Keplr Wallet	latest	Install from keplr.app
+
 🚀 Quick Start (3 Terminals)
 Terminal 1: Start Database
 bash
@@ -42,6 +58,8 @@ sudo systemctl start postgresql
 # Verify it's running
 sudo systemctl status postgresql
 ✅ You should see active (exited) - this is normal
+
+
 Terminal 2: Start Backend API
 bash
 # Navigate to backend
@@ -61,6 +79,8 @@ Expected output:
 🚀 PhoenixPME Backend Server Started!
 📍 Port: 3001
 🔗 Health: http://localhost:3001/health
+
+
 Terminal 3: Start Frontend App
 bash
 # Navigate to frontend
