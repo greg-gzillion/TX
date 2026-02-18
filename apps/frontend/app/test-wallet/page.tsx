@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import WalletSelector from '../../components/WalletSelector';
+import WalletSelector from '@/components/layout/WalletSelector';
 
 export default function TestWalletPage() {
   const [connectedAddress, setConnectedAddress] = useState<string>('');
