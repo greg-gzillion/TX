@@ -1,34 +1,55 @@
-'use client';
-
-import * as React from 'react';
 import { 
+  // Charts & Analytics
   BarChart3, 
   TrendingUp, 
-  Users, 
-  DollarSign, 
-  ShoppingBag, 
-  Calendar, 
-  Download,
-  Filter, 
-  RefreshCw, 
   PieChart, 
   LineChart, 
   BarChart,
-  Search,  // <-- Add this
+  
+  // Data & Metrics
+  Users, 
+  DollarSign, 
+  ShoppingBag, 
+  Calendar,
+  
+  // Actions & Controls
+  Download,
+  Upload,
+  Filter, 
+  RefreshCw, 
+  Search,
+  Copy,
+  Edit,
+  Trash2,
+  Eye,
+  EyeOff,
+  MoreVertical,
+  Settings,
+  
+  // Navigation & UI
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+  Menu,
+  X,
+  
+  // Status & Indicators
   AlertCircle,
   CheckCircle,
   XCircle,
   Clock,
-  Eye,
-  EyeOff,
-  Copy,
+  Key,           // <-- Adding Key
+  Lock,
+  Unlock,
+  Shield,
+  
+  // Misc
   ExternalLink,
-  MoreVertical,
-  Settings,
-  Trash2,
-  Edit
+  Globe,
+  Mail,
+  Phone,
+  MapPin
 } from 'lucide-react';
 export interface ApiKey {
   id: string;
