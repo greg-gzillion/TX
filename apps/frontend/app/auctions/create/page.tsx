@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import WalletSelector from '@/components/layout/WalletSelector';
 import RoleSelector, { Role } from '@/components/RoleSelector';
-import CreateAuctionForm from '@/components/auctions/AuctionCreator';
+import { AuctionCreator } from '@/components/auctions/AuctionCreator';
 
 export default function CreateAuctionPage() {
   const [selectedRole, setSelectedRole] = useState<Role | null>(null);
