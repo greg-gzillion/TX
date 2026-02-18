@@ -26,6 +26,8 @@ import {
   EyeOff,
   MoreVertical,
   Settings,
+  Plus,           // <-- Adding Plus
+  Minus,
   
   // Navigation & UI
   ChevronDown,
@@ -40,11 +42,11 @@ import {
   CheckCircle,
   XCircle,
   Clock,
-  Key,           // <-- Adding Key
-  Cpu,
+  Key,
   Lock,
   Unlock,
   Shield,
+  Cpu,            // <-- Already added
   
   // Misc
   ExternalLink,
