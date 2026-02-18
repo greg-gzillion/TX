@@ -22,23 +22,23 @@ export function AuctionCreator() {
     }
 
     setLoading(true);
-try {
-  const client = auctionClient;  // Use existing instance
-  const id = await client.createAuction(
-    desc,
-    price,
-    parseInt(days)
-  );
-  setAuctionId(id);
-  alert(`✅ Auction created! ID: ${id}`);
-  setItemDescription("");
-  setStartingPrice("100");
-  setDurationDays("7");
-} catch (error: any) {
-  alert(`❌ Error: ${error.message}`);
-} finally {
-  setLoading(false);
-}
+    try {
+      const client = auctionClient;  // NO 'new' keyword!
+      const id = await client.createAuction(
+        desc,
+        price,
+        parseInt(days)
+      );
+      setAuctionId(id);
+      alert(`✅ Auction created! ID: ${id}`);
+      setItemDescription("");
+      setStartingPrice("100");
+      setDurationDays("7");
+    } catch (error: any) {
+      alert(`❌ Error: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
 
   return (
     <div className="p-4 border rounded-lg">
