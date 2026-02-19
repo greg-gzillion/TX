@@ -36,6 +36,15 @@ export function PriceFeed() {
 
   return (
     <div className="bg-white p-6 rounded-xl border shadow-sm mb-8">
+      {/* Add sandbox banner at the top */}
+      <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-4">
+        <p className="text-purple-800 text-sm flex items-center">
+          <span className="text-xl mr-2">🧪</span>
+          <strong>SANDBOX MODE:</strong> Prices are simulated for testing.
+          <a href="/" className="underline ml-1 font-bold">View live prices →</a>
+        </p>
+      </div>
+
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold text-gray-900">Live Price Feed</h3>
         <span className="text-xs text-gray-500">
@@ -61,6 +70,11 @@ export function PriceFeed() {
           <div className="text-xl font-bold">${prices?.palladium?.toLocaleString() || '0'}</div>
         </div>
       </div>
+      
+      {/* Add a subtle note about sandbox */}
+      <p className="text-xs text-gray-400 mt-4 text-center">
+        ⚡ Sandbox environment - prices may not reflect real market data
+      </p>
     </div>
   );
 }

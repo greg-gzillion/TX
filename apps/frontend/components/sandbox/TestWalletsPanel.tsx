@@ -18,6 +18,15 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
 
   return (
     <div className="bg-white p-6 rounded-xl border shadow-sm">
+      {/* Add sandbox banner */}
+      <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-4">
+        <p className="text-purple-800 text-sm flex items-center">
+          <span className="text-xl mr-2">🧪</span>
+          <strong>SANDBOX MODE:</strong> Test wallets with fake TESTUSD.
+          <a href="/auctions/create" className="underline ml-1 font-bold">Connect real wallet →</a>
+        </p>
+      </div>
+
       <h3 className="text-lg font-semibold mb-4">🧪 Test Wallets</h3>
       <p className="text-sm text-gray-600 mb-4">
         Click a wallet to select it for testing
@@ -41,8 +50,8 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
               </div>
               <span className="text-sm font-mono">{wallet.balance} TESTUSD</span>
             </div>
-            <div className="text-xs text-gray-500 font-mono mt-1">
-              {wallet.address.slice(0, 12)}...
+            <div className="text-xs text-gray-500 font-mono mt-1 break-all">
+              {wallet.address} {/* Show FULL address */}
             </div>
           </button>
         ))}

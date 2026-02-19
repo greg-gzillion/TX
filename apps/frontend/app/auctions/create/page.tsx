@@ -1,33 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import WalletSelector from '@/components/layout/WalletSelector';
-import RoleSelector, { Role } from '@/components/RoleSelector';
-import { AuctionCreator } from '@/components/auctions/AuctionCreator';
-
+import CreateAuctionForm from '@/components/auctions/CreateAuctionForm';
 export default function CreateAuctionPage() {
-  const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-  const [walletAddress, setWalletAddress] = useState<string>('');
-
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-8">Create New Auction</h1>
-
-      {/* Step 1: Connect Wallet */}
-      <WalletSelector onConnect={setWalletAddress} />
-
-      {/* Step 2: Select Role (only after wallet connected) */}
-      {walletAddress && (
-        <RoleSelector
-          selectedRole={selectedRole}
-          onSelectRole={setSelectedRole}
-        />
-      )}
-
-      {/* Step 3: Show Auction Form (only after role selected) */}
-      {selectedRole && (
-        <AuctionCreator />
-      )}
+      <CreateAuctionForm />
     </div>
   );
 }

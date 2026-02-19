@@ -118,6 +118,15 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
   if (!address) {
     return (
       <div className="bg-white p-6 rounded-xl border shadow-sm">
+        {/* Add sandbox banner */}
+        <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-4">
+          <p className="text-purple-800 text-sm flex items-center">
+            <span className="text-xl mr-2">🧪</span>
+            <strong>SANDBOX MODE:</strong> Test wallets with fake TESTUSD.
+            <a href="/auctions/create" className="underline ml-1 font-bold">Connect real wallet →</a>
+          </p>
+        </div>
+
         <h3 className="text-lg font-semibold mb-4">Connect Wallet</h3>
         <p className="text-sm text-gray-600 mb-4">
           Connect your wallet to start testing
@@ -146,6 +155,15 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
 
   return (
     <div className="bg-white p-6 rounded-xl border shadow-sm">
+      {/* Add sandbox banner */}
+      <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-4">
+        <p className="text-purple-800 text-sm flex items-center">
+          <span className="text-xl mr-2">🧪</span>
+          <strong>SANDBOX MODE:</strong> Test wallet connection.
+          <a href="/auctions/create" className="underline ml-1 font-bold">Use real wallet →</a>
+        </p>
+      </div>
+
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">Connected Wallet</h3>
         <Button onClick={disconnect} variant="outline" size="sm">
@@ -153,7 +171,7 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
         </Button>
       </div>
       <div className="space-y-2">
-        <div className="text-sm font-mono bg-gray-50 p-2 rounded">
+        <div className="text-sm font-mono bg-gray-50 p-2 rounded break-all">
           {address}  {/* ✅ Shows full address */}
         </div>
         {balance && (

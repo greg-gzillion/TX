@@ -30,6 +30,15 @@ export function ContractTester({ wallet }: { wallet: any }) {
 
   return (
     <div>
+      {/* Add the same sandbox banner */}
+      <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-6">
+        <p className="text-purple-800 text-sm flex items-center">
+          <span className="text-xl mr-2">🧪</span>
+          <strong>SANDBOX MODE:</strong> All contract interactions are simulated. 
+          <a href="/auctions" className="underline ml-1 font-bold">View real auctions →</a>
+        </p>
+      </div>
+
       <h2 className="text-xl font-bold mb-4">📜 Smart Contract Tester</h2>
       <p className="text-gray-600 mb-6">
         Test contract functions with mock data. Real contract deployment coming March 6.

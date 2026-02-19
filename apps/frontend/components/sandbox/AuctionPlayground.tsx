@@ -52,6 +52,15 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
 
   return (
     <div>
+      {/* Sandbox Banner - Added at the top */}
+      <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-6">
+        <p className="text-purple-800 text-sm flex items-center">
+          <span className="text-xl mr-2">🧪</span>
+          <strong>SANDBOX MODE:</strong> All auctions and bids are temporary mock data. 
+          <a href="/auctions/create" className="underline ml-1 font-bold">Go to real auctions →</a>
+        </p>
+      </div>
+
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-bold">🏛️ Auction Playground</h2>
         {wallet && (
