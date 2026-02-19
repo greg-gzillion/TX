@@ -1,21 +1,21 @@
 # PhoenixPME Fee Model
 
-**Last Updated:** February 16, 2026
+**Last Updated:** February 18, 2026
 
 ---
 
 ## The 1.1% Auction Fee
 
 ### What It Is
-A **1.1% fee** on all successful auctions that accumulates in smart contract escrow.
+A **1.1% fee** on all successful auctions that accumulates in a smart contract-governed **Community Reserve Fund**.
 
 ### What It's For
-**Seed capital** for a **future blockchain-powered insurance platform** for physical precious metals (gold, silver, platinum) - whether held in vaults or at home.
+**Seed capital** for **future community initiatives** - to be determined by DAO vote.
 
 ### Current Status
-⚠️ **Insurance platform is SHELVED** (separate project, temporarily paused).  
-⚠️ **No insurance exists today.** This fee is NOT purchasing coverage.  
-⚠️ Funds are accumulating to preserve the option to build this future vision.
+⚠️ **NO SPECIFIC PROJECT IS PLANNED.** This fee is NOT purchasing anything.
+⚠️ Funds are accumulating to give the community future options.
+⚠️ The community (DAO) will decide how funds are used.
 
 ---
 
@@ -24,32 +24,34 @@ Auction Success
 ↓
 1.1% Fee
 ↓
-Escrow Account (growing)
+Community Reserve Fund (growing)
 ↓
-Reserved for future insurance platform (if launched)
-
+Future use determined by DAO vote
 - ✅ Funds are visible on-chain
-- ✅ No one touches them (smart contract controlled)
-- ✅ No current use - just building
+- ✅ Smart contract controlled
+- ✅ No one touches them without community vote
 
 ---
 
-## Developer Compensation
+## Founder Development Allocation
 
-| Scenario | Developer Gets |
-|----------|----------------|
+| Scenario | Founder Receives |
+|----------|------------------|
 | **Today** | ❌ NOTHING from the 1.1% fees |
-| **If insurance launches** | [To be determined - e.g., platform fees, premium share, etc.] |
-| **If insurance never launches** | ❌ Nothing (funds remain in escrow) |
+| **Future** | 10% of Community Reserve (development reward) |
+| **If DAO decides** | Community can vote to change allocation |
+
+The 10% founder allocation recognizes past development work and aligns incentives for continued contribution. The community controls the remaining 90%.
 
 ---
 
 ## Critical Disclaimers
 
-⚠️ **INSURANCE DOES NOT EXIST TODAY**  
-⚠️ **The 1.1% fee is NOT buying insurance**  
-⚠️ **Funds may never be used for insurance**  
-⚠️ **Future insurance terms are undefined**  
+⚠️ **NO INSURANCE EXISTS TODAY**
+⚠️ **NO SPECIFIC PROJECT IS PLANNED**
+⚠️ **The 1.1% fee is NOT purchasing anything**
+⚠️ **Funds may never be used**
+⚠️ **Future use determined by DAO vote**
 ⚠️ **You may receive no benefit from these fees**
 
 By using PhoenixPME auctions, you acknowledge and accept these facts.
@@ -61,14 +63,16 @@ By using PhoenixPME auctions, you acknowledge and accept these facts.
 | Question | Answer |
 |----------|--------|
 | Fee rate | 1.1% |
-| Where it goes | Escrow account |
-| What it's for | Future insurance platform (shelved) |
+| Where it goes | Community Reserve Fund |
+| What it's for | Future community initiatives (TBD) |
+| Who decides | DAO vote |
+| Founder allocation | 10% of Reserve (development reward) |
 | Is insurance active? | ❌ NO |
-| Does developer get paid? | ❌ NO (not from this fee) |
+| Does founder get paid now? | ❌ NO |
 | Can I verify funds? | ✅ Yes, on-chain |
 
 ---
 
-*The 1.1% fee is transparent, verifiable, and accumulating in escrow for a potential future project. No current insurance exists.*
+*The 1.1% fee is transparent, verifiable, and accumulating for future community decisions. No promises are made about how funds will be used.*
 
 **Questions?** gjf20842@gmail.com
