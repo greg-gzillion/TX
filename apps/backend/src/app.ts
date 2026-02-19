@@ -38,8 +38,8 @@ app.use('/api/sandbox', sandboxRoutes);
 // Error handling
 app.use(errorHandler);
 
-// 404 handler
-app.use('*', (req, res) => {
+// 404 handler - remove the '*'
+app.use((req, res) => {
   res.status(404).json({
     success: false,
     error: 'Route not found',
