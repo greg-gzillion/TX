@@ -37,3 +37,4 @@ cored-new
 *.backup.*
 src.backup.*
 target/
+docs-backup/
