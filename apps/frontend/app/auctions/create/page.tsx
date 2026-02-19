@@ -20,13 +20,13 @@ export default function CreateAuctionPage() {
       {walletAddress && (
         <RoleSelector
           selectedRole={selectedRole}
-          onSelectRole={setSelectedRole}  // Now properly typed
+          onSelectRole={setSelectedRole}
         />
       )}
 
       {/* Step 3: Show Auction Form (only after role selected) */}
       {selectedRole && (
-        <CreateAuctionForm selectedRole={selectedRole} />
+        <AuctionCreator />
       )}
     </div>
   );
