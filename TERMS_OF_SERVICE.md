@@ -5,11 +5,11 @@
 
 ---
 
-## ⚠️ IMPORTANT NOTICES
-
+⚠️ **IMPORTANT NOTICES**
 - **Beta/Testnet:** This is EXPERIMENTAL software on TX blockchain testnet
 - **Not Financial Advice:** All decisions are your own responsibility
-- **Insurance Not Yet Available:** No insurance coverage is currently provided
+- **Insurance Not Available:** No insurance coverage is currently provided
+- **Community Reserve:** 1.1% fees accumulate in Community Reserve Fund
 
 ---
 
@@ -21,9 +21,8 @@ By using PhoenixPME, you agree to these Terms of Service.
 
 ## 2. Fees
 
-- **1.1% auction fee** goes to insurance pool escrow
-- Developer retains **10% ownership stake** in insurance pool
-- You are responsible for all blockchain gas fees
+- **1.1% auction fee** goes to Community Reserve Fund escrow
+- Developer retains **10% founder allocation** in Community Reserve Fund
 
 ---
 
