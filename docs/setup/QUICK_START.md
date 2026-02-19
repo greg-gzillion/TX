@@ -136,3 +136,128 @@ Live Frontend: https://phoenix-frontend-seven.vercel.app
 Live API: https://phoenix-api-756y.onrender.com
 Author: Greg (@greg-gzillion)
 
+## 🔧 Wallet Setup Guide
+
+### Step 1: Install a Wallet
+
+Choose one of these compatible wallets:
+
+| Wallet | Installation | Best For |
+|--------|--------------|----------|
+| **Keplr** | [keplr.app](https://www.keplr.app) | Most users, stable |
+| **Leap** | [leapwallet.io](https://www.leapwallet.io) | Alternative, great UI |
+
+### Step 2: Add Coreum Testnet
+
+#### For Keplr:
+1. Open Keplr extension
+2. Click the hamburger menu (☰)
+3. Select "Add Chain"
+4. Enter these details:
+
+```json
+{
+  "chainId": "coreum-testnet-1",
+  "chainName": "Coreum Testnet",
+  "rpc": "https://full-node.testnet-1.coreum.dev:26657",
+  "rest": "https://rest-full-node.testnet-1.coreum.dev",
+  "bip44": {
+    "coinType": 990
+  },
+  "bech32Config": {
+    "bech32PrefixAccAddr": "testcore",
+    "bech32PrefixAccPub": "testcorepub",
+    "bech32PrefixValAddr": "testcorevaloper",
+    "bech32PrefixValPub": "testcorevaloperpub",
+    "bech32PrefixConsAddr": "testcorevalcons",
+    "bech32PrefixConsPub": "testcorevalconspub"
+  },
+  "currencies": [
+    {
+      "coinDenom": "TESTCORE",
+      "coinMinimalDenom": "utestcore",
+      "coinDecimals": 6,
+      "coinGeckoId": "coreum"
+    }
+  ],
+  "feeCurrencies": [
+    {
+      "coinDenom": "TESTCORE",
+      "coinMinimalDenom": "utestcore",
+      "coinDecimals": 6
+    }
+  ],
+  "stakeCurrency": {
+    "coinDenom": "TESTCORE",
+    "coinMinimalDenom": "utestcore",
+    "coinDecimals": 6
+  },
+  "gasPriceStep": {
+    "low": 0.01,
+    "average": 0.025,
+    "high": 0.03
+  }
+}
+Click "Add Chain"
+
+Approve in wallet
+
+For Leap:
+Similar process, search for "Coreum Testnet" in the network selector
+
+Step 3: Get Test Tokens
+Token	Purpose	How to Get
+TESTCORE	Gas fees	Coreum Faucet
+TESTUSD	Auctions	Coming March 6 with TX testnet
+Step 4: Add TESTUSD Token (Manual - Until March 6)
+Since TESTUSD isn't auto-detected yet, add it manually:
+
+In Keplr, go to "Add Token"
+
+Enter:
+
+Denom: utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6
+
+Symbol: TESTUSD
+
+Decimals: 6
+
+Click "Add"
+
+Step 5: Verify Connection
+Visit PhoenixPME
+
+Click "Connect Wallet"
+
+Your address should appear
+
+You should see TESTCORE balance (TESTUSD after March 6)
+
+❓ Wallet Troubleshooting
+Problem	Solution
+"Chain not found"	Double-check chain ID: coreum-testnet-1
+"No TESTCORE"	Use faucet link above
+"TESTUSD not visible"	Add manually using denom above
+"Connection fails"	Refresh page, ensure wallet unlocked
+"Wrong network"	Switch to Coreum testnet in wallet
+text
+
+## 📝 **Also add this to Quick Commands:**
+
+```markdown
+| Action | Command/URL |
+|--------|-------------|
+| **Coreum Faucet** | `https://faucet.testnet-1.coreum.dev` |
+| **TESTUSD Denom** | `utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6` |
+🚀 This addition gives users:
+✅ Step-by-step wallet setup
+
+✅ Exact chain configuration
+
+✅ TESTUSD manual addition guide
+
+✅ Faucet links
+
+✅ Troubleshooting help
+
+
