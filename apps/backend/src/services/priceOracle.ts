@@ -11,11 +11,11 @@ export let priceCache: {
   palladium: number;
   lastUpdated: Date | null;
 } = {
-  gold: 0,
-  silver: 0,
-  platinum: 0,
-  palladium: 0,
-  lastUpdated: null
+  gold: 5004.80,     // Mock values as fallback
+  silver: 78.04,
+  platinum: 2094.00,
+  palladium: 1716.00,
+  lastUpdated: new Date()
 };
 
 interface KitcoResponse {
@@ -68,12 +68,12 @@ export async function fetchSpotPrices(): Promise<{
       };
     }
     
-    // Ultimate fallback
+    // Ultimate fallback (keep mock values)
     return {
-      gold: 1950,
-      silver: 28,
-      platinum: 1020,
-      palladium: 550
+      gold: 5004.80,
+      silver: 78.04,
+      platinum: 2094.00,
+      palladium: 1716.00
     };
   }
 }
