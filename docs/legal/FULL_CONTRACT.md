@@ -91,11 +91,11 @@ Licensee shall pay Licensor a royalty of **1.1% (one point one percent)** of the
 
 | Period | Royalty Rate |
 | :--- | :--- |
-| Months 0-3 (Initial Launch) | 0%* |
+| Months 0-3 (Initial Launch) | 1.1% |
 | Months 3-6 (Phase 2) | 1.1% |
 | Months 6-12 (Phase 3) | 1.1% |
-| Month 13+ (Ongoing) | 1.1% |
+| Month 13+ (Ongoing) | 1.1% unless changed by DAO|
 
-*\*The 0% rate during the initial launch period is offered as an introductory incentive and does not alter the standard royalty rate of 1.1% applicable thereafter.*
-
-*Last updated: February 14, 2026*
+---
+**Note:** This agreement is a template. Each commercial licensee will sign their own copy with specific terms.
+*Last updated: February 18, 2026*
