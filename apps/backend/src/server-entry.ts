@@ -1,22 +1,26 @@
-import app from './index';
+import { app } from './app';
+import { config } from './config';
 
-const PORT = process.env.PORT || 3001;
+const PORT = config.PORT || 3001;
 
+// Start server
 app.listen(PORT, () => {
   console.log(`
 🚀 PhoenixPME Backend Server Started!
 📍 Port: ${PORT}
 📅 Time: ${new Date().toISOString()}
-📊 Environment: ${process.env.NODE_ENV || 'development'}
-🔗 Health: http://localhost:${PORT}/health
+📊 Environment: ${config.NODE_ENV || 'development'}
+🔗 Health: http://localhost:${PORT}/api/health
 🔗 API: http://localhost:${PORT}/api
 
 📝 Available Endpoints:
-  GET  /health                - Health check
+  GET  /api/health            - Health check
+  GET  /api/health/database    - Database status
+  GET  /api/health/config      - Config info
   POST /api/auth/register     - Register user
   POST /api/auth/login        - Login user
   GET  /api/auctions          - List auctions
-  GET  /api/blockchain        - Blockchain info
-  GET  /api-docs              - Swagger API docs
+  GET  /api/sandbox/auctions  - Mock auctions
+  GET  /api/sandbox/wallets   - Test wallets
   `);
 });
