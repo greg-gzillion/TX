@@ -8,6 +8,7 @@ import authRoutes from './routes/auth.routes';
 import auctionRoutes from './routes/auction.routes';
 import healthRoutes from './routes/health.routes';
 import sandboxRoutes from './routes/sandbox.routes';
+import pricesRoutes from './routes/prices.routes'; // 👈 ADD THIS
 
 // Import middleware
 import { requestLogger } from './middleware/requestLogger';
@@ -18,8 +19,11 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
-// CORS middleware
-app.use(cors());
+// CORS middleware - Update with your frontend URL
+app.use(cors({
+  origin: ['https://phoenix-frontend-seven.vercel.app', 'http://localhost:3000'],
+  credentials: true,
+}));
 
 // Other middleware
 app.use(compression());
@@ -29,16 +33,34 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Request logging
 app.use(requestLogger);
 
+// Root route - welcome message (add BEFORE API routes)
+app.get('/', (req, res) => {
+  res.json({
+    success: true,
+    message: 'PhoenixPME API',
+    version: '1.0.0',
+    environment: process.env.NODE_ENV || 'development',
+    endpoints: {
+      health: '/api/health',
+      auctions: '/api/auctions',
+      prices: '/api/prices',
+      sandbox: '/api/sandbox/auctions',
+      auth: '/api/auth/login'
+    }
+  });
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/auctions', auctionRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/sandbox', sandboxRoutes);
+app.use('/api/prices', pricesRoutes); // 👈 ADD THIS
 
 // Error handling
 app.use(errorHandler);
 
-// 404 handler - remove the '*'
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
