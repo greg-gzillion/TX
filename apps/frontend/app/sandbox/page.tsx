@@ -1,4 +1,3 @@
-// app/sandbox/page.tsx
 'use client';
 
 import { useState } from 'react';
@@ -8,7 +7,6 @@ import { AuctionPlayground } from '@/components/sandbox/AuctionPlayground';
 import { PriceFeed } from '@/components/sandbox/PriceFeed';
 import { ContractTester } from '@/components/sandbox/ContractTester';
 
-const API_URL = 'https://phoenix-api-756y.onrender.com/api/sandbox';
 export default function SandboxPage() {
   const [selectedWallet, setSelectedWallet] = useState(null);
   const [activeTab, setActiveTab] = useState('auctions');
@@ -26,16 +24,16 @@ export default function SandboxPage() {
           All tokens are testnet only - no real value.
         </p>
 
-        {/* Price Feed */}
         <PriceFeed />
 
-        {/* Wallet Selection */}
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           <WalletSelector onSelect={setSelectedWallet} />
-          <TestWalletsPanel selectedWallet={selectedWallet} />
+          <TestWalletsPanel 
+            selectedWallet={selectedWallet} 
+            onSelectWallet={setSelectedWallet}
+          />
         </div>
 
-        {/* Playground Tabs */}
         {selectedWallet && (
           <div className="bg-white rounded-xl shadow-sm border">
             <div className="border-b flex">

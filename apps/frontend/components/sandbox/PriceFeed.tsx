@@ -46,25 +46,21 @@ export function PriceFeed() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-amber-50 p-3 rounded-lg">
           <div className="text-sm text-amber-600">GOLD</div>
-          <div className="text-xl font-bold">${prices?.gold?.toLocaleString()}</div>
+          <div className="text-xl font-bold">${prices?.gold?.toLocaleString() || '0'}</div>
         </div>
         <div className="bg-gray-50 p-3 rounded-lg">
           <div className="text-sm text-gray-600">SILVER</div>
-          <div className="text-xl font-bold">${prices?.silver?.toLocaleString()}</div>
+          <div className="text-xl font-bold">${prices?.silver?.toLocaleString() || '0'}</div>
         </div>
         <div className="bg-slate-50 p-3 rounded-lg">
           <div className="text-sm text-slate-600">PLATINUM</div>
-          <div className="text-xl font-bold">${prices?.platinum?.toLocaleString()}</div>
+          <div className="text-xl font-bold">${prices?.platinum?.toLocaleString() || '0'}</div>
         </div>
         <div className="bg-zinc-50 p-3 rounded-lg">
           <div className="text-sm text-zinc-600">PALLADIUM</div>
-          <div className="text-xl font-bold">${prices?.palladium?.toLocaleString()}</div>
+          <div className="text-xl font-bold">${prices?.palladium?.toLocaleString() || '0'}</div>
         </div>
       </div>
-
-      <p className="text-xs text-gray-400 mt-4">
-        * Real-time prices from Kitco API via Render backend
-      </p>
     </div>
   );
 }
