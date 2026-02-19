@@ -1,5 +1,9 @@
-// components/sandbox/AuctionPlayground.tsx
-export function AuctionPlayground({ wallet }) {
+'use client';
+
+import { useState } from 'react';
+import { Button } from '@/components/ui/Button';
+
+export function AuctionPlayground({ wallet }: { wallet: any }) {
   const [mockAuctions] = useState([
     { id: 1, title: '1oz Gold Bar', price: 5004.80, seller: 'Robert', bids: 12 },
     { id: 2, title: '10oz Silver Bar', price: 780.40, seller: 'Alice', bids: 8 },
@@ -23,14 +27,14 @@ export function AuctionPlayground({ wallet }) {
               </span>
             </div>
             <div className="text-2xl font-bold text-amber-600 mb-2">
-              ${auction.price}
+              ${auction.price.toLocaleString()}
             </div>
             <div className="text-sm text-gray-500 mb-3">
               Seller: {auction.seller}
             </div>
-            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+            <Button variant="primary" size="sm" fullWidth>
               Place Bid (Test)
-            </button>
+            </Button>
           </div>
         ))}
       </div>
