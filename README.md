@@ -13,7 +13,7 @@
 - Smart contract testing (starts March 6)
 - Real auction creation
 - On-chain bid placement
-- Insurance pool accumulation
+- Community Reserve Fund accumulation
 
 ### 📅 March 6, 2026:
 TX testnet launches - REAL TESTING BEGINS!
@@ -24,7 +24,7 @@ TX testnet launches - REAL TESTING BEGINS!
 ---
 
 ## Overview
-Blockchain-based auction platform for physical precious metals with integrated insurance funding mechanism.
+Blockchain-based auction platform for physical precious metals with integrated Community Reserve Fund.
 
 ---
 
@@ -41,17 +41,15 @@ Blockchain-based auction platform for physical precious metals with integrated i
 
 ### 2. Fee Distribution
 **Auction Platform Fees (1.1%):**
-- 100% goes to Community Reserve Fund (building capital for future insurance)
-- Developer stake: 10% ownership of accumulated Community Reserve Fund
+- 100% goes to Community Reserve Fund
+- Developer allocation: 10% of Community Reserve Fund (founder development reward)
 
-**Future Insurance Transaction Fees:**
-- 10% to Developer (per insurance transaction)
-- 90% to Insurance Pool (per insurance transaction)
+**Note:** The insurance concept has been shelved. The Community Reserve Fund will be governed by future DAO vote.
 
-### 3. Insurance Module (Future)
-**Activation:** When Community Reserve Fund reaches sufficient capital  
-**Developer Stake:** 10% ownership of Community Reserve Fund  
-**Insurance Fee:** Competitive percentage TBD ([Fee Model](docs/legal/FEE_MODEL.md))
+### 3. Community Reserve Fund
+**Purpose:** Accumulates 1.1% fees for future community initiatives  
+**Governance:** Future DAO will decide fund usage  
+**Developer Allocation:** 10% of fund (development reward)
 
 ---
 
