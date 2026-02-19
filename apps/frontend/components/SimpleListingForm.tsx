@@ -134,7 +134,7 @@ export default function SimpleListingForm() {
           <li>• Simple listing only - no complex inventory system</li>
           <li>• Basic Buy Now or 1-30 day auction</li>
           <li>• TESTUSD payments for development</li>
-          <li>• 1.1% fee auto-deducted to insurance pool</li>
+          <li>• 1.1% fee auto-deducted to Community Reserve Fund</li>
           <li>• No collectibles registry features yet</li>
         </ul>
       </div>

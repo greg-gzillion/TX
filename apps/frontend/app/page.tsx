@@ -247,7 +247,7 @@ export default function HomePage() {
             Create Your First Auction
           </Button>
           <p className="text-sm text-gray-500 mt-3">
-            No listing fees • 1.1% final value fee goes to insurance pool
+            No listing fees • 1.1% final value fee goes to Community Reserve Fund
           </p>
         </div>
       </main>
