@@ -75,7 +75,7 @@ The foundation token for PhoenixPME auctions is now operational on Coreum testne
 | Frontend | React/TypeScript | 3000 |
 | Backend | Express.js/PostgreSQL | 3001 |
 | Blockchain | Coreum (CosmWasm) | - |
-| Insurance Services | Various | 3200-3204 |
+| Reserve Services | Future | TBD |
 
 ---
 
@@ -97,37 +97,43 @@ The foundation token for PhoenixPME auctions is now operational on Coreum testne
   "platinum": 2014.00,
   "palladium": 1671.00
 }
+```
 
-Quick Local Setup
+## Quick Local Setup
+```bash
 git clone https://github.com/greg-gzillion/TX.git
 cd TX
 # Follow the quick start guide in docs/setup/QUICK_START.md
-Development
-Resource	Link
-Repository	github.com/greg-gzillion/TX
-Developer	Greg (@greg-gzillion)
-Contact	gjf20842@gmail.com
-⚖️ Legal & Compliance
-License
-This project is dual-licensed. See DUAL_LICENSE.md for details.
+```
 
-User Agreements
-Terms of Service - Platform usage agreement
+## Development
+| Resource | Link |
+|----------|------|
+| Repository | [github.com/greg-gzillion/TX](https://github.com/greg-gzillion/TX) |
+| Developer | Greg ([@greg-gzillion](https://github.com/greg-gzillion)) |
+| Contact | gjf20842@gmail.com |
 
-Privacy Policy - How your data is handled
+## ⚖️ Legal & Compliance
 
-Risk Disclosure - Important risks
+### License
+This project is dual-licensed. See [DUAL_LICENSE.md](docs/legal/DUAL_LICENSE.md) for details.
 
-Insurance Disclaimer - Insurance status
+### User Agreements
+- [Terms of Service](TERMS_OF_SERVICE.md) - Platform usage agreement
+- [Privacy Policy](PRIVACY_POLICY.md) - How your data is handled
+- [Risk Disclosure](docs/legal/compliance/RISK_DISCLOSURE.md) - Important risks
+- [Insurance Disclaimer](docs/legal/compliance/INSURANCE_DISCLAIMER.md) - Insurance status
 
-Contributor Agreement
-All contributors must agree to the terms in CONTRIBUTOR_AGREEMENT.md.
+### Contributor Agreement
+All contributors must agree to the terms in [CONTRIBUTOR_AGREEMENT.md](docs/legal/CONTRIBUTOR_AGREEMENT.md).
 
-Keywords
-TX Blockchain Coreum Sologenic CosmWasm Precious Metals Gold Silver RWA DEX Escrow P2P Marketplace
+## Keywords
+`TX Blockchain` `Coreum` `Sologenic` `CosmWasm` `Precious Metals` `Gold` `Silver` `RWA` `DEX` `Escrow` `P2P Marketplace`
 
-This is a reorganized version of the original project at github.com/PhoenixPME/coreum-pme. All legal documents have been transferred and remain in effect.
+---
 
-Last Updated: February 17, 2026
-Live Frontend: https://phoenix-frontend-seven.vercel.app
-Live API: https://phoenix-api-756y.onrender.com
+*This is a reorganized version of the original project at [github.com/PhoenixPME/coreum-pme](https://github.com/PhoenixPME/coreum-pme). All legal documents have been transferred and remain in effect.*
+
+**Last Updated:** February 18, 2026  
+**Live Frontend:** [https://phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app)  
+**Live API:** [https://phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com)
