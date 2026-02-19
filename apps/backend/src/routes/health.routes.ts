@@ -3,6 +3,15 @@ import { config } from '../config';
 
 const router = Router();
 
+// Test route - to verify routing is working
+router.get('/test', (req, res) => {
+  res.json({ 
+    success: true, 
+    message: 'Health routes are working!',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Basic health check
 router.get('/', async (req, res) => {
   try {
