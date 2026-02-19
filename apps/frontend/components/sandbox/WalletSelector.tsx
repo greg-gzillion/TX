@@ -154,7 +154,7 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
       </div>
       <div className="space-y-2">
         <div className="text-sm font-mono bg-gray-50 p-2 rounded">
-          {address.slice(0, 8)}...{address.slice(-6)}
+          {address}  {/* ✅ Shows full address */}
         </div>
         {balance && (
           <div className="text-sm text-gray-600">
