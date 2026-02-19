@@ -7,6 +7,7 @@ import cors from 'cors';
 import authRoutes from './routes/auth.routes';
 import auctionRoutes from './routes/auction.routes';
 import healthRoutes from './routes/health.routes';
+import sandboxRoutes from './routes/sandbox.routes';
 
 // Import middleware
 import { requestLogger } from './middleware/requestLogger';
@@ -32,6 +33,7 @@ app.use(requestLogger);
 app.use('/api/auth', authRoutes);
 app.use('/api/auctions', auctionRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/sandbox', sandboxRoutes);
 
 // Error handling
 app.use(errorHandler);
