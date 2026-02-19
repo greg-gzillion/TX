@@ -41,16 +41,16 @@ Blockchain-based auction platform for physical precious metals with integrated i
 
 ### 2. Fee Distribution
 **Auction Platform Fees (1.1%):**
-- 100% goes to insurance pool (building capital for future insurance)
-- Developer stake: 10% ownership of accumulated insurance pool
+- 100% goes to Community Reserve Fund (building capital for future insurance)
+- Developer stake: 10% ownership of accumulated Community Reserve Fund
 
 **Future Insurance Transaction Fees:**
 - 10% to Developer (per insurance transaction)
 - 90% to Insurance Pool (per insurance transaction)
 
 ### 3. Insurance Module (Future)
-**Activation:** When insurance pool reaches sufficient capital  
-**Developer Stake:** 10% ownership of insurance pool  
+**Activation:** When Community Reserve Fund reaches sufficient capital  
+**Developer Stake:** 10% ownership of Community Reserve Fund  
 **Insurance Fee:** Competitive percentage TBD ([Fee Model](docs/legal/FEE_MODEL.md))
 
 ---

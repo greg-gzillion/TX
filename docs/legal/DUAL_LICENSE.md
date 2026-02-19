@@ -29,15 +29,15 @@ Phoenix PME offers two licensing tracks to accommodate different use cases:
 
 ### GPL v3.0 License:
 - **License Fee**: $0
-- **Protocol Fees**: 1.1% to insurance pool (hardcoded in smart contracts)
-- **Developer Stake**: 10% of insurance pool allocated to developer
+- **Protocol Fees**: 1.1% to Community Reserve Fund (hardcoded in smart contracts)
+- **Developer Stake**: 10% of Community Reserve Fund allocated to developer
 - **Modifications**: Must be open sourced under GPL v3.0
 
 ### Commercial License:
 - **License Fee**: Negotiated (minimum $1,000/year)
 - **Royalty**: 1.1% - 2.0% of transaction volume (negotiated)
-- **Protocol Fees**: 1.1% to insurance pool still applies
-- **Developer Stake**: 10% ownership in insurance pool maintained
+- **Protocol Fees**: 1.1% to Community Reserve Fund still applies
+- **Developer Stake**: 10% ownership in Community Reserve Fund maintained
 - **Support**: Custom terms available
 
 ## 🛡️ Developer Protections (Transparent Disclosure)
@@ -48,7 +48,7 @@ Phoenix PME offers two licensing tracks to accommodate different use cases:
 - No trademark registrations currently (common law rights only)
 
 ### 2. Insurance Pool Stake
-- **10% developer allocation** from insurance fees
+- **10% developer allocation** from reserve allocations
 - Stake accumulates in pool over time
 - Voting rights: [To be defined - currently developer-controlled]
 - Profit participation: [To be defined - pool governance TBD]

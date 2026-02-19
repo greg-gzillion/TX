@@ -180,7 +180,7 @@ pub fn settle_auction(
     let fee = auction.high_bid.multiply_ratio(11u128, 1000u128);
     let seller_amount = auction.high_bid.checked_sub(fee)?;
     
-    // Update insurance pool
+    // Update Community Reserve Fund
     let mut pool = INSURANCE_POOL.load(deps.storage)?;
     pool.balance = pool.balance.checked_add(fee)?;
     INSURANCE_POOL.save(deps.storage, &pool)?;
@@ -196,7 +196,7 @@ pub fn settle_auction(
         }],
     };
     
-    // Send fee to insurance pool
+    // Send fee to Community Reserve Fund
     let fee_msg = BankMsg::Send {
         to_address: pool.address.to_string(),
         amount: vec![Coin {

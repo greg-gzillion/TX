@@ -42,7 +42,7 @@ The following are out of scope:
 ## Security Features
 - **Smart Contracts**: All contracts are tested 
 **Wallet Integration**: Multi-wallet support with secure connection handling
-- **Insurance Pool**: 1.1% fee mechanism with 10% developer stake
+- **Insurance Pool**: 1.1% fee mechanism with 10% founder allocation
 
 ## Bug Bounty
 Currently, we do not offer a formal bug bounty program, but significant contributions may be recognized in project documentation and considered for grants from future platform revenue.

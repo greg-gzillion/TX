@@ -72,7 +72,7 @@ Seller ships → USPS tracking # → Oracle Service → Coreum Contract
 2. **Oracle polls USPS API** every 6 hours
 3. **Status checked:** "In Transit" → "Out for Delivery" → "Delivered"
 4. **On "Delivered":** Oracle submits transaction to Coreum
-5. **Smart contract releases funds** to seller and fees to insurance pool
+5. **Smart contract releases funds** to seller and fees to Community Reserve Fund
 
 ### Current Oracle Implementation
 
@@ -330,7 +330,7 @@ fn raise_dispute(auction_id: u64, reason: String) {
 - Each arbitrator reviews evidence
 - Votes: "Buyer Wins" or "Seller Wins"
 - 2/3 majority required
-- Arbitrators paid 10 TESTUSD from insurance pool
+- Arbitrators paid 10 TESTUSD from Community Reserve Fund
 
 **Outcomes:**
 

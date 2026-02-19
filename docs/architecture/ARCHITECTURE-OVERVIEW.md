@@ -59,7 +59,7 @@ Add mock client and auction pages:
 - ✅ **End-to-end flow** - Create → Bid → End → Release tested
 
 #### 1.3 Insurance Module (`/apps/insurance-module`)
-**Purpose:** Fees generated deposited into insurance pool
+**Purpose:** Fees generated deposited into Community Reserve Fund
 
 insurance-module/
 ├── server.js → Insurance API server
@@ -131,7 +131,7 @@ auction/
 - ✅ `execute_close_auction` - End auctions as seller
 - ✅ `execute_claim_winnings` - Release funds to winner
 - ✅ Multi-auction counter with persistent storage
-- ✅ 1.1% fee calculation ready for insurance pool
+- ✅ 1.1% fee calculation ready for Community Reserve Fund
 
 **Test Results:**
 running 16 tests
@@ -327,7 +327,7 @@ Insurance Module (Standalone Service)
 | **Single Oracle** | USPS tracking is single point of failure | Multi-source verification + dispute period (72h) |
 | **Insurance Pool** | $50k goal is preliminary estimate | Detailed economic model in `docs/business/ECONOMIC_MODEL.md` |
 | **Developer Stake** | 10% allocation needs justification | See `docs/business/FEE_JUSTIFICATION.md` |
-| **Multi-sig** | Not yet implemented | 3/5 multi-sig for insurance pool by March 6 |
+| **Multi-sig** | Not yet implemented | 3/5 multi-sig for Community Reserve Fund by March 6 |
 
 **These limitations are documented and planned for decentralization before mainnet.**
 
@@ -347,7 +347,7 @@ Insurance Module (Standalone Service)
 
 | Priority | Module | Timeline | Status |
 |----------|--------|----------|--------|
-| 1 | Multi-sig for insurance pool | Week 1 | 🔜 Planned |
+| 1 | Multi-sig for Community Reserve Fund | Week 1 | 🔜 Planned |
 | 2 | Oracle decentralization design | Week 1 | 🔜 Planned |
 | 3 | Economic modeling documentation | Week 2 | 🔜 Planned |
 | 4 | Expand test coverage (40+ tests) | Week 2 | 🟡 In Progress |
@@ -361,7 +361,7 @@ Insurance Module (Standalone Service)
 - ✅ Frontend: Complete MVP with mock client
 - ✅ Wallet integration: Keplr/Leap working
 - ✅ Tests: 21+ total tests passing
-- 🔄 Multi-sig: Planned for insurance pool
+- 🔄 Multi-sig: Planned for Community Reserve Fund
 - 🔄 Oracle design: Documentation in progress
 - 🔄 Economic modeling: To be documented
 

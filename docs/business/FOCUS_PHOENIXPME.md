@@ -2,7 +2,7 @@
 
 ## BUILDING NOW:
 1. Auction/escrow for physical precious metals
-2. 1.1% fee → insurance pool
+2. 1.1% fee → Community Reserve Fund
 3. Basic eBay-like functionality
 
 ## NOT BUILDING NOW (PARKED):
@@ -16,7 +16,7 @@
 ✅ Simple listing (type, weight, photos, price)
 ✅ TESTUSD escrow smart contract
 ✅ Buy-Now & basic bidding
-✅ 1.1% fee to insurance pool
+✅ 1.1% fee to Community Reserve Fund
 ✅ Insurance pool tracker display
 
 ## COMPLEXITY BOUNDARY:

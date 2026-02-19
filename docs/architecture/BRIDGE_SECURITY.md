@@ -42,7 +42,7 @@ User → Coreum Smart Contract → Bridge Oracle → XRPL Ledger
 2. **Coreum contract** creates auction and calculates fees (1.1%)
 3. **Oracle service** monitors XRPL for RLUSD payments
 4. **Verification** confirms payment received on XRPL
-5. **Funds released** to seller, fees to insurance pool
+5. **Funds released** to seller, fees to Community Reserve Fund
 
 ### Current Components
 
@@ -150,7 +150,7 @@ User → Coreum Smart Contract → Bridge Oracle → XRPL Ledger
 - ✅ Fair transaction ordering (Coreum native)
 
 #### 4. Bridge Draining
-**Attack:** Exploit in bridge logic drains insurance pool  
+**Attack:** Exploit in bridge logic drains Community Reserve Fund  
 **Impact:** Complete loss of funds  
 **Likelihood:** Low (simple logic), Medium (complex bridge)  
 **Mitigation:**

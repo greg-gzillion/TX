@@ -1,7 +1,7 @@
 # PhoenixPME - Precious Metals Exchange
 
 ## Overview
-Blockchain-based auction platform for physical precious metals with integrated insurance funding mechanism.
+Blockchain-based auction platform for physical precious metals with integrated Community Reserveing mechanism.
 
 ## Core Components
 
@@ -19,8 +19,8 @@ For detailed fee model, see: docs/FEE_MODEL.md
 For detailed fee model, see: docs/FEE_MODEL.md
 **Auction Platform Fees (1.1%):**
 For detailed fee model, see: docs/FEE_MODEL.md
-- **100% goes to insurance pool** (building capital for future insurance)
-- **Developer stake**: 10% ownership of accumulated insurance pool
+- **100% goes to Community Reserve Fund** (building capital for future insurance)
+- **Developer stake**: 10% ownership of accumulated Community Reserve Fund
 
 **Future Insurance Transaction Fees:**
 For detailed fee model, see: docs/FEE_MODEL.md
@@ -28,8 +28,8 @@ For detailed fee model, see: docs/FEE_MODEL.md
 - **90% to Insurance Pool** (per insurance transaction)
 
 ### 3. Insurance Module (Future)
-- **Activation**: When insurance pool reaches sufficient capital
-- **Developer Stake**: 10% ownership of insurance pool
+- **Activation**: When Community Reserve Fund reaches sufficient capital
+- **Developer Stake**: 10% ownership of Community Reserve Fund
 - **Insurance Fee**: Will be competitive percentage (TBD)
 For detailed fee model, see: docs/FEE_MODEL.md
 - **Developer Share**: 10% of all insurance transaction fees
@@ -39,8 +39,8 @@ For detailed fee model, see: docs/FEE_MODEL.md
 
 
 ## Implementation Details
-- **Single escrow account**: All auction fees accumulate in insurance pool
-- **Developer ownership**: 10% stake in total insurance pool
+- **Single escrow account**: All auction fees accumulate in Community Reserve Fund
+- **Developer ownership**: 10% stake in total Community Reserve Fund
 - **Future insurance**: Developer receives 10% of all insurance transaction fees
 - **Transparency**: All allocations verifiable on XRPL ledger
 
@@ -71,7 +71,7 @@ For detailed fee model, see: docs/FEE_MODEL.md
 
 ## Notes
 - Auction platform fee (1.1%) builds insurance capital
-- Developer owns 10% stake in insurance pool
+- Developer owns 10% stake in Community Reserve Fund
 - When insurance launches: developer gets 10% of insurance transaction fees
 - All fees escrowed in RLUSD on XRPL
 - Insurance activates automatically when pool reaches threshold

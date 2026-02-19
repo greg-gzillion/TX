@@ -5,7 +5,7 @@
 - [ ] TESTUSD token for development
 - [ ] Basic listing/bidding interface
 - [ ] Wallet connection (Leap/Keplr)
-- [ ] 1.1% fee collection to insurance pool
+- [ ] 1.1% fee collection to Community Reserve Fund
 
 ## PRIORITY 2: Enhanced Features
 - [ ] Real RLUSD integration

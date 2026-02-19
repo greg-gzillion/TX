@@ -27,7 +27,7 @@ PhoenixPME currently provides:
 PhoenixPME charges a 1.1% transaction fee on successful auctions.
 
 **Current fee allocation:**
-- 100% deposited into insurance pool escrow
+- 100% deposited into Community Reserve Fund escrow
 - Accumulating capital for future insurance operations
 - Developer retains 10% ownership stake in pool
 
@@ -52,3 +52,5 @@ PhoenixPME does NOT currently hold insurance licenses. We CANNOT guarantee insur
 ---
 
 **⚠️ THIS IS A CRITICAL DOCUMENT. READ CAREFULLY BEFORE USING PHOENIXPME. ⚠️**
+---
+*This document supersedes any prior statements about insurance availability.*
