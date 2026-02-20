@@ -1,12 +1,13 @@
 'use client';
+
 import { useState } from 'react';
 import MetalSelector from '@/components/forms/MetalSelector';
-import FormTypeSelector from '@/components/forms/FormTypeSelector';
+import FormTypeSelector from '@/components/forms/phase2/FormTypeSelector';
 import WeightInput from '@/components/forms/WeightInput';
-import PuritySelector from '@/components/forms/PuritySelector';
+import PuritySelector from '@/components/forms/phase2/PuritySelector';
 import CertificationInput from '@/components/forms/phase2/CertificationInput';
 import SerialNumberInput from '@/components/forms/phase2/SerialNumberInput';
-import ImageUploader from '@/components/auctions/ImageUploader';
+import ImageUploader from '@/components/forms/phase2/ImageUploader';
 import PriceCalculator from '@/components/forms/PriceCalculator';
 
 // Define the exact type that CertificationInput expects
@@ -131,10 +132,7 @@ export default function CreateAuctionForm() {
                 <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
               </div>
               <div>
-                <ImageUploader 
-                  images={images} 
-                  onChange={setImages} 
-                />
+                <ImageUploader onImagesChange={setImages} />
               </div>
             </div>
           </section>

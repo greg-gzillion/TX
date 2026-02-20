@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { crfService } from '../lib/crf-service';
+import { crfService } from '@/lib/crf-service';
 
 export default function CRFBalance() {
   const [balance, setBalance] = useState(crfService.getBalance());

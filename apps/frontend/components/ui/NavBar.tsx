@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from './Button';
+import { Button } from '@/components/ui/Button';
 import WalletSelector from '@/components/layout/WalletSelector';
 import { Search } from 'lucide-react';
 

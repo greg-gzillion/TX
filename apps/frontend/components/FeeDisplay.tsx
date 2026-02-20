@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { feeCollector } from '../lib/fee-collector';
+import { feeCollector } from '@/lib/fee-collector';
 
 export default function FeeDisplay() {
   const [total, setTotal] = useState(feeCollector.getTotalAccumulated());
