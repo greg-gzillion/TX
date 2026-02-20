@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';  // 👈 Add useEffect import
 import { Button } from '@/components/ui/Button';
 
 export function AuctionPlayground({ wallet }: { wallet: any }) {
@@ -48,6 +48,13 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
     setNewAuction({ title: '', price: '' });
     setShowCreateForm(false);
   };
+
+  // Fixed useEffect
+  useEffect(() => {
+    if (!showCreateForm) {
+      setNewAuction({ title: '', price: '' });
+    }
+  }, [showCreateForm]);
 
   return (
     <div>
