@@ -1,14 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import MetalSelector from '@/components/forms/MetalSelector';
-import FormTypeSelector from '@/components/forms/phase2/FormTypeSelector';
-import WeightInput from '@/components/forms/WeightInput';
-import PuritySelector from '@/components/forms/phase2/PuritySelector';
-import CertificationInput from '@/components/forms/phase2/CertificationInput';
-import SerialNumberInput from '@/components/forms/phase2/SerialNumberInput';
-import ImageUploader from '@/components/forms/phase2/ImageUploader';
-import PriceCalculator from '@/components/forms/PriceCalculator';
+import MetalSelector from '@/components/shared/forms/inputs/MetalSelector';
+import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector';
+import WeightInput from '@/components/shared/forms/inputs/WeightInput';
+import PuritySelector from '@/components/shared/forms/inputs/PuritySelector';
+import CertificationInput from '@/components/shared/forms/inputs/CertificationInput';
+import SerialNumberInput from '@/components/shared/forms/inputs/SerialNumberInput';
+import ImageUploader from '@/components/shared/forms/inputs/ImageUploader';
+import PriceCalculator from '@/components/shared/forms/inputs/PriceCalculator';
 
 // Define the exact type that CertificationInput expects
 type CertificationType = {

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/shared/ui/Button';
 
 interface AuctionCardProps {
   id: number;

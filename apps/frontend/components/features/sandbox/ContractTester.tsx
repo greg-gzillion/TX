@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/shared/ui/Button';
 
 export function ContractTester({ wallet }: { wallet: any }) {
   const [contractAddress, setContractAddress] = useState('');

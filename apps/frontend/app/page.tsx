@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { NavBar } from '@/components/ui/NavBar';
-import { FilterTabs } from '@/components/ui/FilterTabs';
-import { AuctionCard } from '@/components/ui/AuctionCard';
-import { Button } from '@/components/ui/Button';
+import { NavBar } from '@/components/shared/ui/NavBar';
+import { FilterTabs } from '@/components/shared/ui/FilterTabs';
+import { AuctionCard } from '@/components/shared/ui/AuctionCard';
+import { Button } from '@/components/shared/ui/Button';
 import { api } from '@/lib/api';
 import { TrendingUp, TrendingDown, Clock, Users, DollarSign } from 'lucide-react';
 import { Auction, PriceData } from '@/types/auction';

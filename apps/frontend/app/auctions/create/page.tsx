@@ -1,6 +1,6 @@
 'use client';
 
-import CreateAuctionForm from '@/components/auctions/CreateAuctionForm';
+import CreateAuctionForm from '@/components/features/auctions/CreateAuctionForm';
 export default function CreateAuctionPage() {
   return (
     <div className="container mx-auto px-4 py-8">

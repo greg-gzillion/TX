@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/Button';
-import WalletSelector from '@/components/layout/WalletSelector';
+import { Button } from '@/components/shared/ui/Button';
+import WalletSelector from '@/components/shared/layout/WalletSelector';
 import { Search } from 'lucide-react';
 
 export function NavBar() {

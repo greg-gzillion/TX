@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import WalletSelector from '@/components/layout/WalletSelector';
-import { Button } from '@/components/ui/Button';
+import WalletSelector from '@/components/shared/layout/WalletSelector';
+import { Button } from '@/components/shared/ui/Button';
 import { Copy, ExternalLink, RefreshCw } from 'lucide-react';
 
 export default function TestWalletPage() {

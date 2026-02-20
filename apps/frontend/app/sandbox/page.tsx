@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { WalletSelector } from '@/components/sandbox/WalletSelector';
-import { TestWalletsPanel } from '@/components/sandbox/TestWalletsPanel';
-import { AuctionPlayground } from '@/components/sandbox/AuctionPlayground';
-import { PriceFeed } from '@/components/sandbox/PriceFeed';
-import { ContractTester } from '@/components/sandbox/ContractTester';
+import { WalletSelector } from '@/components/features/sandbox/WalletSelector';
+import { TestWalletsPanel } from '@/components/features/sandbox/TestWalletsPanel';
+import { AuctionPlayground } from '@/components/features/sandbox/AuctionPlayground';
+import { PriceFeed } from '@/components/features/sandbox/PriceFeed';
+import { ContractTester } from '@/components/features/sandbox/ContractTester';
 
 export default function SandboxPage() {
   const [selectedWallet, setSelectedWallet] = useState(null);

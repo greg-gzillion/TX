@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';  // 👈 Add useEffect import
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/shared/ui/Button';
 
 export function AuctionPlayground({ wallet }: { wallet: any }) {
   const [mockAuctions, setMockAuctions] = useState([
