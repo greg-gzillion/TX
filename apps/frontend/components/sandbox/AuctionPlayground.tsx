@@ -5,11 +5,10 @@ import { Button } from '@/components/ui/Button';
 
 export function AuctionPlayground({ wallet }: { wallet: any }) {
   const [mockAuctions, setMockAuctions] = useState([
-    { id: 1, title: '1oz Gold Bar', price: 5004.80, seller: 'Robert', bids: 12 },
-    { id: 2, title: '10oz Silver Bar', price: 780.40, seller: 'Alice', bids: 8 },
-    { id: 3, title: '1oz Platinum Bar', price: 2094.00, seller: 'Charlie', bids: 5 },
-  ]);
-
+   { id: 1, title: '1oz Gold Bar', price: 5004.80, seller: 'Robert', bids: 12 },
+   { id: 2, title: '10oz Silver Bar', price: 780.40, seller: 'Alice', bids: 8 },
+   { id: 3, title: '1oz Platinum Bar', price: 2094.00, seller: 'Charlie', bids: 5 },
+   ]);
   const [newAuction, setNewAuction] = useState({ title: '', price: '' });
   const [showCreateForm, setShowCreateForm] = useState(false);
 
