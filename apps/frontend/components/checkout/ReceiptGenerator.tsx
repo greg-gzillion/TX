@@ -6,7 +6,7 @@ import QRCode from 'react-qr-code';
 // Import Phase 3 types
 import type { ShippingState } from '@/phase3/ShippingSelector';
 import type { PaymentState } from '@/phase3/PaymentSelector';
-import type { AuctionItem } from '@/components/OrderSummary';
+import type { AuctionItem } from '@/components/checkout/OrderSummary';
 
 export interface TransactionRecord {
   id: string;
