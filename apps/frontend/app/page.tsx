@@ -10,7 +10,7 @@ import { TrendingUp, TrendingDown, Clock, Users, DollarSign } from 'lucide-react
 import { Auction, PriceData } from '@/types/auction';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState('all');  // ← ADD THIS (was missing)
+  const [activeTab, setActiveTab] = useState('all');
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [prices, setPrices] = useState<PriceData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -99,6 +99,19 @@ export default function HomePage() {
       <NavBar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* TESTNET DISCLAIMER - PROMINENT RED BANNER */}
+        <div className="bg-red-100 border-4 border-red-500 rounded-lg p-4 mb-8">
+          <p className="text-red-800 text-lg font-bold flex items-center justify-center">
+            <span className="text-2xl mr-2">⚠️</span>
+            TESTNET BETA - NO REAL VALUE
+            <span className="text-2xl ml-2">⚠️</span>
+          </p>
+          <p className="text-red-700 text-center mt-2">
+            This is experimental software. All transactions are on testnet.
+            Do not send real funds. For testing purposes only.
+          </p>
+        </div>
+
         {/* Hero Section */}
         <div className="mb-8 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
