@@ -132,7 +132,10 @@ export default function CreateAuctionForm() {
                 <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
               </div>
               <div>
-                <ImageUploader onImagesChange={setImages} />
+                <ImageUploader 
+                  images={images} 
+                  onChange={setImages} 
+                />
               </div>
             </div>
           </section>
