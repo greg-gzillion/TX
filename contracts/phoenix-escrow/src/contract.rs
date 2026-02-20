@@ -4,8 +4,7 @@
 };
 use cw2::set_contract_version;
 use crate::msg::{InstantiateMsg, ExecuteMsg, QueryMsg};
-use crate::state::{AUCTION_COUNT, AUCTIONS, Auction, Bid, AuctionStatus, DEVELOPER_WALLET};
-
+use crate::state::{AUCTION_COUNT, AUCTIONS, Auction, Bid, AuctionStatus, DEVELOPER_WALLET, COMMUNITY_RESERVE_FUND};
 // Version info for contract migration
 const CONTRACT_NAME: &str = "crates.io:phoenix-escrow";
 const CONTRACT_VERSION: &str = "1.0.0";
@@ -78,7 +77,6 @@ fn execute_create_auction(
     // Get next auction ID
     let auction_id = AUCTION_COUNT.load(deps.storage)?;
     
-    // Create auction
     let auction = Auction {
         seller: info.sender.to_string(),
         item_id,
@@ -96,10 +94,7 @@ fn execute_create_auction(
         confirmed: false,
     };
     
-    // Save auction
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    
-    // Increment counter
     AUCTION_COUNT.save(deps.storage, &(auction_id + 1))?;
     
     Ok(Response::new()
@@ -143,19 +138,24 @@ fn execute_place_bid(
 ) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Check if auction is active
+    // Collateral checks
+    if auction.seller_collateral.is_zero() {
+        return Err(StdError::generic_err("Seller collateral not set - auction cannot accept bids"));
+    }
+    if auction.buyer_collateral.is_zero() {
+        return Err(StdError::generic_err("Buyer collateral required - you must post collateral to bid"));
+    }
+    
     if auction.status != AuctionStatus::Active {
         return Err(StdError::generic_err("Auction is not active"));
     }
     
-    // Check if auction has ended
     if env.block.time.seconds() > auction.end_time {
         auction.status = AuctionStatus::Ended;
         AUCTIONS.save(deps.storage, auction_id, &auction)?;
         return Err(StdError::generic_err("Auction has ended"));
     }
     
-    // Get bid amount from sent funds
     let funds = info.funds;
     if funds.len() != 1 {
         return Err(StdError::generic_err("Must send exactly one coin type"));
@@ -164,34 +164,28 @@ fn execute_place_bid(
     let bid_amount = funds[0].amount;
     let bid_denom = funds[0].denom.clone();
     
-    // Validate bid (must be at least starting price for first bid)
     if let Some(current_bid) = &auction.current_bid {
         if bid_amount <= current_bid.amount {
             return Err(StdError::generic_err("Bid must be higher than current bid"));
         }
     } else {
-        // First bid must be at least starting price
         if bid_amount < auction.starting_price {
             return Err(StdError::generic_err("Bid must be at least starting price"));
         }
     }
     
-    // Create bid
     let bid = Bid {
         bidder: info.sender.to_string(),
         amount: bid_amount,
         timestamp: env.block.time.seconds(),
     };
     
-    // Update auction
     let mut messages = vec![];
     
     if let Some(previous_bid) = auction.current_bid.take() {
-        // Clone the bidder address before moving
         let bidder_address = previous_bid.bidder.clone();
         let bid_amount_value = previous_bid.amount;
         
-        // Return previous bid to previous bidder
         messages.push(BankMsg::Send {
             to_address: bidder_address,
             amount: coins(bid_amount_value.u128(), &bid_denom),
@@ -219,7 +213,6 @@ fn execute_end_auction(
 ) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Only seller can end auction early
     if info.sender.to_string() != auction.seller {
         return Err(StdError::generic_err("Only seller can end auction"));
     }
@@ -228,7 +221,6 @@ fn execute_end_auction(
         return Err(StdError::generic_err("Auction is not active"));
     }
     
-    // Check if auction has already ended by time
     if env.block.time.seconds() > auction.end_time {
         auction.status = AuctionStatus::Ended;
         AUCTIONS.save(deps.storage, auction_id, &auction)?;
@@ -255,37 +247,30 @@ fn execute_release_escrow(
 ) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Check if escrow already released
     if auction.escrow_released {
         return Err(StdError::generic_err("Escrow already released"));
     }
     
-    // Only seller or admin can release escrow
     if info.sender != auction.seller {
         return Err(StdError::generic_err("Only seller can release escrow"));
     }
     
-    // Check if auction has ended
     if auction.status != AuctionStatus::Ended && env.block.time.seconds() <= auction.end_time {
         return Err(StdError::generic_err("Auction hasn't ended yet"));
     }
     
-    // Mark auction as ended if not already
     if auction.status == AuctionStatus::Active {
         auction.status = AuctionStatus::Ended;
     }
     
-    // Process escrow release
     let mut messages = vec![];
     
     if let Some(winning_bid) = &auction.current_bid {
-        // Check if reserve price is met
         if let Some(reserve_price) = auction.reserve_price {
             if winning_bid.amount < reserve_price {
                 auction.escrow_released = true;
                 AUCTIONS.save(deps.storage, auction_id, &auction)?;
                 
-                // Return funds to bidder
                 messages.push(BankMsg::Send {
                     to_address: winning_bid.bidder.clone(),
                     amount: coins(winning_bid.amount.u128(), "ucore"),
@@ -300,23 +285,19 @@ fn execute_release_escrow(
             }
         }
         
-        // Calculate 1% royalty fee
-        let royalty_fee = winning_bid.amount.multiply_ratio(1u128, 100u128);
-        let seller_amount = winning_bid.amount.checked_sub(royalty_fee)?;
+        let community_fee = winning_bid.amount.multiply_ratio(11u128, 1000u128);
+        let seller_amount = winning_bid.amount.checked_sub(community_fee)?;
         
-        // Send royalty to developer wallet
         messages.push(BankMsg::Send {
-            to_address: DEVELOPER_WALLET.to_string(),
-            amount: coins(royalty_fee.u128(), "ucore"),
+            to_address: COMMUNITY_RESERVE_FUND.to_string(),
+            amount: coins(community_fee.u128(), "ucore"),
         });
         
-        // Send remaining to seller
         messages.push(BankMsg::Send {
             to_address: auction.seller.clone(),
             amount: coins(seller_amount.u128(), "ucore"),
         });
     } else {
-        // No bids, nothing to release
         return Err(StdError::generic_err("No winning bid to release"));
     }
     
@@ -338,7 +319,6 @@ fn execute_cancel_auction(
 ) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
     
-    // Only seller can cancel
     if info.sender.to_string() != auction.seller {
         return Err(StdError::generic_err("Only seller can cancel auction"));
     }
@@ -347,7 +327,6 @@ fn execute_cancel_auction(
         return Err(StdError::generic_err("Auction is not active"));
     }
     
-    // Return any current bid
     let mut messages = vec![];
     if let Some(current_bid) = auction.current_bid.take() {
         messages.push(BankMsg::Send {
@@ -377,11 +356,9 @@ mod tests {
         let env = mock_env();
         let info = mock_info("seller123", &coins(0, "ucore"));
         
-        // Instantiate contract
         let msg = InstantiateMsg { admin: "admin123".to_string() };
         let _res = instantiate(deps.as_mut(), env.clone(), info.clone(), msg).unwrap();
         
-        // Create auction
         let msg = ExecuteMsg::CreateAuction {
             item_id: "gold_bar_1".to_string(),
             description: "1oz Gold Bar".to_string(),
@@ -392,11 +369,9 @@ mod tests {
         
         let res = execute(deps.as_mut(), env, info, msg).unwrap();
         
-        // Verify response
         assert_eq!(res.attributes[0].value, "create_auction");
         assert_eq!(res.attributes[1].value, "0");
         
-        // Verify auction was saved
         let query_msg = QueryMsg::GetAuction { auction_id: 0 };
         let res = query(deps.as_ref(), mock_env(), query_msg).unwrap();
         let auction: Auction = from_json(res).unwrap();
