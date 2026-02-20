@@ -99,7 +99,7 @@ export default function HomePage() {
       <NavBar />
       
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* TESTNET DISCLAIMER - PROMINENT RED BANNER */}
+        {/* TESTNET DISCLAIMER */}
         <div className="bg-red-100 border-4 border-red-500 rounded-lg p-4 mb-8">
           <p className="text-red-800 text-lg font-bold flex items-center justify-center">
             <span className="text-2xl mr-2">⚠️</span>
@@ -195,7 +195,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Live Prices Banner - Enhanced */}
+        {/* Live Prices Banner */}
         {prices && (
           <div className="mb-8">
             <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-t-xl p-4 text-white">
