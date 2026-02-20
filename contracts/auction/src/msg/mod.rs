@@ -4,7 +4,7 @@ use cosmwasm_schema::cw_serde;
 #[cw_serde]
 pub struct InstantiateMsg {
     pub admin: String,
-    pub insurance_pool: String,
+    pub community_reserve_fund: String,
     pub token_denom: String,
 }
 

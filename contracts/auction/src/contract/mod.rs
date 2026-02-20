@@ -22,7 +22,7 @@ pub fn instantiate(
 ) -> Result<Response, ContractError> {
     let config = Config {
         admin: deps.api.addr_validate(&msg.admin)?,
-        insurance_pool: deps.api.addr_validate(&msg.insurance_pool)?,
+        community_reserve_fund: deps.api.addr_validate(&msg.community_reserve_fund)?,
         token_denom: msg.token_denom,
     };
     
@@ -280,9 +280,9 @@ fn execute_claim_winnings(
                 amount: coins(payout, config.token_denom.clone()),
             };
             
-            // Transfer fee to insurance pool
+            // Transfer fee to community reserve fund
             let fee_msg = BankMsg::Send {
-                to_address: config.insurance_pool.to_string(),
+                to_address: config.community_reserve_fund.to_string(),
                 amount: coins(fee, config.token_denom),
             };
             

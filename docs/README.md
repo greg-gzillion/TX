@@ -27,7 +27,7 @@ For detailed fee model, see: docs/FEE_MODEL.md
 - **10% to Developer** (per insurance transaction)
 - **90% to Insurance Pool** (per insurance transaction)
 
-### 3. Insurance Module (Future)
+### 3. Future Initiatives (Future)
 - **Activation**: When Community Reserve Fund reaches sufficient capital
 - **Developer Stake**: 10% ownership of Community Reserve Fund
 - **Insurance Fee**: Will be competitive percentage (TBD)

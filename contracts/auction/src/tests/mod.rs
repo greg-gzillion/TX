@@ -13,7 +13,7 @@ mod tests {
         let info = mock_info("creator", &coins(1000, "utestcore"));
         let msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         let res = instantiate(deps.as_mut(), env, info, msg);
@@ -27,7 +27,7 @@ mod tests {
         let info = mock_info("bidder", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
@@ -45,7 +45,7 @@ mod tests {
         let info = mock_info("creator", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
@@ -60,7 +60,7 @@ mod tests {
         let info = mock_info("winner", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
@@ -75,7 +75,7 @@ mod tests {
         let info = mock_info("creator", &[]);
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info, instantiate_msg).unwrap();
@@ -90,7 +90,7 @@ mod tests {
         let info = mock_info("creator", &[]);
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), info, instantiate_msg).unwrap();
@@ -106,7 +106,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -150,7 +150,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -185,7 +185,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -245,7 +245,7 @@ mod tests {
         println!("🎉 BUY IT NOW VS AUCTION TEST COMPLETE!");
     }
         #[test]
-    fn test_insurance_pool_accumulation() {
+    fn test_community_reserve_fund_accumulation() {
         let mut deps = mock_dependencies();
         let env = mock_env();
         
@@ -253,7 +253,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -280,7 +280,7 @@ mod tests {
         let close_msg1 = ExecuteMsg::CloseAuction { auction_id: 1 };
         execute(deps.as_mut(), env.clone(), closer.clone(), close_msg1).unwrap();
         
-        // Claim winnings - this should trigger fee to insurance pool
+        // Claim winnings - this should trigger fee to community reserve fund
         let winner1 = mock_info("bidder1", &[]);
         let claim_msg1 = ExecuteMsg::ClaimWinnings { auction_id: 1 };
         execute(deps.as_mut(), env.clone(), winner1, claim_msg1).unwrap();
@@ -306,19 +306,19 @@ mod tests {
         let close_msg2 = ExecuteMsg::CloseAuction { auction_id: 2 };
         execute(deps.as_mut(), env.clone(), closer, close_msg2).unwrap();
         
-        // Claim winnings - second fee to insurance pool
+        // Claim winnings - second fee to community reserve fund
         let winner2 = mock_info("bidder2", &[]);
         let claim_msg2 = ExecuteMsg::ClaimWinnings { auction_id: 2 };
         execute(deps.as_mut(), env, winner2, claim_msg2).unwrap();
         
-        // At this point, we would query the insurance pool balance
+        // At this point, we would query the community reserve fund balance
         // For now, we just verify the test runs without errors
         println!("✅ Insurance pool accumulation test completed");
         println!("   Auction 1 winning bid: 200 (fee: 2.2)");
         println!("   Auction 2 winning bid: 300 (fee: 3.3)");
         println!("   Total accumulated: 5.5 (1.1% of 500)");
         
-        // Note: In a real implementation, you would query the insurance pool
+        // Note: In a real implementation, you would query the community reserve fund
         // balance and verify it equals 5.5 (or whatever the fee amount should be)
     }
         #[test]
@@ -330,7 +330,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -410,7 +410,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -455,7 +455,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -490,7 +490,7 @@ mod tests {
         let admin = mock_info("admin", &coins(1000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -532,7 +532,7 @@ mod tests {
         let admin = mock_info("admin", &coins(u128::MAX, "utestcore")); // Max u128
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();
@@ -567,7 +567,7 @@ mod tests {
         let admin = mock_info("admin", &coins(10000, "utestcore"));
         let instantiate_msg = InstantiateMsg {
             admin: "admin".to_string(),
-            insurance_pool: "pool".to_string(),
+            community_reserve_fund: "pool".to_string(),
             token_denom: "utestcore".to_string(),
         };
         instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg).unwrap();

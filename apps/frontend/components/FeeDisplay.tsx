@@ -21,7 +21,7 @@ export default function FeeDisplay() {
   return (
     <div className="bg-white p-6 rounded-xl border shadow-sm">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900">Insurance Pool Accumulator</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Community Reserve Fund Accumulator</h3>
         <span className="px-3 py-1 bg-purple-100 text-purple-700 text-sm rounded-full">
           1.1% Fee
         </span>
@@ -69,7 +69,7 @@ export default function FeeDisplay() {
 
       <div className="mt-4 p-3 bg-purple-50 rounded-lg">
         <p className="text-xs text-purple-700">
-          💡 <strong>Future Insurance Module:</strong> These fees will fund a separate insurance program
+          💡 <strong>Future Initiatives:</strong> These fees will fund a separate insurance program
           where metal owners can buy policies. Developer receives 10% stake + 10% of fees when launched.
         </p>
       </div>

@@ -18,7 +18,7 @@ fuzz_target!(|data: &[u8]| {
                 let admin = mock_info("admin", &coins(1000, "utestcore"));
                 let instantiate_msg = InstantiateMsg {
                     admin: "admin".to_string(),
-                    insurance_pool: "pool".to_string(),
+                    community_reserve_fund: "pool".to_string(),
                     token_denom: "utestcore".to_string(),
                 };
                 let _ = instantiate(deps.as_mut(), env.clone(), admin, instantiate_msg);

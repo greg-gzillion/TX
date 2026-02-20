@@ -29,7 +29,7 @@ pub enum QueryMsg {
 pub struct FeeInfoResponse {
     pub fee_percent: f32,
     pub fee_bps: u16,
-    pub insurance_allocation: u8,
+    pub community_reserve_allocation: u8,
     pub developer_stake: u8,
     pub status: String,
 }
@@ -39,7 +39,7 @@ pub struct ConfigResponse {
     pub admin: String,
     pub fee_bps: u16,
     pub developer_stake: u8,
-    pub insurance_target: String,
+    pub community_reserve_target: String,
 }
 
 #[entry_point]
@@ -54,7 +54,7 @@ pub fn instantiate(
         admin: msg.admin,
         fee_bps: msg.fee_bps,
         developer_stake: msg.developer_stake,
-        insurance_target: "50000000000".to_string(), // 50,000 RLUSD
+        community_reserve_target: "50000000000".to_string(), // 50,000 RLUSD
     };
     
     // In a real contract, we would store this
@@ -84,7 +84,7 @@ pub fn query(_deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
             let resp = FeeInfoResponse {
                 fee_percent: 1.1,
                 fee_bps: 110,
-                insurance_allocation: 100,
+                community_reserve_allocation: 100,
                 developer_stake: 10,
                 status: "active".to_string(),
             };
@@ -95,7 +95,7 @@ pub fn query(_deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
                 admin: "testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6".to_string(),
                 fee_bps: 110,
                 developer_stake: 10,
-                insurance_target: "50000000000".to_string(),
+                community_reserve_target: "50000000000".to_string(),
             };
             cosmwasm_std::to_json_binary(&resp)
         }

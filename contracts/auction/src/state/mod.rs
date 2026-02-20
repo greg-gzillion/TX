@@ -5,7 +5,7 @@ use cosmwasm_schema::cw_serde;
 #[cw_serde]
 pub struct Config {
     pub admin: Addr,
-    pub insurance_pool: Addr,
+    pub community_reserve_fund: Addr,
     pub token_denom: String,
 }
 
