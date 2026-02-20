@@ -39,3 +39,4 @@ src.backup.*
 target/
 docs-backup/
 docs-backup/
+contracts/cw-plus/
