@@ -1,4 +1,4 @@
-﻿use cosmwasm_std::Uint128;
+use cosmwasm_std::Uint128;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -39,4 +39,17 @@ pub enum QueryMsg {
     },
     GetActiveAuctions {},
     GetAuctionCount {},
+}
+
+// ============ RESPONSE TYPES ============
+use crate::state::{Auction, Config};
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct ConfigResponse {
+    pub config: Config,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct AuctionResponse {
+    pub auction: Auction,
 }

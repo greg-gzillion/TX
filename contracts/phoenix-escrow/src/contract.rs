@@ -63,7 +63,51 @@ pub fn execute(
     }
 }
 
-#[entry_point]
+// ==================== EXECUTION FUNCTIONS ====================
+
+fn execute_create_auction(
+    deps: DepsMut,
+    env: Env,
+    info: MessageInfo,
+    item_id: String,
+    description: String,
+    starting_price: Uint128,
+    reserve_price: Option<Uint128>,
+    duration_hours: u64,
+) -> StdResult<Response> {
+    // Get next auction ID
+    let auction_id = AUCTION_COUNT.load(deps.storage)?;
+    
+    // Create auction
+    let auction = Auction {
+        seller: info.sender.to_string(),
+        item_id,
+        description,
+        starting_price,
+        reserve_price,
+        start_time: env.block.time.seconds(),
+        end_time: env.block.time.plus_seconds(duration_hours * 3600).seconds(),
+        current_bid: None,
+        bids: vec![],
+        status: AuctionStatus::Active,
+        escrow_released: false,
+        seller_collateral: Uint128::zero(),
+        buyer_collateral: Uint128::zero(),
+        confirmed: false,
+    };
+    
+    // Save auction
+    AUCTIONS.save(deps.storage, auction_id, &auction)?;
+    
+    // Increment counter
+    AUCTION_COUNT.save(deps.storage, &(auction_id + 1))?;
+    
+    Ok(Response::new()
+        .add_attribute("method", "create_auction")
+        .add_attribute("auction_id", auction_id.to_string())
+        .add_attribute("seller", info.sender.to_string()))
+}
+
 pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetAuction { auction_id } => {
@@ -89,47 +133,6 @@ pub fn query(deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
             to_json_binary(&count)
         },
     }
-}
-
-// ==================== EXECUTION FUNCTIONS ====================
-fn execute_create_auction(
-    deps: DepsMut,
-    env: Env,
-    info: MessageInfo,
-    item_id: String,
-    description: String,
-    starting_price: Uint128,
-    reserve_price: Option<Uint128>,
-    duration_hours: u64,
-) -> StdResult<Response> {
-    // Get next auction ID
-    let auction_id = AUCTION_COUNT.load(deps.storage)?;
-    
-    // Create auction
-    let auction = Auction {
-        seller: info.sender.to_string(),
-        item_id,
-        description,
-        starting_price,
-        reserve_price,
-        start_time: env.block.time.seconds(),
-        end_time: env.block.time.seconds() + (duration_hours * 3600),
-        current_bid: None,
-        bids: vec![],
-        status: AuctionStatus::Active,
-        escrow_released: false,
-    };
-    
-    // Save auction
-    AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    
-    // Increment counter
-    AUCTION_COUNT.save(deps.storage, &(auction_id + 1))?;
-    
-    Ok(Response::new()
-        .add_attribute("method", "create_auction")
-        .add_attribute("auction_id", auction_id.to_string())
-        .add_attribute("seller", info.sender.to_string()))
 }
 
 fn execute_place_bid(
@@ -264,7 +267,7 @@ fn execute_release_escrow(
     
     // Check if auction has ended
     if auction.status != AuctionStatus::Ended && env.block.time.seconds() <= auction.end_time {
-        return Err(StdError::generic_err("Auction hasn'\''t ended yet"));
+        return Err(StdError::generic_err("Auction hasn't ended yet"));
     }
     
     // Mark auction as ended if not already
@@ -329,7 +332,7 @@ fn execute_release_escrow(
 
 fn execute_cancel_auction(
     deps: DepsMut,
-    env: Env,
+    _env: Env,
     info: MessageInfo,
     auction_id: u64,
 ) -> StdResult<Response> {
@@ -382,7 +385,7 @@ mod tests {
         let msg = ExecuteMsg::CreateAuction {
             item_id: "gold_bar_1".to_string(),
             description: "1oz Gold Bar".to_string(),
-            starting_price: Uint128::from(1000000u64), // 1 CORE = 1,000,000 ucore
+            starting_price: Uint128::from(1000000u64),
             reserve_price: Some(Uint128::from(1500000u64)),
             duration_hours: 24,
         };
@@ -391,7 +394,7 @@ mod tests {
         
         // Verify response
         assert_eq!(res.attributes[0].value, "create_auction");
-        assert_eq!(res.attributes[1].value, "0"); // First auction ID
+        assert_eq!(res.attributes[1].value, "0");
         
         // Verify auction was saved
         let query_msg = QueryMsg::GetAuction { auction_id: 0 };

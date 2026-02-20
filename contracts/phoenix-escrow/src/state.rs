@@ -19,22 +19,28 @@ pub struct Auction {
     pub bids: Vec<Bid>,
     pub status: AuctionStatus,
     pub escrow_released: bool,
+    pub seller_collateral: Uint128,
+    pub buyer_collateral: Uint128,
+    pub confirmed: bool,
 }
-
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub struct Bid {
     pub bidder: String,
     pub amount: Uint128,
     pub timestamp: u64,
 }
-
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
 pub enum AuctionStatus {
     Active,
     Ended,
     Cancelled,
 }
-
+// ==================== CONFIG STRUCT ====================
+#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+pub struct Config {
+    pub owner: String,
+    pub community_reserve_fund: String,
+}
 // ==================== STORAGE ====================
 use cw_storage_plus::{Item, Map};
 
