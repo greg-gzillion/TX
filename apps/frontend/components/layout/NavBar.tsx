@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import WalletSelector from '@/components/wallet/WalletSelector';
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -38,9 +39,7 @@ export default function NavBar() {
           </div>
           
           <div className="flex items-center space-x-4">
-            <button className="px-4 py-2 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50">
-              Connect Wallet
-            </button>
+            <WalletSelector />
           </div>
         </div>
       </div>
