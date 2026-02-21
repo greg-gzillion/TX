@@ -126,7 +126,8 @@ export function getPriceDifference(metal: MetalType, auctionPrice: number): numb
 // Initialize - run once at startup
 export async function initPriceOracle() {
   try {
-    // Try to load latest prices from database
+    // STEP 1: Load latest prices from database FIRST (priority)
+    console.log('📊 Loading latest spot prices from database...');
     const lastPrice = await prisma.priceHistory.findFirst({
       orderBy: { createdAt: 'desc' }
     });
@@ -139,13 +140,30 @@ export async function initPriceOracle() {
         palladium: lastPrice.palladium,
         lastUpdated: lastPrice.createdAt
       };
-      console.log('📊 Loaded cached spot prices from', lastPrice.createdAt);
+      console.log('✅ Loaded prices from database:', {
+        gold: lastPrice.gold,
+        silver: lastPrice.silver,
+        platinum: lastPrice.platinum,
+        palladium: lastPrice.palladium,
+        timestamp: lastPrice.createdAt
+      });
     } else {
-      // Fetch fresh prices
-      await updateSpotPrices();
+      console.log('⚠️ No database records found, using default values');
+      // Keep the mock values in priceCache
     }
     
-    // Schedule daily updates (8am EST)
+    // STEP 2: Try to fetch fresh prices in the background (don't block startup)
+    // This will update the database and cache if successful
+    setTimeout(async () => {
+      try {
+        console.log('🔄 Fetching fresh spot prices in background...');
+        await updateSpotPrices();
+      } catch (error) {
+        console.error('Background price update failed:', error);
+      }
+    }, 5000); // Wait 5 seconds after startup
+    
+    // STEP 3: Schedule daily updates (8am EST)
     const scheduleDaily = () => {
       const now = new Date();
       const target = new Date();
@@ -156,15 +174,37 @@ export async function initPriceOracle() {
       }
       
       const msUntilTarget = target.getTime() - now.getTime();
+      console.log(`📅 Next scheduled update in ${Math.round(msUntilTarget / 1000 / 60)} minutes`);
       
       setTimeout(async () => {
         await updateSpotPrices();
-        scheduleDaily();
+        scheduleDaily(); // Re-schedule for next day
       }, msUntilTarget);
     };
     
     scheduleDaily();
+    
   } catch (error) {
     console.error('❌ Failed to initialize price oracle:', error);
+    
+    // Ultimate fallback - try to load from database one more time
+    try {
+      const lastPrice = await prisma.priceHistory.findFirst({
+        orderBy: { createdAt: 'desc' }
+      });
+      if (lastPrice) {
+        priceCache = {
+          gold: lastPrice.gold,
+          silver: lastPrice.silver,
+          platinum: lastPrice.platinum,
+          palladium: lastPrice.palladium,
+          lastUpdated: lastPrice.createdAt
+        };
+        console.log('📊 Fallback: Loaded cached spot prices from', lastPrice.createdAt);
+      }
+    } catch (dbError) {
+      console.error('❌ Fallback also failed:', dbError);
+      // Keep existing mock values in cache
+    }
   }
 }
