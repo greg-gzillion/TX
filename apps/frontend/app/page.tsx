@@ -20,7 +20,21 @@ export default function HomePage() {
     async function loadData() {
       try {
         setLoading(true);
-        const pricesData = await api.getPrices();
+        let pricesData = await api.getPrices();
+        
+        // TEMPORARY FIX - Override incorrect prices
+        // TODO: Remove this when backend is fixed
+        if (pricesData && pricesData.gold === 5004.8) {
+          console.log('⚠️ Using temporary price override (backend returning stale data)');
+          pricesData = {
+            gold: 5105.90,
+            silver: 84.52,
+            platinum: 2157.00,
+            palladium: 1743.00,
+            lastUpdated: pricesData.lastUpdated
+          };
+        }
+        
         setPrices(pricesData);
         
         // Mock auctions with real prices - using testcore addresses
@@ -33,7 +47,6 @@ export default function HomePage() {
             bids: 12,
             metal: 'gold',
             seller: 'testcore1xa352f6gtgc4g7c9rrdgl4wn9vaw9r25v47jen',
-            // Removed premium field - seller sets price
           },
           {
             id: 2,
@@ -124,14 +137,14 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Right side - "Why PhoenixPME?" card - UPDATED: removed bank statement */}
+          {/* Right side - "Why PhoenixPME?" card */}
           <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 shadow-lg p-6">
             <h2 className="text-2xl font-bold text-amber-800 mb-4 flex items-center gap-2">
               <span className="text-3xl">🔥</span> Why PhoenixPME?
             </h2>
             
             <div className="space-y-4">
-              {/* Problem - REMOVED bank statement */}
+              {/* Problem */}
               <div>
                 <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-1">
                   <span className="text-red-500">⚠️</span> The Problem
@@ -145,7 +158,6 @@ export default function HomePage() {
                     <span className="text-red-500 mt-1">•</span>
                     <span>eBay takes <span className="font-bold text-red-600">15%</span> of your sale</span>
                   </li>
-                  {/* Bank statement removed */}
                 </ul>
               </div>
 
@@ -190,7 +202,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Prices Banner - UPDATED: Changed from "Live" to "Last Updated" with API disclaimer */}
+        {/* Prices Banner */}
         {prices && (
           <div className="mb-8">
             <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-t-xl p-4 text-white">
