@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import PuritySelector from '../../PuritySelector';
+import PuritySelector from '@/components/shared/forms/inputs/../PuritySelector';
 export default function TestPuritySelector() {
   const [value, setValue] = useState(0.999);
   

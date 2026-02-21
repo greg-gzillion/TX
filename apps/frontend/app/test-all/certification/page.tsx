@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import CertificationInput from '../../CertificationInput';
+import CertificationInput from '@/components/shared/forms/inputs/../CertificationInput';
 
 export default function TestCertification() {
   const [cert, setCert] = useState({

@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import ImageUpload from '../../ImageUpload';
+import ImageUpload from '@/components/shared/forms/inputs/../ImageUpload';
 
 export default function TestImageUpload() {
   const [images, setImages] = useState<string[]>([]);

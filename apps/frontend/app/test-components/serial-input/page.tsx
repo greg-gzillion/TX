@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import SerialNumberInput from '../../SerialNumberInput';
+import SerialNumberInput from '@/components/shared/forms/inputs/../SerialNumberInput';
 export default function TestSerialInput() {
   const [value, setValue] = useState('');
   

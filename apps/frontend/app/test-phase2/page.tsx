@@ -1,38 +1,36 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
-import FormTypeSelector from '../FormTypeSelector';
-import PuritySelector from '../PuritySelector';
-import SerialNumberInput from '../SerialNumberInput';
+import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector';
+import PuritySelector from '@/components/shared/forms/inputs/PuritySelector';
+import SerialNumberInput from '@/components/shared/forms/inputs/SerialNumberInput';
 
 export default function TestForm() {
   const [formType, setFormType] = useState<'coin' | 'round' | 'bar' | 'jewelry' | 'other'>('coin');
-  const [purity, setPurity] = useState<number>(0.999);
-  const [serial, setSerial] = useState('');
-  
+  const [purity, setPurity] = useState(0.999);
+  const [serialNumber, setSerialNumber] = useState('');
+
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6">Phase 2 Components Test</h1>
+      <h1 className="text-2xl font-bold mb-6">Test Phase 2 Components</h1>
       
-      <div className="space-y-6">
-        <div className="border p-4 rounded">
+      <div className="space-y-8">
+        <div>
+          <h2 className="text-lg font-semibold mb-2">FormTypeSelector</h2>
           <FormTypeSelector value={formType} onChange={setFormType} />
-          <p className="mt-2">Selected: {formType}</p>
+          <p className="mt-2 text-sm text-gray-600">Selected: {formType}</p>
         </div>
-        
-        <div className="border p-4 rounded">
+
+        <div>
+          <h2 className="text-lg font-semibold mb-2">PuritySelector</h2>
           <PuritySelector metalType="Gold" value={purity} onChange={setPurity} />
-          <p className="mt-2">Purity: {purity}</p>
+          <p className="mt-2 text-sm text-gray-600">Selected purity: {purity}</p>
         </div>
-        
-        <div className="border p-4 rounded">
-          <SerialNumberInput value={serial} onChange={setSerial} />
-          <p className="mt-2">Serial: {serial}</p>
-        </div>
-        
-        <div className="bg-green-50 p-4 rounded border border-green-200">
-          <h2 className="font-bold text-green-800">✅ Phase 2 Components Working!</h2>
-          <p className="text-green-600">All 3 components are rendering correctly.</p>
+
+        <div>
+          <h2 className="text-lg font-semibold mb-2">SerialNumberInput</h2>
+          <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
+          <p className="mt-2 text-sm text-gray-600">Serial: {serialNumber || '(empty)'}</p>
         </div>
       </div>
     </div>

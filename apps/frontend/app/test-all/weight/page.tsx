@@ -1,5 +1,5 @@
 'use client';
-import WeightInput from '../../WeightInput';
+import WeightInput from '@/components/shared/forms/inputs/../WeightInput';
 export default function Test() {
   return (
     <div className="p-4">

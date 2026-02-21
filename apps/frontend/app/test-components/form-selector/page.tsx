@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import FormTypeSelector from '../../FormTypeSelector';
+import FormTypeSelector from '@/components/shared/forms/inputs/../FormTypeSelector';
 export default function TestFormSelector() {
   const [value, setValue] = useState<'coin' | 'round' | 'bar' | 'jewelry' | 'other'>('coin');
   
