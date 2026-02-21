@@ -6,7 +6,7 @@ import { FilterTabs } from '@/components/shared/ui/FilterTabs';
 import { AuctionCard } from '@/components/shared/ui/AuctionCard';
 import { Button } from '@/components/shared/ui/Button';
 import { api } from '@/lib/api';
-import { TrendingUp, TrendingDown, Clock, Users, DollarSign } from 'lucide-react';
+import { TrendingUp, TrendingDown, Clock, Users, DollarSign, Info } from 'lucide-react';
 import { Auction, PriceData } from '@/types/auction';
 
 export default function HomePage() {
@@ -14,6 +14,7 @@ export default function HomePage() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
   const [prices, setPrices] = useState<PriceData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showPriceInfo, setShowPriceInfo] = useState(false);
 
   useEffect(() => {
     async function loadData() {
@@ -32,7 +33,7 @@ export default function HomePage() {
             bids: 12,
             metal: 'gold',
             seller: 'testcore1xa352f6gtgc4g7c9rrdgl4wn9vaw9r25v47jen',
-            premium: '+2.5%',
+            // Removed premium field - seller sets price
           },
           {
             id: 2,
@@ -42,7 +43,6 @@ export default function HomePage() {
             bids: 8,
             metal: 'silver',
             seller: 'testcore14qkw9fplr9xplfl5qwz8rr8f3uxhja8yuf0z6l',
-            premium: '+1.8%',
           },
           {
             id: 3,
@@ -52,7 +52,6 @@ export default function HomePage() {
             bids: 5,
             metal: 'platinum',
             seller: 'testcore1urvw6ta906qphvvrmcuwwxy3z2fqns56er2agu',
-            premium: '+3.2%',
           },
           {
             id: 4,
@@ -62,7 +61,6 @@ export default function HomePage() {
             bids: 3,
             metal: 'palladium',
             seller: 'testcore1rr8knhdwc9uthxh3fazt3k4keuqtycctzcvd3c',
-            premium: '-0.5%',
           }
         ]);
       } catch (error) {
@@ -126,14 +124,14 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Right side - "Why PhoenixPME?" card */}
+          {/* Right side - "Why PhoenixPME?" card - UPDATED: removed bank statement */}
           <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 shadow-lg p-6">
             <h2 className="text-2xl font-bold text-amber-800 mb-4 flex items-center gap-2">
               <span className="text-3xl">🔥</span> Why PhoenixPME?
             </h2>
             
             <div className="space-y-4">
-              {/* Problem */}
+              {/* Problem - REMOVED bank statement */}
               <div>
                 <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-1">
                   <span className="text-red-500">⚠️</span> The Problem
@@ -147,10 +145,7 @@ export default function HomePage() {
                     <span className="text-red-500 mt-1">•</span>
                     <span>eBay takes <span className="font-bold text-red-600">15%</span> of your sale</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Banks freeze accounts for "suspicious activity"</span>
-                  </li>
+                  {/* Bank statement removed */}
                 </ul>
               </div>
 
@@ -195,18 +190,33 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Live Prices Banner */}
+        {/* Prices Banner - UPDATED: Changed from "Live" to "Last Updated" with API disclaimer */}
         {prices && (
           <div className="mb-8">
             <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-t-xl p-4 text-white">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-bold flex items-center gap-2">
-                  <span className="text-2xl">💰</span> Live Spot Prices
+                  <span className="text-2xl">💰</span> Spot Prices
                 </h2>
-                <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
-                  Updated: {new Date(prices.lastUpdated).toLocaleTimeString()}
-                </span>
+                <div className="flex items-center gap-3">
+                  <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
+                    Last updated: {new Date(prices.lastUpdated).toLocaleString()}
+                  </span>
+                  <button
+                    onClick={() => setShowPriceInfo(!showPriceInfo)}
+                    className="text-white hover:text-amber-200"
+                  >
+                    <Info className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
+              {showPriceInfo && (
+                <div className="mt-2 text-xs bg-white/10 p-2 rounded">
+                  Reference prices shown. Sellers set their own prices.
+                  <br />
+                  <span className="opacity-75">Source: phoenix-api-756y.onrender.com/api/prices</span>
+                </div>
+              )}
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white rounded-b-xl shadow-lg p-4 border border-gray-200">
