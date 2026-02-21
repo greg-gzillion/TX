@@ -2,8 +2,7 @@
 
 > Live tracking of development milestones, releases, and community growth
 
-## 📊 Current Status
-**Last Updated:** February 18, 2026
+**Last Updated:** February 20, 2026
 
 ### 🏗️ Development Phase
 - **Current:** Phase 8 - Production Deployment
@@ -23,11 +22,41 @@
 - [x] **Documentation Update** - Architecture guide, quick start, fee model with new terminology
 - [x] **Terminology Update** - "Insurance pool" → "Community Reserve Fund" across all docs
 
-### 🔄 In Progress
-- Auction contract tests for main auction contract
-- Real auction data integration (currently using mock auctions with real prices)
-- Bid placement UI with contract integration
-- TESTUSD visibility in Keplr (manual addition required)
+### 2026-02-20: Contract Client & Form Integration
+
+#### Completed
+- [x] **PhoenixEscrowClient** - TypeScript wrapper for contract interactions
+  - Execute methods: `createAuction`, `placeBid`, `finalizeAuction`
+  - Query methods: `getAuction`, `getActiveAuctions`, `getAuctionsBySeller`, `getAuctionsByBidder`
+  - Utility methods: `coreToUcore`, `ucoreToCore`, `calculateTotalForBid`
+
+- [x] **Create Auction Form** - Connected to contract client
+  - Form data serialized to JSON in contract's `description` field
+  - 10% collateral calculation based on reserve price
+  - Loading states during submission
+  - Error handling for wallet connection and insufficient funds
+  - Success feedback with transaction hash
+
+- [x] **Git commit** - `58e73ffb2657a5b25b14e942e9f0b4b51ca36f4f`
+  - Files added: 
+    - `lib/contract/phoenix-escrow.ts`
+    - `components/features/auctions/CreateAuctionForm/index.tsx`
+  - Lines changed: +771, -33
+
+#### Repository Metrics (14-day, as of Feb 20)
+- TX repo clones: 2,371
+- TX repo unique cloners: 660
+- Coreum-pme clones: 2,339  
+- Coreum-pme unique cloners: 359
+- Protocol specs clones: 39
+- Protocol specs unique cloners: 33
+- **Total clones across all repos**: 4,749
+- **Total unique cloners across all repos**: 1,052
+
+#### Next
+- [ ] Wallet connection hook (Keplr/Cosmostation)
+- [ ] Active auctions display page
+- [ ] Bid form with contract integration
 
 ### 🎯 Next Week Goals (2026-02-19 to 2026-02-25)
 1. Complete auction contract tests (16/16 passing)
@@ -36,6 +65,47 @@
 4. Create comprehensive wallet setup guide
 5. Begin TX testnet preparation for March 6 launch
 6. Engage 400+ cloners with first "Call for Testers"
+🔧 TECHNICAL DETAILS ONLY:
+PhoenixEscrowClient Interface
+typescript
+// Execute
+createAuction(itemId: string, description: string, startingPrice: string, reservePrice: string, durationHours: number)
+placeBid(auctionId: number, bidAmount: string)
+finalizeAuction(auctionId: number)
+
+// Query  
+getAuction(auctionId: number)
+getActiveAuctions()
+getAuctionsBySeller(seller: string)
+getAuctionsByBidder(bidder: string)
+
+// Utils
+coreToUcore(coreAmount: string): string
+ucoreToCore(ucoreAmount: string): string
+calculateTotalForBid(bidAmount: string): string
+Create Auction Form Data Structure
+typescript
+// Description field contains JSON with:
+{
+  version: "1.0.0",
+  schema: "phoenix-pme-auction-v1",
+  item: {
+    metalType: "Gold" | "Silver" | "Platinum" | "Palladium" | "Other",
+    formType: "coin" | "round" | "bar" | "jewelry" | "other",
+    weight: number,
+    weightUnit: "troy_oz" | "grams" | "ounces",
+    purity: string,
+    certification: {
+      isGraded: boolean,
+      service?: string,
+      grade?: string,
+      certNumber?: string
+    } | null,
+    serialNumber: string | null
+
+  },
+  created: string // ISO timestamp
+}
 
 ## 📈 Metrics & Analytics
 
@@ -44,11 +114,13 @@
 |--------|-----------|-----------|---------|
 | **Stars** | 1 | 0 | +1 |
 | **Forks** | 0 | 0 | - |
-| **Clones (14 days)** | 1,543 | 1,853 | -310 |
-| **Unique Cloners** | 407 | 328 | +79 |
-| **Unique Visitors** | 3 | 8 | -5 |
+| **TX Clones (14 days)** | 2,371 | 1,543 | +828 |
+| **TX Unique Cloners** | 660 | 407 | +253 |
+| **Coreum-pme Clones** | 2,339 | 2,872 | -533 |
+| **Coreum-pme Unique Cloners** | 359 | 451 | -92 |
+| **Total Clones (all repos)** | 4,749 | 4,415 | +334 |
+| **Total Unique Cloners** | 1,052 | 858 | +194 |
 | **Human PRs** | 8 | 8 | - |
-
 *\*Note: Total clones across both repos: 4,415 (coreum-pme 2,872 + TX 1,543)*
 
 ### Deployment Status
@@ -91,16 +163,28 @@
   - ✅ Documentation updated with new terminology
   - ✅ Render support ticket resolved (Prisma v5 downgrade)
 
-### 2026-02-14: Wallet Consolidation & Insurance Features
+### 2026-02-14: Wallet Consolidation & Features
 - **Version:** v0.2.0 (Feature Complete)
 - **Changes:**
   - Consolidated all wallet components (removed 10+ redundant files)
   - Added FeeDisplay and InsurancePoolBalance components
-  - Created fee-collector.ts and insurance-pool.ts services
+  - Created fee-collector.ts and  services
   - Finalized 7-wallet configuration (3 mock + 4 real)
   - Fixed all import paths with absolute imports
   - Enhanced UI feedback for MetalSelector and RoleSelector
   - Created CURRENT-FOCUS.md and ROADMAP.md
+
+### 📝 Terminology Update (2026-02-18)
+- [x] "Insurance Pool" → "Community Reserve Fund"
+- [x] "Insurance wallet" → "Community Reserve fund"  
+- [x] "Insurance module" → "Future initiatives"
+- [x] All legal docs updated with new terminology
+- [x] README reflects community ownership model
+
+**Why:** To clearly communicate that fees accumulate in a 
+community-controlled treasury, not an insurance product 
+with promises or guarantees. Users own the fund together; 
+no insurance is promised or implied.
 
 ### 2026-02-13: Auction Form Completion
 - **Version:** v0.1.5 (UI Complete)
