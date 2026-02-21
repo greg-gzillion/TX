@@ -126,7 +126,7 @@ export function getPriceDifference(metal: MetalType, auctionPrice: number): numb
 // Initialize - run once at startup
 export async function initPriceOracle() {
   try {
-    // STEP 1: Load latest prices from database FIRST (priority)
+    // STEP 1: Load latest prices from database FIRST
     console.log('📊 Loading latest spot prices from database...');
     const lastPrice = await prisma.priceHistory.findFirst({
       orderBy: { createdAt: 'desc' }
@@ -149,10 +149,9 @@ export async function initPriceOracle() {
       });
     } else {
       console.log('⚠️ No database records found, using default values');
-      // Keep the mock values in priceCache
     }
     
-    // STEP 2: Try to fetch fresh prices in the background (don't block startup)
+    // STEP 2: Try to fetch fresh prices in the background
     setTimeout(async () => {
       try {
         console.log('🔄 Fetching fresh spot prices in background...');
@@ -160,7 +159,7 @@ export async function initPriceOracle() {
       } catch (error) {
         console.error('Background price update failed:', error);
       }
-    }, 5000); // Wait 5 seconds after startup
+    }, 5000);
     
     // STEP 3: Schedule daily updates (8am EST)
     const scheduleDaily = () => {
@@ -177,7 +176,7 @@ export async function initPriceOracle() {
       
       setTimeout(async () => {
         await updateSpotPrices();
-        scheduleDaily(); // Re-schedule for next day
+        scheduleDaily();
       }, msUntilTarget);
     };
     
@@ -186,7 +185,7 @@ export async function initPriceOracle() {
   } catch (error) {
     console.error('❌ Failed to initialize price oracle:', error);
     
-    // Ultimate fallback - try to load from database one more time
+    // Ultimate fallback
     try {
       const lastPrice = await prisma.priceHistory.findFirst({
         orderBy: { createdAt: 'desc' }
@@ -203,35 +202,6 @@ export async function initPriceOracle() {
       }
     } catch (dbError) {
       console.error('❌ Fallback also failed:', dbError);
-      // Keep existing mock values in cache
-    }
-  }
-}
-
-    
-    scheduleDaily();
-    
-  } catch (error) {
-    console.error('❌ Failed to initialize price oracle:', error);
-    
-    // Ultimate fallback - try to load from database one more time
-    try {
-      const lastPrice = await prisma.priceHistory.findFirst({
-        orderBy: { createdAt: 'desc' }
-      });
-      if (lastPrice) {
-        priceCache = {
-          gold: lastPrice.gold,
-          silver: lastPrice.silver,
-          platinum: lastPrice.platinum,
-          palladium: lastPrice.palladium,
-          lastUpdated: lastPrice.createdAt
-        };
-        console.log('📊 Fallback: Loaded cached spot prices from', lastPrice.createdAt);
-      }
-    } catch (dbError) {
-      console.error('❌ Fallback also failed:', dbError);
-      // Keep existing mock values in cache
     }
   }
 }
