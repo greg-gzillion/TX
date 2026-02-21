@@ -1,3 +1,5 @@
+"use client";
+
 // components/auctions/list/AuctionList.tsx
 import { useEffect, useState } from 'react';
 import { usePhoenixEscrow } from '@/lib/contract/phoenix-escrow';

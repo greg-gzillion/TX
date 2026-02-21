@@ -1,3 +1,5 @@
+"use client";
+
 // components/auctions/list/AuctionCard.tsx
 import { Auction } from '@/lib/contract/phoenix-escrow';
 
@@ -7,19 +9,32 @@ interface Props {
 }
 
 export default function AuctionCard({ auction, onBid }: Props) {
-  const metadata = JSON.parse(auction.description);
+  // Guard against undefined auction
+  if (!auction || !auction.description) {
+    return null;
+  }
+
+  let metadata;
+  try {
+    metadata = JSON.parse(auction.description);
+  } catch (e) {
+    console.error('Failed to parse auction description:', e);
+    return null;
+  }
   
   return (
     <div className="border rounded-lg p-4 hover:shadow-lg transition">
       <div className="flex justify-between items-start">
         <div>
           <span className="text-2xl mr-2">
-            {metadata.item.metalType === 'Gold' && '🥇'}
-            {metadata.item.metalType === 'Silver' && '🥈'}
-            {metadata.item.metalType === 'Platinum' && '⚪'}
-            {metadata.item.metalType === 'Palladium' && '⚫'}
+            {metadata?.item?.metalType === 'Gold' && '🥇'}
+            {metadata?.item?.metalType === 'Silver' && '🥈'}
+            {metadata?.item?.metalType === 'Platinum' && '⚪'}
+            {metadata?.item?.metalType === 'Palladium' && '⚫'}
           </span>
-          <h3 className="text-lg font-semibold">{metadata.item.metalType} {metadata.item.formType}</h3>
+          <h3 className="text-lg font-semibold">
+            {metadata?.item?.metalType} {metadata?.item?.formType}
+          </h3>
         </div>
         <span className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded">
           {auction.status}
@@ -27,9 +42,9 @@ export default function AuctionCard({ auction, onBid }: Props) {
       </div>
       
       <div className="mt-2 space-y-1 text-sm text-gray-600">
-        <p>Weight: {metadata.item.weight} {metadata.item.weightUnit}</p>
-        <p>Purity: {parseFloat(metadata.item.purity) * 100}%</p>
-        {metadata.item.serialNumber && <p>Serial: {metadata.item.serialNumber}</p>}
+        <p>Weight: {metadata?.item?.weight} {metadata?.item?.weightUnit}</p>
+        <p>Purity: {metadata?.item?.purity ? (parseFloat(metadata.item.purity) * 100).toFixed(1) : 'N/A'}%</p>
+        {metadata?.item?.serialNumber && <p>Serial: {metadata.item.serialNumber}</p>}
       </div>
       
       <div className="mt-4 flex justify-between items-center">
@@ -38,7 +53,7 @@ export default function AuctionCard({ auction, onBid }: Props) {
           <p className="text-xl font-bold">
             {auction.current_bid 
               ? `${(parseInt(auction.current_bid) / 1_000_000).toFixed(2)} CORE`
-              : `${(parseInt(auction.starting_price) / 1_000_000).toFixed(2)} CORE (start)'`
+              : `${(parseInt(auction.starting_price) / 1_000_000).toFixed(2)} CORE (start)`
             }
           </p>
         </div>

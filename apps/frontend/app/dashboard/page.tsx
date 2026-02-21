@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import WalletSelector from '@/components/wallet/WalletSelector';
 import { useWallet } from '@/lib/wallet-context';
-import { AuctionList } from '@/components/auctions/list/AuctionList';
+import AuctionList from '@/components/auctions/list/AuctionList';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
