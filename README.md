@@ -89,15 +89,6 @@ The foundation token for PhoenixPME auctions is now operational on Coreum testne
 | **Health Check** | [https://phoenix-api-756y.onrender.com/health](https://phoenix-api-756y.onrender.com/health) |
 | **Metal Prices** | [https://phoenix-api-756y.onrender.com/api/prices](https://phoenix-api-756y.onrender.com/api/prices) |
 
-### Current Metal Prices (as of Feb 17, 2026)
-```json
-{
-  "gold": 4865.50,
-  "silver": 72.56,
-  "platinum": 2014.00,
-  "palladium": 1671.00
-}
-```
 
 ## Quick Local Setup
 ```bash
