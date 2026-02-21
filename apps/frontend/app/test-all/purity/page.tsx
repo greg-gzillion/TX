@@ -1,5 +1,5 @@
 'use client';
-import PuritySelector from '@/components/shared/forms/inputs/../PuritySelector';
+import PuritySelector from '@/components/shared/forms/inputs/PuritySelector';
 export default function Test() {
   return (
     <div className="p-4">

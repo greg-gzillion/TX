@@ -1,5 +1,5 @@
 'use client';
-import FormTypeSelector from '@/components/shared/forms/inputs/../FormTypeSelector';
+import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector';
 export default function Test() {
   return (
     <div className="p-4">
