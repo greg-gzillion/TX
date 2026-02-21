@@ -21,8 +21,11 @@ router.get('/prices-debug', async (req, res) => {
         force_load_ran: true
       }
     });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (error: any) {  // <-- Add ': any' here to fix the TypeScript error
+    res.status(500).json({ 
+      success: false, 
+      error: error?.message || 'Unknown error occurred' 
+    });
   }
 });
 
