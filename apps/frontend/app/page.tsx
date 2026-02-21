@@ -5,44 +5,34 @@ import NavBar from '@/components/layout/NavBar';
 import { FilterTabs } from '@/components/shared/ui/FilterTabs';
 import AuctionCard from '@/components/auctions/list/AuctionCard';
 import { Button } from '@/components/shared/ui/Button';
-import { api } from '@/lib/api';
-import { TrendingUp, TrendingDown, Clock, Users, DollarSign, Info } from 'lucide-react';
-import { Auction, PriceData } from '@/types/auction';
+import { TrendingUp, TrendingDown, Clock, Users, DollarSign } from 'lucide-react';
+import { Auction } from '@/types/auction';
+
+// Static reference prices - updated manually when market closes
+const REFERENCE_PRICES = {
+  gold: 5105.90,
+  silver: 84.52,
+  platinum: 2157.00,
+  palladium: 1743.00,
+  lastUpdated: "February 20, 2026"
+};
 
 export default function HomePage() {
   const [activeTab, setActiveTab] = useState('all');
   const [auctions, setAuctions] = useState<Auction[]>([]);
-  const [prices, setPrices] = useState<PriceData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showPriceInfo, setShowPriceInfo] = useState(false);
 
   useEffect(() => {
     async function loadData() {
       try {
         setLoading(true);
-        let pricesData = await api.getPrices();
         
-        // TEMPORARY FIX - Override incorrect prices
-        // TODO: Remove this when backend is fixed
-        if (pricesData && pricesData.gold === 5004.8) {
-          console.log('⚠️ Using temporary price override (backend returning stale data)');
-          pricesData = {
-            gold: 5105.90,
-            silver: 84.52,
-            platinum: 2157.00,
-            palladium: 1743.00,
-            lastUpdated: pricesData.lastUpdated
-          };
-        }
-        
-        setPrices(pricesData);
-        
-        // Mock auctions with real prices - using testcore addresses
+        // Mock auctions with reference prices
         setAuctions([
           {
             id: 1,
             title: '1oz Gold Bar - 999.9 Fine',
-            currentBid: pricesData.gold,
+            currentBid: REFERENCE_PRICES.gold,
             timeLeft: '2h 15m',
             bids: 12,
             metal: 'gold',
@@ -51,7 +41,7 @@ export default function HomePage() {
           {
             id: 2,
             title: '10oz Silver Bar',
-            currentBid: pricesData.silver * 10,
+            currentBid: REFERENCE_PRICES.silver * 10,
             timeLeft: '1d 3h',
             bids: 8,
             metal: 'silver',
@@ -60,7 +50,7 @@ export default function HomePage() {
           {
             id: 3,
             title: '1oz Platinum Bar',
-            currentBid: pricesData.platinum,
+            currentBid: REFERENCE_PRICES.platinum,
             timeLeft: '3h 45m',
             bids: 5,
             metal: 'platinum',
@@ -69,7 +59,7 @@ export default function HomePage() {
           {
             id: 4,
             title: '1oz Palladium Bar',
-            currentBid: pricesData.palladium,
+            currentBid: REFERENCE_PRICES.palladium,
             timeLeft: '4h 20m',
             bids: 3,
             metal: 'palladium',
@@ -182,98 +172,35 @@ export default function HomePage() {
                 </ul>
               </div>
 
-              {/* March 6 Countdown */}
+              {/* Launch Date - Removed countdown */}
               <div className="mt-4 pt-4 border-t border-amber-200">
                 <div className="bg-amber-100 rounded-lg p-3 text-center">
-                  <p className="text-amber-800 font-bold flex items-center justify-center gap-2">
-                    <span className="text-xl">🚀</span>
-                    Coming March 6, 2026
-                    <span className="text-xl">🚀</span>
+                  <p className="text-amber-800 font-bold">
+                    Launching March 6, 2026 on TX blockchain
                   </p>
-                  <p className="text-sm text-amber-700 mt-1">
-                    Live on TX blockchain testnet
-                  </p>
-                  <div className="text-xs text-amber-600 mt-2">
-                    {Math.ceil((new Date('2026-03-06') - new Date()) / (1000 * 60 * 60 * 24))} days to go
-                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Prices Banner */}
-        {prices && (
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-amber-500 to-yellow-500 rounded-t-xl p-4 text-white">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold flex items-center gap-2">
-                  <span className="text-2xl">💰</span> Spot Prices
-                </h2>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm bg-white/20 px-3 py-1 rounded-full">
-                    Last updated: {new Date(prices.lastUpdated).toLocaleString()}
-                  </span>
-                  <button
-                    onClick={() => setShowPriceInfo(!showPriceInfo)}
-                    className="text-white hover:text-amber-200"
-                  >
-                    <Info className="w-4 h-4" />
-                  </button>
-                </div>
+        {/* Reference Prices Banner */}
+        <div className="mb-8">
+          <div className="bg-gray-100 rounded-lg p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
+              <div className="flex items-center space-x-4">
+                <span className="font-medium text-gray-700">Reference Prices:</span>
+                <span className="text-amber-700">🥇 Gold ${REFERENCE_PRICES.gold}</span>
+                <span className="text-gray-600">🥈 Silver ${REFERENCE_PRICES.silver}</span>
+                <span className="text-gray-600">🔷 Platinum ${REFERENCE_PRICES.platinum}</span>
+                <span className="text-gray-600">🔶 Palladium ${REFERENCE_PRICES.palladium}</span>
               </div>
-              {showPriceInfo && (
-                <div className="mt-2 text-xs bg-white/10 p-2 rounded">
-                  Reference prices shown. Sellers set their own prices.
-                  <br />
-                  <span className="opacity-75">Source: phoenix-api-756y.onrender.com/api/prices</span>
-                </div>
-              )}
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white rounded-b-xl shadow-lg p-4 border border-gray-200">
-              {/* Gold */}
-              <div className="text-center p-3 hover:bg-amber-50 rounded-lg transition cursor-pointer" onClick={() => setActiveTab('gold')}>
-                <div className="text-3xl mb-2">🥇</div>
-                <div className="font-bold text-amber-600">GOLD</div>
-                <div className="text-xl font-bold">${prices.gold.toLocaleString()}</div>
-                <div className="text-sm text-green-600 flex items-center justify-center gap-1">
-                  <TrendingUp className="w-3 h-3" /> +2.6%
-                </div>
-              </div>
-              
-              {/* Silver */}
-              <div className="text-center p-3 hover:bg-gray-50 rounded-lg transition cursor-pointer" onClick={() => setActiveTab('silver')}>
-                <div className="text-3xl mb-2">🥈</div>
-                <div className="font-bold text-gray-600">SILVER</div>
-                <div className="text-xl font-bold">${prices.silver.toLocaleString()}</div>
-                <div className="text-sm text-green-600 flex items-center justify-center gap-1">
-                  <TrendingUp className="w-3 h-3" /> +6.3%
-                </div>
-              </div>
-              
-              {/* Platinum */}
-              <div className="text-center p-3 hover:bg-slate-50 rounded-lg transition cursor-pointer" onClick={() => setActiveTab('platinum')}>
-                <div className="text-3xl mb-2">🔷</div>
-                <div className="font-bold text-slate-600">PLATINUM</div>
-                <div className="text-xl font-bold">${prices.platinum.toLocaleString()}</div>
-                <div className="text-sm text-green-600 flex items-center justify-center gap-1">
-                  <TrendingUp className="w-3 h-3" /> +4.5%
-                </div>
-              </div>
-              
-              {/* Palladium */}
-              <div className="text-center p-3 hover:bg-zinc-50 rounded-lg transition cursor-pointer" onClick={() => setActiveTab('palladium')}>
-                <div className="text-3xl mb-2">🔶</div>
-                <div className="font-bold text-zinc-600">PALLADIUM</div>
-                <div className="text-xl font-bold">${prices.palladium.toLocaleString()}</div>
-                <div className="text-sm text-red-600 flex items-center justify-center gap-1">
-                  <TrendingDown className="w-3 h-3" /> -0.5%
-                </div>
-              </div>
+              <span className="text-xs text-gray-500">
+                Market close • {REFERENCE_PRICES.lastUpdated}
+              </span>
             </div>
           </div>
-        )}
+        </div>
 
         {/* Market Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
