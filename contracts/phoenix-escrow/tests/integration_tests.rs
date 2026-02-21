@@ -1,0 +1,207 @@
+#[cfg(test)]
+mod tests {
+    use cosmwasm_std::testing::{mock_dependencies, mock_env, mock_info};
+    use cosmwasm_std::{coins, from_json, Uint128};
+    use phoenix_escrow::contract::{execute, instantiate, query};
+    use phoenix_escrow::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+    use phoenix_escrow::state::{Auction, AuctionStatus, COMMUNITY_RESERVE_FUND};
+
+    #[test]
+    fn test_instantiate() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        let info = mock_info("creator", &coins(0, "ucore"));
+        
+        let msg = InstantiateMsg {
+            admin: "admin".to_string(),
+        };
+        
+        let res = instantiate(deps.as_mut(), env, info, msg).unwrap();
+        assert_eq!(res.attributes[0].value, "instantiate");
+    }
+
+    #[test]
+    fn test_create_auction() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        // 1 CORE = 1,000,000 ucore
+        let starting_price = Uint128::from(1000u64);        // 0.001 CORE starting bid
+        let reserve_price = Uint128::from(1000000u64);      // 1.0 CORE minimum
+        let seller_collateral = reserve_price.multiply_ratio(10u128, 100u128); // 10% of reserve
+        
+        let info = mock_info("seller", &coins(seller_collateral.u128(), "ucore"));
+
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), info.clone(), instantiate_msg).unwrap();
+        
+        let msg = ExecuteMsg::CreateAuction {
+            item_id: "gold_1".to_string(),
+            description: "1oz Gold Bar".to_string(),
+            starting_price,
+            reserve_price,  // Now using reserve price
+            duration_hours: 24,
+        };
+        
+        let res = execute(deps.as_mut(), env, info, msg).unwrap();
+        
+        assert_eq!(res.attributes[0].value, "create_auction");
+        assert_eq!(res.attributes[1].value, "0");
+        
+        let query_msg = QueryMsg::GetAuction { auction_id: 0 };
+        let query_res = query(deps.as_ref(), mock_env(), query_msg).unwrap();
+        let auction: Auction = from_json(&query_res).unwrap();
+        
+        assert_eq!(auction.seller, "seller");
+        assert_eq!(auction.item_id, "gold_1");
+        assert_eq!(auction.starting_price, starting_price);
+        assert_eq!(auction.reserve_price, reserve_price);
+        assert_eq!(auction.status, AuctionStatus::Active);
+        assert_eq!(auction.seller_collateral, seller_collateral);
+        assert_eq!(auction.buyer_collateral, Uint128::zero());
+        assert_eq!(auction.confirmed, false);
+        assert_eq!(auction.bid_processed, false);
+    }
+
+    #[test]
+    fn test_place_bid_with_collateral() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let starting_price = Uint128::from(1000u64);
+        let reserve_price = Uint128::from(1000000u64);
+        let seller_collateral = reserve_price.multiply_ratio(10u128, 100u128);
+        let seller_info = mock_info("seller", &coins(seller_collateral.u128(), "ucore"));
+        
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), seller_info.clone(), instantiate_msg).unwrap();
+        
+        let create_msg = ExecuteMsg::CreateAuction {
+            item_id: "gold_1".to_string(),
+            description: "1oz Gold Bar".to_string(),
+            starting_price,
+            reserve_price,
+            duration_hours: 24,
+        };
+        execute(deps.as_mut(), env.clone(), seller_info.clone(), create_msg).unwrap();
+        
+        // Bid above reserve price
+        let bid_amount = reserve_price;  // Exactly at reserve price
+        let buyer_collateral = bid_amount.multiply_ratio(10u128, 100u128); // 10% of bid
+        let total_buyer_funds = bid_amount + buyer_collateral;
+        
+        println!("Debug: bid_amount={}, buyer_collateral={}, total={}", bid_amount, buyer_collateral, total_buyer_funds);
+        
+        let buyer_info = mock_info("buyer", &coins(total_buyer_funds.u128(), "ucore"));
+        let bid_msg = ExecuteMsg::PlaceBid { auction_id: 0 };
+        
+        let res = execute(deps.as_mut(), env, buyer_info, bid_msg).unwrap();
+        
+        assert_eq!(res.attributes[0].value, "place_bid");
+        
+        let query_msg = QueryMsg::GetAuction { auction_id: 0 };
+        let query_res = query(deps.as_ref(), mock_env(), query_msg).unwrap();
+        let auction: Auction = from_json(&query_res).unwrap();
+        
+        assert!(auction.current_bid.is_some());
+        if let Some(bid) = auction.current_bid {
+            assert_eq!(bid.bidder, "buyer");
+            assert_eq!(bid.amount, bid_amount);
+        }
+        assert_eq!(auction.bids.len(), 0);
+        assert_eq!(auction.buyer_collateral, buyer_collateral);
+    }
+
+     #[test]
+    fn test_dual_collateral_enforcement() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let starting_price = Uint128::from(1000u64);
+        let reserve_price = Uint128::from(1000000u64);
+        let seller_collateral = reserve_price.multiply_ratio(10u128, 100u128);
+        let seller_info = mock_info("seller", &coins(seller_collateral.u128(), "ucore"));
+        
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), seller_info.clone(), instantiate_msg).unwrap();
+        
+        let create_msg = ExecuteMsg::CreateAuction {
+            item_id: "gold_1".to_string(),
+            description: "1oz Gold Bar".to_string(),
+            starting_price,
+            reserve_price,
+            duration_hours: 24,
+        };
+        execute(deps.as_mut(), env.clone(), seller_info, create_msg).unwrap();
+        
+        let bid_amount = reserve_price + Uint128::from(50000u64);  // 1.05 CORE
+        
+        // Test 1: Bid without collateral (should fail)
+        // Send exactly the starting price, no collateral
+        let buyer_info_no_collateral = mock_info("buyer", &coins(starting_price.u128(), "ucore"));
+        let bid_msg = ExecuteMsg::PlaceBid { auction_id: 0 };
+        
+        let err = execute(deps.as_mut(), env.clone(), buyer_info_no_collateral, bid_msg.clone());
+        assert!(err.is_err());
+        
+        // Test 2: Bid with proper collateral (should succeed)
+        let buyer_collateral = bid_amount.multiply_ratio(10u128, 100u128);
+        let total_buyer_funds = bid_amount + buyer_collateral;
+        let buyer_info_with_collateral = mock_info("buyer", &coins(total_buyer_funds.u128(), "ucore"));
+        
+        let res = execute(deps.as_mut(), env, buyer_info_with_collateral, bid_msg);
+        assert!(res.is_ok());
+    }
+
+    #[test]
+    fn test_reserve_not_met() {
+        let mut deps = mock_dependencies();
+        let env = mock_env();
+        
+        let starting_price = Uint128::from(1000u64);
+        let reserve_price = Uint128::from(1000000u64);  // Reserve at 1.0 CORE
+        let seller_collateral = reserve_price.multiply_ratio(10u128, 100u128);
+        let seller_info = mock_info("seller", &coins(seller_collateral.u128(), "ucore"));
+        
+        let instantiate_msg = InstantiateMsg {
+            admin: "admin".to_string(),
+        };
+        instantiate(deps.as_mut(), env.clone(), seller_info.clone(), instantiate_msg).unwrap();
+        
+        let create_msg = ExecuteMsg::CreateAuction {
+            item_id: "gold_1".to_string(),
+            description: "1oz Gold Bar".to_string(),
+            starting_price,
+            reserve_price,
+            duration_hours: 24,
+        };
+        execute(deps.as_mut(), env.clone(), seller_info.clone(), create_msg).unwrap();
+        
+        let bid_amount = Uint128::from(500000u64);  // 0.5 CORE (below reserve)
+        let buyer_collateral = bid_amount.multiply_ratio(10u128, 100u128);
+        let total_buyer_funds = bid_amount + buyer_collateral;
+        
+        let buyer_info = mock_info("buyer", &coins(total_buyer_funds.u128(), "ucore"));
+        let bid_msg = ExecuteMsg::PlaceBid { auction_id: 0 };
+        
+        let res = execute(deps.as_mut(), env.clone(), buyer_info, bid_msg).unwrap();
+        assert_eq!(res.attributes[0].value, "place_bid");
+        
+        // Advance time past end_time
+        let mut env_advanced = env.clone();
+        env_advanced.block.time = env.block.time.plus_seconds(24 * 3600 + 1); // 24 hours + 1 second
+        
+        // End auction - should have no sale
+        let end_msg = ExecuteMsg::EndAuction { auction_id: 0 };
+        let res = execute(deps.as_mut(), env_advanced, seller_info, end_msg).unwrap();
+        
+        assert_eq!(res.attributes[2].value, "no_sale");
+        assert_eq!(res.attributes[3].value, "reserve_not_met");
+  }
+}

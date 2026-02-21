@@ -14,16 +14,17 @@ pub struct Auction {
     pub item_id: String,
     pub description: String,
     pub starting_price: Uint128,
-    pub reserve_price: Option<Uint128>,
+    pub reserve_price: Uint128,        // ← ADD THIS (minimum seller accepts)
     pub start_time: u64,
     pub end_time: u64,
     pub current_bid: Option<Bid>,
     pub bids: Vec<Bid>,
     pub status: AuctionStatus,
     pub escrow_released: bool,
-    pub seller_collateral: Uint128,
-    pub buyer_collateral: Uint128,
+    pub seller_collateral: Uint128,    // 10% of reserve_price
+    pub buyer_collateral: Uint128,     // 10% of winning bid
     pub confirmed: bool,
+    pub bid_processed: bool,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]

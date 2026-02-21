@@ -14,7 +14,7 @@ pub enum ExecuteMsg {
         item_id: String,
         description: String,
         starting_price: Uint128,
-        reserve_price: Option<Uint128>,
+        reserve_price: Uint128,        // ← ADD THIS
         duration_hours: u64,
     },
     PlaceBid {
