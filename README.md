@@ -123,6 +123,7 @@ components/
 | **Backend API** | [https://phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
 | **Health Check** | [https://phoenix-api-756y.onrender.com/health](https://phoenix-api-756y.onrender.com/health) |
 
+<<<<<<< HEAD
 ### Reference Metal Prices (as of Feb 20, 2026 close)
 | Metal | Price |
 |-------|-------|
@@ -136,6 +137,8 @@ components/
 ---
 
 ## 📦 Quick Local Setup
+=======
+>>>>>>> 048a856b8359a8cb38b04b6645ba0231cc5427c3
 
 ```bash
 git clone https://github.com/greg-gzillion/TX.git
@@ -160,6 +163,7 @@ Auction detail page
 
 Real contract integration (March 6)
 
+<<<<<<< HEAD
 ⚖️ Legal & Compliance
 License
 This project is dual-licensed. See DUAL_LICENSE.md for details.
@@ -186,3 +190,8 @@ This is a reorganized version of the original project at github.com/PhoenixPME/c
 Last Updated: February 21, 2026
 Live Frontend: https://phoenix-frontend-seven.vercel.app
 Live API: https://phoenix-api-756y.onrender.com
+=======
+**Last Updated:** February 18, 2026  
+**Live Frontend:** [https://phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app)  
+**Live API:** [https://phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com)
+>>>>>>> 048a856b8359a8cb38b04b6645ba0231cc5427c3
