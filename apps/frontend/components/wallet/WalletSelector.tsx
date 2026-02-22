@@ -76,7 +76,6 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
             coinDenom: 'TESTCORE',
             coinMinimalDenom: 'utestcore',
             coinDecimals: 6,
-            coinGeckoId: 'coreum',
           },
         ],
         feeCurrencies: [
@@ -84,14 +83,12 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
             coinDenom: 'TESTCORE',
             coinMinimalDenom: 'utestcore',
             coinDecimals: 6,
-            coinGeckoId: 'coreum',
           },
         ],
         stakeCurrency: {
           coinDenom: 'TESTCORE',
           coinMinimalDenom: 'utestcore',
           coinDecimals: 6,
-          coinGeckoId: 'coreum',
         },
         gasPriceStep: {
           low: 0.01,
@@ -154,7 +151,6 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
             coinDenom: 'TESTCORE',
             coinMinimalDenom: 'utestcore',
             coinDecimals: 6,
-            coinGeckoId: 'coreum',
           },
         ],
         feeCurrencies: [
@@ -162,14 +158,12 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
             coinDenom: 'TESTCORE',
             coinMinimalDenom: 'utestcore',
             coinDecimals: 6,
-            coinGeckoId: 'coreum',
           },
         ],
         stakeCurrency: {
           coinDenom: 'TESTCORE',
           coinMinimalDenom: 'utestcore',
           coinDecimals: 6,
-          coinGeckoId: 'coreum',
         },
         gasPriceStep: {
           low: 0.01,
