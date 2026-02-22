@@ -21,3 +21,12 @@
 
 ## COMPLEXITY BOUNDARY:
 If it's not essential for trading physical metals TODAY, it goes in /docs/ideas/
+
+## ✅ CURRENT STATUS (as of Feb 21, 2026)
+
+| Feature | Status |
+|---------|--------|
+| Wallet connection | ✅ Working |
+| Create auction form | ✅ Working |
+| TESTUSD integration | ⏳ March 6 |
+| Smart contract deployment | ⏳ March 6 |

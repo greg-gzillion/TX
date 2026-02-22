@@ -1,6 +1,7 @@
-# PhoenixPME Licensing
+# PhoenixPME Legal Documentation
 
-This software is available under a **dual-license model**. Please refer to the appropriate documentation below:
+## 📚 Overview
+This directory contains all legal documentation for the PhoenixPME project.
 
 ## 📜 License Options
 
@@ -14,26 +15,32 @@ For open source, academic, and personal use:
 For business/commercial deployment without GPL requirements:
 - Custom terms with royalty structure
 - Includes support and consulting
-- See: [`docs/legal/COMMERCIAL_LICENSE.md`](docs/legal/COMMERCIAL_LICENSE.md)
+- See: [`docs/legal/COMMERCIAL_TERMS.md`](docs/legal/COMMERCIAL_TERMS.md)
+
+⚠️ **Important:** All commercial fees flow to the Community Reserve Fund, same as public platform. No individual (including founder) can withdraw.
 
 ## 🤝 Contributor Agreement
 All contributors must agree to:
 - [`docs/legal/CONTRIBUTOR_AGREEMENT.md`](docs/legal/CONTRIBUTOR_AGREEMENT.md)
 
 ## 📚 Full Legal Documentation
-All legal documents are maintained in the [`docs/legal/`](docs/legal/) directory:
+
+⚠️ **Terminology Note:** All documents use "Community Reserve Fund" consistently. Older references to "Insurance Pool" have been updated.
 
 | Document | Purpose |
 |----------|---------|
-| [`DUAL_LICENSE.md`](docs/legal/DUAL_LICENSE.md) | Overview of licensing options |
-| [`FACTUAL_LEGAL_STATUS.md`](docs/legal/FACTUAL_LEGAL_STATUS.md) | Copyright and trademark status (honest disclosure) |
-| [`FEE_MODEL.md`](docs/legal/FEE_MODEL.md) | Fee structure (single source of truth) |
-| [`COMMERCIAL_TERMS.md`](docs/legal/COMMERCIAL_TERMS.md) | Complete commercial terms (merged) |
-| [`LEGAL_NOTICES.md`](docs/legal/LEGAL_NOTICES.md) | Consolidated notices (TX, copyright, etc.) |
-| [`CONTRIBUTOR_AGREEMENT.md`](docs/legal/CONTRIBUTOR_AGREEMENT.md) | Contributor terms |
-| [`SECURITY.md`](docs/legal/SECURITY.md) | Security policy |
-| [`compliance/INSURANCE_DISCLAIMER.md`](docs/legal/compliance/INSURANCE_DISCLAIMER.md) | Insurance status disclosure |
-| [`compliance/RISK_DISCLOSURE.md`](docs/legal/compliance/RISK_DISCLOSURE.md) | Risk disclosure |
+| [`DUAL_LICENSE.md`](DUAL_LICENSE.md) | Overview of licensing options |
+| [`FACTUAL_LEGAL_STATUS.md`](FACTUAL_LEGAL_STATUS.md) | Copyright and trademark status (honest disclosure) |
+| [`FEE_MODEL.md`](FEE_MODEL.md) | Fee structure (single source of truth) |
+| [`COMMERCIAL_TERMS.md`](COMMERCIAL_TERMS.md) | Complete commercial terms (merged) |
+| [`NOTICE.md`](NOTICE.md) | General legal notices |
+| [`HONEST_NOTICE.md`](HONEST_NOTICE.md) | Transparent disclosure |
+| [`LICENSE_NOTICE.md`](LICENSE_NOTICE.md) | License summary |
+| [`FULL_CONTRACT.md`](FULL_CONTRACT.md) | Complete legal agreement |
+| [`CONTRIBUTOR_AGREEMENT.md`](CONTRIBUTOR_AGREEMENT.md) | Contributor terms |
+| [`SECURITY.md`](SECURITY.md) | Security policy |
+| [`compliance/INSURANCE_DISCLAIMER.md`](compliance/INSURANCE_DISCLAIMER.md) | Insurance status disclosure |
+| [`compliance/RISK_DISCLOSURE.md`](compliance/RISK_DISCLOSURE.md) | Risk disclosure |
 
 ## 📞 Commercial Inquiries
 For commercial licensing, support, or custom agreements:
@@ -44,4 +51,4 @@ For commercial licensing, support, or custom agreements:
 
 *This file serves as an index to the complete legal documentation. All terms are fully detailed in the referenced documents.*
 
-*Last updated: February 16, 2026*
+*Last updated: February 21, 2026*

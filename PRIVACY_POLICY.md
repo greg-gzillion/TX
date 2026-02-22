@@ -1,7 +1,7 @@
 # PhoenixPME Privacy Policy
 
-**Effective Date:** February 16, 2026  
-**Last Updated:** February 16, 2026
+**Effective Date:** February 21, 2026  
+**Last Updated:** February 21, 2026
 
 ---
 
@@ -30,7 +30,7 @@ PhoenixPME ("we," "us," "our," "Platform") respects your privacy. This Privacy P
 - Transaction data on blockchain
 
 ### 1.3 Blockchain Data
-- Wallet addresses and transaction hashes are public on TX blockchain
+- Wallet addresses and transaction hashes are public on TX blockchain (formerly Coreum)
 - Smart contract interactions are permanently recorded
 
 ---
@@ -45,6 +45,8 @@ PhoenixPME ("we," "us," "our," "Platform") respects your privacy. This Privacy P
 - Detect and prevent fraud
 - Improve platform functionality
 
+⚠️ **Note:** Until March 6, 2026, the platform is in mock mode on testnet. Real transactions are not yet processed.
+
 ---
 
 ## 3. Information Sharing
@@ -52,6 +54,7 @@ PhoenixPME ("we," "us," "our," "Platform") respects your privacy. This Privacy P
 ### 3.1 We DO Share With:
 - **Transaction Counterparties:** Information needed to complete transactions
 - **Blockchain Networks:** Transaction data is public by design
+- **Community Reserve Fund:** Fee data is recorded on-chain
 - **Service Providers:** Hosting, analytics, and security services
 - **Legal Requirements:** When required by law
 
@@ -99,4 +102,4 @@ To exercise rights, contact: gjf20842@gmail.com
 
 ---
 
-**Last Updated:** February 16, 2026
+**Last Updated:** February 21, 2026

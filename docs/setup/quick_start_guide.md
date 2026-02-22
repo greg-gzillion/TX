@@ -1,5 +1,4 @@
 # Phoenix PME - Quick Start Guide
-# Phoenix PME - Quick Start Guide
 ## 🚧 Important Note About Smart Contracts
 ## 🚧 Critical Timeline Information
 
@@ -28,7 +27,7 @@ This guide will help you get PhoenixPME running locally OR connect to the live c
 
 # 🚀 PhoenixPME Quick Start Guide
 
-**Last Updated:** February 18, 2026
++ **Last Updated:** February 21, 2026
 **Purpose:** For users who want to use the PhoenixPME platform
 
 ---
@@ -39,11 +38,13 @@ This guide will help you get PhoenixPME running locally OR connect to the live c
 |--------|--------|
 | **Live Frontend** | ✅ [phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app) |
 | **Live API** | ✅ [phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
-| **Metal Prices** | ✅ Real-time |
+| **Metal Prices** | ✅ Reference prices (updated manually)
 | **Wallet Connection** | ✅ Working |
 | **Smart Contracts** | ⏳ March 6, 2026 |
+	**Metal Prices** | ✅ Reference prices (market close) |---
 
----
+
++ ⚠️ Note: The testnet is currently unstable. A mock wallet is available for UI testing until March 6.
 
 ## ⚠️ Important Timeline
 
@@ -73,8 +74,9 @@ No installation needed! Visit:
 ⚠️ Free tier spins down after inactivity. First request may take 30-50 seconds.
 
 ---
-
 ## 🔧 Wallet Setup
++ 
++ ⚠️ Note: The testnet is currently unstable. A mock wallet is available for UI testing until March 6.
 
 ### Step 1: Install a Wallet
 
@@ -233,5 +235,12 @@ npm install
 npm run dev
 For more detailed technical setup, see setup_guide.md
 
-Last Updated: February 18, 2026
-Author: Greg (@greg-gzillion)
+## 📍 Project Status (as of Feb 21, 2026)
+
+| Aspect | Status |
+|--------|--------|
+| **Live Frontend** | ✅ [phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app) |
+| **Live API** | ✅ [phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
+| **Metal Prices** | ✅ Reference prices (market close, manual updates) |
+| **Wallet Connection** | ✅ Working (mock wallet for testing) |
+| **Smart Contracts** | ⏳ March 6, 2026 |

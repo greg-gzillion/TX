@@ -58,3 +58,14 @@
 2. Consider trademark registration if brand valuable
 3. Monetize through services, not license restrictions
 4. Build community around open source core
+
+---
+## 🎯 What This Means For Users & Contributors
+
+- **You can use the code freely** (GPL v3.0)
+- **You can fork the project** (it's allowed!)
+- **The brand isn't legally protected** (yet)
+- **Your contributions become part of the project** (per CLA)
+- **The project succeeds if we build community**
+
+*Last updated: February 14, 2026*

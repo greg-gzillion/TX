@@ -51,6 +51,12 @@ You acknowledge that:
 ## 8. SIGNATURE
 By submitting a pull request, creating an issue, or contributing code through any means, you electronically sign this agreement.
 
+## 9. DEVELOPER CERTIFICATE OF ORIGIN
+By contributing, you certify that:
+- The contribution was created in whole or in part by you
+- You have the right to submit it under the project's license
+- The contribution is based on previous work that, to your knowledge, is appropriately licensed
+- You are not submitting someone else's work without permission
 ---
 
 **This is a legally binding agreement.** If you do not agree, do not contribute.

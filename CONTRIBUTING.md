@@ -1,21 +1,39 @@
 # How to Contribute to PhoenixPME
 
+**Last updated:** February 21, 2026
+
+---
+
 ## 🎯 Project Focus
 First, please read [`CURRENT-FOCUS.md`](CURRENT-FOCUS.md) to understand what we're building NOW vs what's parked for later. This will save everyone time.
+
+---
 
 ## 📋 Finding Tasks
 1. Check [`PROJECTS_NEW.md`](PROJECTS_NEW.md) for current priorities
 2. Look for issues tagged `good-first-issue` or `help-wanted` on [GitHub Issues](https://github.com/greg-gzillion/TX/issues)
 3. Review the architecture docs in [`/docs/architecture/`](/docs/architecture/) to understand the system
+4. Check [`docs/TERMINOLOGY_GUIDE.md`](docs/TERMINOLOGY_GUIDE.md) for consistent language before contributing
+
+---
 
 ## 🚀 Development Setup
 
 ### Prerequisites
-- Node.js v18+
-- Docker (for local blockchain)
+- Node.js v20+
+- PostgreSQL v14+ (optional, for local backend)
+- Docker (optional, for local blockchain)
 - Keplr wallet (for testnet interaction)
 
+### ⚠️ Important Note About Testnet
+**The current Coreum testnet (v3.x) is NOT compatible with our smart contracts (built for v5.0+).**
+
+- **TX Testnet Launches:** March 6, 2026
+- **Current Status:** Mock mode active for UI testing
+- **Real contract calls:** Begin March 6
+
 ### Local Development
+
 ```bash
 # Clone your fork
 git clone https://github.com/YOUR_USERNAME/TX.git
@@ -24,111 +42,178 @@ cd TX
 # Install dependencies
 cd apps/frontend && npm install
 cd ../backend && npm install
+Mock Wallets (For Testing)
+The project includes mock wallets for UI testing without a blockchain connection:
 
-# Start development servers
-# Terminal 1 - Backend
-cd apps/backend && npm run dev
+### Mock Wallets (For Testing)
+The project includes mock wallets for UI testing without a blockchain connection:
 
-# Terminal 2 - Frontend  
-cd apps/frontend && npm run dev
+| Wallet | Address | Balance | Role |
+|--------|---------|---------|------|
+| Robert | `testcore1xa352f6gtgc4g7c9rrdgl4wn9vaw9r25v47jen` | 5,000,000 | Can create auctions |
+| Alice | `testcore14qkw9fplr9xplfl5qwz8rr8f3uxhja8yuf0z6l` | 1,000,000 | Can bid |
+| Bob | `testcore1afmlm9ra7m555vurve6ek4754rnv7max2hl6en` | 2,000,000 | Can bid |
+| Charlie | `testcore1urvw6ta906qphvvrmcuwwxy3z2fqns56er2agu` | 3,000,000 | Can bid |
+| Treasury | `testcore1mocktreasuryaddress12345` | 13,000,000 | Admin (funds auctions) |
+| Deployer | `testcore1mockdeployeraddress67890` | 5,000,000 | Contract deployment |
+| **Community Reserve Fund** | `testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv` | 0 (accumulates) | Receives 1.1% fees |
 
-# Visit http://localhost:3000
+**Important Notes:**
+- Any user can be a buyer OR seller depending on the auction (Robert can bid, Alice can create auctions)
+- The Community Reserve Fund address is where 1.1% fees accumulate
+- **No one can withdraw** from this address - funds are locked until DAO governance
+- Balance grows with each successful auction
 
-# Mock wallets are in tests/fixtures/wallets/
-# Available roles: Treasury, Deployer, Insurance, Seller, Alice, Bob, Charlie
+
+Start Development Servers
+Terminal 1 - Backend
+bash
+cd apps/backend
+cp .env.example .env  # Configure as needed
+npm run dev
+# Runs on http://localhost:3001
+Terminal 2 - Frontend
+bash
+cd apps/frontend
+cp .env.local.example .env.local  # Configure as needed
+npm run dev
+# Runs on http://localhost:3000
+Verify Everything Works
+✅ Frontend loads at http://localhost:3000
+
+✅ Backend health check: http://localhost:3001/health
+
+✅ Mock wallet selector appears in navbar
+
+✅ No errors in browser console (F12)
 
 📝 Pull Request Process
-Branch Naming:
+Branch Naming
 feature/description for new features
 
 fix/description for bug fixes
 
 docs/description for documentation
 
-Before Submitting:
-Test your changes locally
+test/description for test improvements
 
-Ensure all tests pass
+Before Submitting
+✅ Test your changes locally
 
-Update documentation if needed
+✅ Ensure all tests pass (npm test)
 
-Add your changes to PROJECTS_NEW.md if applicable
+✅ Update documentation if needed
 
-PR Description Should Include:
-What problem does this solve?
+✅ Check terminology guide for consistent language
 
-How did you test it?
+✅ Add your changes to PROJECTS_NEW.md if applicable
+
+✅ Run npm run build to verify no build errors
+
+PR Description Should Include
+What problem does this solve? (Link to issue if applicable)
+
+How did you test it? (Local testing, browser console, etc.)
 
 Screenshots for UI changes
 
-Related issue numbers
+Related issue numbers (e.g., "Fixes #123")
+
+Any breaking changes (and how to migrate)
 
 💬 Communication
-GitHub Issues: For technical discussions, bug reports, feature requests
-
-Email: gjf20842@gmail.com - For serious work, grants, or partnership inquiries
-
-Do NOT: Open issues for general questions about blockchain or React
+Channel	Purpose
+GitHub Issues	Technical discussions, bug reports, feature requests
+GitHub Discussions	Grant proposals, community feedback, long-form discussions
+Email	gjf20842@gmail.com - For serious work, grants, or partnership inquiries
+Do NOT: Open issues for general questions about blockchain or React (use Discussions first).
 
 💰 The PhoenixPME Funding Model
-This project aims to become self-sustaining through a 1.1% protocol fee, governed by the community. This means contributors are paid via transparent grants, not equity or speculative tokens.
+This project aims to become self-sustaining through a 1.1% protocol fee governed by the community. All fees flow to the Community Reserve Fund (CRF) - a smart contract that no individual can access.
+
+Key Facts About Funding
+✅ 1.1% fee is hardcoded in smart contracts
+
+✅ Funds go to Community Reserve Fund (no individual access)
+
+✅ Founder (Greg) has 10% voting weight, NOT withdrawal rights
+
+✅ Future use determined by DAO vote
+
+✅ Contributors paid via transparent grants, not equity or tokens
 
 Path for Technical Contributors
 Step 1: Find an Open Task
-Check the active issues in the GitHub Issues tab.
+Check active issues in GitHub Issues
 
-Review the roadmap in ROADMAP.md and CURRENT-FOCUS.md.
+Review ROADMAP.md and CURRENT-FOCUS.md
 
-Comment on an issue or discussion to express interest and share your initial thoughts.
+Comment on an issue to express interest and share initial thoughts
 
 Step 2: Submit a Grant Proposal
-For substantial work, submit a proposal to the community. A good proposal includes:
+For substantial work, submit a proposal to the community via GitHub Discussions. A good proposal includes:
 
-Title & Summary: e.g., "Build Core Auction Escrow Smart Contract v1.0"
-
-Detailed Scope of Work: Reference specific sections of the Architecture Overview.
-
-Deliverables: Concrete outputs (e.g., "Audited CosmWasm contract on Coreum testnet", "Technical documentation").
-
-Timeline: Estimated start date and completion date.
-
-Grant Request: Total funding amount and milestone breakdowns (e.g., "30% on audit completion, 70% on mainnet deployment").
-
-Your Background: Links to previous relevant work (GitHub, portfolio).
-
+Section	What to Include
+Title & Summary	e.g., "Build BidForm Component v1.0"
+Scope of Work	Reference relevant architecture docs
+Deliverables	Concrete outputs (code, tests, docs)
+Timeline	Estimated start and completion dates
+Grant Request	Total amount + milestone breakdown
+Your Background	Links to previous relevant work
 Step 3: Community Review & Vote
-Your proposal will be posted to the GitHub Discussions tab.
+Proposal posted to GitHub Discussions
 
-Community members and other developers will ask questions and provide feedback.
+Community feedback and refinement (minimum 7 days)
 
-Once refined, the proposal will move to an on-chain snapshot vote for funding approval.
+On-chain snapshot vote for funding approval
 
 Step 4: Work & Get Paid
-Upon vote approval, the grant amount is locked in the DAO treasury.
+Grant amount locked in Community Reserve Fund
 
-You work publicly, preferably in a fork or branch of the main repo.
+Work publicly in fork or branch
 
-Upon milestone completion, you submit proof of work. A multi-sig of community trustees releases the funds.
+Submit proof of work at milestones
 
-Current Priority Tracks for Grants
-Core Smart Contract Development: Implementing the auction escrow state machine in CosmWasm.
+Multi-sig of community trustees releases funds
 
-Frontend/UI Development: Building user-friendly auction interfaces.
+✅ Current Priority Tracks (as of Feb 21, 2026)
+✅ Completed
+Area	Status
+Core auction contracts	✅ 7 + 16 tests passing
+Frontend auction creation form	✅ Complete with 8 components
+Wallet integration (Keplr/Leap)	✅ Working
+Live deployment	✅ Vercel + Render
+Frontend reorganization	✅ Clean structure, no duplicates
+🔜 Immediate Needs
+Priority	Task	Status
+🔴 HIGH	BidForm component	⏳ IN PROGRESS
+🔴 HIGH	Auction detail page	⏳ PLANNED
+🔴 HIGH	Real contract integration	⏳ March 6+
+🟡 MEDIUM	Shipping oracle development	📝 FUTURE
+🟡 MEDIUM	Dispute resolution system	📝 FUTURE
+Future Tracks (Post-MVP)
+Oracle Development (shipping tracking verification)
 
-Oracle Development: Creating services to verify shipping and tracking.
+Cross-Chain Infrastructure (settlement layer bridges)
 
-Cross-Chain Infrastructure: Building bridges between TX (logic) and settlement layers.
+Testing & Security (audits, bug bounties)
 
-Testing & Security: Auditing contracts and writing comprehensive tests.
+🚀 Getting Started Today
+You don't need to wait for a grant to contribute:
 
-Getting Started Today
-You don't need to wait for a grant to contribute.
+Fork the repository and start experimenting
 
-Fork the repository and start experimenting.
+Submit a Pull Request for:
 
-Submit a Pull Request for documentation fixes, design ideas, or small improvements.
+Documentation fixes
 
-Join the Discussion to help shape the protocol's future.
+Design ideas
+
+Small improvements
+
+Test additions
+
+Join the Discussion to help shape the protocol's future
 
 Building trust through small, public contributions is the best path to larger, funded work.
 
@@ -141,13 +226,24 @@ License your work under GPL v3.0 (see LICENSE)
 
 Maintain the project's dual-license structure for commercial use
 
-❓ Questions
+Use consistent terminology from docs/TERMINOLOGY_GUIDE.md
+
+❓ Questions?
 Check existing issues first
 
 Review documentation in /docs/
 
 Open a GitHub issue with the question label
 
+Email serious inquiries to gjf20842@gmail.com
+
+📚 Related Documents
+Document	Purpose
+CURRENT-FOCUS.md	What we're building NOW
+ROADMAP.md	Future plans
+PROJECTS_NEW.md	Current priorities
+TERMINOLOGY_GUIDE.md	Consistent language
+CONTRIBUTOR_AGREEMENT.md	Legal terms
 Thank you for helping build the future of physical metals trading on blockchain! 🏆
 
-Last updated: February 14, 2026
+Last updated: February 21, 2026

@@ -1,6 +1,6 @@
 # ⚙️ PhoenixPME Technical Setup Guide
 
-**Last Updated:** February 18, 2026
+**Last Updated:** February 21, 2026
 **Purpose:** For developers who want to run the PhoenixPME platform locally
 
 ---
@@ -73,3 +73,54 @@ curl -I http://localhost:3000
 Quick Start Guide - For users using the platform
 
 Coreum Reference - Official Coreum documentation
+
+## 🚀 Quick Start (3 Terminals)
++ 
++ ⚠️ **Note:** The testnet is currently unstable. The frontend uses a mock wallet for UI testing until March 6.
+
+## ✅ Verification
+bash
+# Check backend
+curl http://localhost:3001/health
+
+# Check frontend
+curl -I http://localhost:3000
++ 
++ # When running, you should see:
++ # - Frontend: http://localhost:3000
++ # - Mock wallet available for testing
+
+## 🔧 Troubleshooting
++ 
++ ### Mock Wallet Not Showing
++ If the wallet selector doesn't appear, check that:
++ - You're running the latest code (`git pull`)
++ - Dependencies are installed (`npm install`)
++ - No errors in browser console (F12)
+
+4. Add troubleshooting note
+diff
+## 🔧 Troubleshooting
++ 
++ ### Mock Wallet Not Showing
++ If the wallet selector doesn't appear, check that:
++ - You're running the latest code (`git pull`)
++ - Dependencies are installed (`npm install`)
++ - No errors in browser console (F12)
+🔧 FIX COMMANDS:
+bash
+cd ~/dev/TX/docs/setup
+nano SETUP_GUIDE.md
+# Make the updates above
+📋 UPDATED ENVIRONMENT VARIABLES:
+The .env examples are still correct:
+
+bash
+# Backend .env
+DATABASE_URL="postgresql://postgres@localhost:5432/phoenix"
+PORT=3001
+NODE_ENV=development
+
+# Frontend .env.local  
+NEXT_PUBLIC_API_URL=http://localhost:3001
+NEXT_PUBLIC_CHAIN_ID=coreum-testnet-1

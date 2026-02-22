@@ -227,4 +227,48 @@ This state machine relies on several external services for real-world verificati
 - Dispute resolution in V1 may use a trusted "Protocol Guardian" multisig for simplicity.
 - Bond and fee parameters should be configurable via governance.
 
+
+## 📊 State Machine Diagram
+                ┌─────────────────┐
+                │AWAITING_SELLER_ │
+                │     BOND        │
+                └────────┬────────┘
+                         │ SELLER_DEPOSITS_BOND
+                         ▼
+                ┌─────────────────┐
+                │  LISTING_ACTIVE │
+                └────────┬────────┘
+                         │ AUCTION_TIMER_EXPIRES
+                         ▼
+                ┌─────────────────┐
+                │ BIDDING_CLOSED  │
+                └────────┬────────┘
+          ┌──────────────┼──────────────┐
+     RESERVE_MET    RESERVE_NOT_MET    │
+          ▼              ▼              │
+┌─────────────────┐┌─────────────────┐  │
+│AWAITING_WINNER_ ││   CANCELLED_NO_ │  │
+│    PAYMENT      ││     WINNER       │  │
+└────────┬────────┘└─────────────────┘  │
+         │ WINNER_LOCKS_PAYMENT         │
+         ▼                              │
+┌─────────────────┐                      │
+│ AWAITING_SHIPMENT│                      │
+└────────┬────────┘                      │
+         │ SELLER_SUBMITS_SHIPMENT_PROOF │
+         ▼                              │
+┌─────────────────┐                      │
+│   IN_TRANSIT    │                      │
+└────────┬────────┘                      │
+         │ CARRIER_CONFIRMS_DELIVERY     │
+         ▼                              │
+┌─────────────────┐                      │
+│AWAITING_BUYER_  │                      │
+│ CONFIRMATION    │                      │
+└────────┬────────┘                      │
+         │ BUYER_CONFIRMS_SATISFACTION   │
+         ▼                              │
+┌─────────────────┐                      │
+│    COMPLETE     │◀─────────────────────┘
+└─────────────────┘
 *Document Version: 1.0 | Last Updated: 2026-02-06*

@@ -75,3 +75,7 @@ BY USING PHOENIXPME, YOU EXPLICITLY ACKNOWLEDGE:
 **Contact:** gjf20842@gmail.com
 
 **⚠️ IF YOU CANNOT ACCEPT THESE RISKS, DO NOT USE PHOENIXPME. ⚠️**
+## 9. Document Version
+
+This version: v1.0 - February 16, 2026
+Supersedes all prior risk disclosures.

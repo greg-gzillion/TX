@@ -561,7 +561,7 @@ Our oracle design evolves from **centralized simplicity** (testnet) to **decentr
 
 - [Bridge Security](./BRIDGE_SECURITY.md) - Cross-chain security architecture
 - [Security Patterns](./SECURITY_PATTERNS.md) - Smart contract best practices
-- [Economic Model](../business/ECONOMIC_MODEL.md) - Insurance pool incentives
+- [Economic Model](../business/ECONOMIC_MODEL.md) - Community Reserve Fund incentives
 - [Dispute Resolution Guide](../operations/DISPUTE_GUIDE.md) - User-facing dispute process
 
 ---

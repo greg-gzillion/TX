@@ -53,4 +53,12 @@ PhoenixPME does NOT currently hold insurance licenses. We CANNOT guarantee insur
 
 **⚠️ THIS IS A CRITICAL DOCUMENT. READ CAREFULLY BEFORE USING PHOENIXPME. ⚠️**
 ---
+## 5. User Acknowledgment
+
+**BY USING PHOENIXPME, YOU ACKNOWLEDGE:**
+- You understand insurance services are NOT currently available
+- You accept all risk of loss, theft, or damage
+- The 1.1% fee funds future development, NOT current coverage
+- No regulatory body has approved or reviewed this platform
+
 *This document supersedes any prior statements about insurance availability.*

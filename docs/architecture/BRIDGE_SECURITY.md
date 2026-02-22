@@ -33,7 +33,7 @@ User → Coreum Smart Contract → Bridge Oracle → XRPL Ledger
                                       ↓
                               Verification Service
                                       ↓
-                              Insurance Pool (Escrow)
+                              Community Reserve Fund (Escrow)
 ```
 
 ### How It Works Today
@@ -354,7 +354,7 @@ Real-time visibility into:
 - Oracle consensus rate
 - Transaction success rate
 - Pending transactions queue
-- Insurance pool balance
+- Community Reserve Fund balance
 - Failed transaction logs
 
 ---
@@ -399,7 +399,7 @@ Real-time visibility into:
 - Phase 1 (Month 1): Max $10,000 TVL
 - Phase 2 (Month 2-3): Max $50,000 TVL
 - Phase 3 (Month 4-6): Max $200,000 TVL
-- Phase 4 (Month 7+): Insurance pool threshold ($50,000+)
+- Phase 4 (Month 7+): Community Reserve Fund threshold ($50,000+)
 
 **Risk Mitigation:** Gradual TVL increase allows time to identify issues before significant funds at risk.
 
@@ -423,7 +423,7 @@ The roadmap to production prioritizes:
 
 - [Oracle Design](./ORACLE_DESIGN.md) - Multi-oracle consensus architecture
 - [Security Patterns](./SECURITY_PATTERNS.md) - Smart contract security best practices
-- [Economic Model](../business/ECONOMIC_MODEL.md) - Insurance pool economics
+- [Economic Model](../business/ECONOMIC_MODEL.md) - Community Reserve Fund economics
 - [Emergency Runbook](../operations/EMERGENCY_RUNBOOK.md) - Incident response procedures
 
 ---
