@@ -1,286 +1,350 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import Link from 'next/link';
 import NavBar from '@/components/layout/NavBar';
-import { FilterTabs } from '@/components/shared/ui/FilterTabs';
-import AuctionCard from '@/components/auctions/list/AuctionCard';
 import { Button } from '@/components/shared/ui/Button';
-import { TrendingUp, TrendingDown, Clock, Users, DollarSign } from 'lucide-react';
-import { Auction } from '@/types/auction';
-
-// Static reference prices - updated manually when market closes
-const REFERENCE_PRICES = {
-  gold: 5105.90,
-  silver: 84.52,
-  platinum: 2157.00,
-  palladium: 1743.00,
-  lastUpdated: "February 20, 2026"
-};
+import { Search, Award } from 'lucide-react';
 
 export default function HomePage() {
-  const [activeTab, setActiveTab] = useState('all');
-  const [auctions, setAuctions] = useState<Auction[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        
-        // Mock auctions with reference prices
-        setAuctions([
-          {
-            id: 1,
-            title: '1oz Gold Bar - 999.9 Fine',
-            currentBid: REFERENCE_PRICES.gold,
-            timeLeft: '2h 15m',
-            bids: 12,
-            metal: 'gold',
-            seller: 'testcore1xa352f6gtgc4g7c9rrdgl4wn9vaw9r25v47jen',
-          },
-          {
-            id: 2,
-            title: '10oz Silver Bar',
-            currentBid: REFERENCE_PRICES.silver * 10,
-            timeLeft: '1d 3h',
-            bids: 8,
-            metal: 'silver',
-            seller: 'testcore14qkw9fplr9xplfl5qwz8rr8f3uxhja8yuf0z6l',
-          },
-          {
-            id: 3,
-            title: '1oz Platinum Bar',
-            currentBid: REFERENCE_PRICES.platinum,
-            timeLeft: '3h 45m',
-            bids: 5,
-            metal: 'platinum',
-            seller: 'testcore1urvw6ta906qphvvrmcuwwxy3z2fqns56er2agu',
-          },
-          {
-            id: 4,
-            title: '1oz Palladium Bar',
-            currentBid: REFERENCE_PRICES.palladium,
-            timeLeft: '4h 20m',
-            bids: 3,
-            metal: 'palladium',
-            seller: 'testcore1rr8knhdwc9uthxh3fazt3k4keuqtycctzcvd3c',
-          }
-        ]);
-      } catch (error) {
-        console.error('Failed to load data:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
-  }, []);
-
-  const filteredAuctions = activeTab === 'all' 
-    ? auctions 
-    : auctions.filter(a => a.metal === activeTab);
-
-  // Calculate market stats
-  const totalBids = auctions.reduce((sum, a) => sum + a.bids, 0);
-  const activeAuctions = auctions.length;
-  const totalVolume = auctions.reduce((sum, a) => sum + a.currentBid, 0);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-4 border-amber-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading PhoenixPME...</p>
-        </div>
-      </div>
-    );
-  }
+  const [searchQuery, setSearchQuery] = useState('');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="min-h-screen bg-white">
       <NavBar />
       
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* TESTNET DISCLAIMER */}
-        <div className="bg-red-100 border-4 border-red-500 rounded-lg p-4 mb-8">
-          <p className="text-red-800 text-lg font-bold flex items-center justify-center">
-            <span className="text-2xl mr-2">⚠️</span>
-            TESTNET BETA - NO REAL VALUE
-            <span className="text-2xl ml-2">⚠️</span>
-          </p>
-          <p className="text-red-700 text-center mt-2">
-            This is experimental software. All transactions are on testnet.
-            Do not send real funds. For testing purposes only.
+      {/* Main content - fully centered with viewport constraints */}
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        
+        {/* Hero Section */}
+        <div className="text-center mb-8 w-full">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+            Trade Precious Metals
+          </h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Direct peer-to-peer. No middlemen. No hidden fees.
           </p>
         </div>
 
-        {/* Hero Section with Why PhoenixPME card */}
-        <div className="grid md:grid-cols-2 gap-8 items-start mb-8">
-          {/* Left side - Hero text */}
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Trade Precious Metals
-              <span className="block text-xl text-amber-600 mt-2">Decentralized • Trustless • Community Owned</span>
-            </h1>
-            <p className="text-gray-600 max-w-3xl mx-auto md:mx-0">
-              Buy and sell gold, silver, platinum, and palladium directly with other users.
-              No middlemen, no hidden fees, just pure peer-to-peer trading on the TX blockchain.
-            </p>
+        {/* Search Bar */}
+        <div className="w-full max-w-2xl mx-auto mb-10">
+          <div className="flex gap-2">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search for gold, silver, platinum..."
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+              />
+            </div>
+            <Button variant="gold" className="px-6 whitespace-nowrap">
+              Search
+            </Button>
           </div>
+          
+          {/* Quick Categories */}
+          <div className="flex flex-wrap justify-center gap-4 mt-3 text-sm text-gray-600">
+            <Link href="/auctions?metal=gold" className="hover:text-amber-600">Gold</Link>
+            <Link href="/auctions?metal=silver" className="hover:text-amber-600">Silver</Link>
+            <Link href="/auctions?metal=platinum" className="hover:text-amber-600">Platinum</Link>
+            <Link href="/auctions?metal=palladium" className="hover:text-amber-600">Palladium</Link>
+            <Link href="/auctions?form=coin" className="hover:text-amber-600">Coins</Link>
+            <Link href="/auctions?form=bar" className="hover:text-amber-600">Bars</Link>
+          </div>
+        </div>
 
-          {/* Right side - "Why PhoenixPME?" card */}
-          <div className="bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 shadow-lg p-6">
-            <h2 className="text-2xl font-bold text-amber-800 mb-4 flex items-center gap-2">
-              <span className="text-3xl">🔥</span> Why PhoenixPME?
-            </h2>
+        {/* Disclaimer */}
+        <div className="w-full max-w-3xl mx-auto mb-10">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex items-start gap-3">
+              <span className="text-2xl">🧪</span>
+              <div>
+                <p className="text-yellow-800 font-semibold text-sm">TESTNET CONCEPT — NOT YET ACTIVE</p>
+                <p className="text-yellow-700 text-xs mt-1">
+                  Experimental testnet software. No real funds. Open source code.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+			 				                 
+        {/* Comparison Cards */}
+        <div className="w-full max-w-4xl mx-auto mb-10">
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Traditional */}
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl">🏛️</span>
+                <h3 className="text-xl font-bold">Traditional Platforms</h3>
+              </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>10-15% fees — gone forever</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>Fees to shareholders</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>Users have no say</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* PhoenixPME */}
+            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl">⚙️</span>
+                <h3 className="text-xl font-bold text-amber-900">PhoenixPME</h3>
+              </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>10% collateral — returned on success</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>1.1% fees to Community Reserve Fund</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>Users gain governance weight</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>48-hour buyer verification</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        {/* Tagline */}
+        <div className="w-full max-w-2xl mx-auto text-center mb-8 border-t border-b border-gray-200 py-6">
+          <p className="text-xl">
+            <span className="line-through text-gray-400 mr-2">10% fees?</span>
+            <span className="font-semibold text-amber-600">10% collateral — returned.</span>
+          </p>
+        </div>
+
+        {/* PHNX & Reputation */}
+        <div className="w-full max-w-4xl mx-auto mb-10">
+          <div className="bg-white border border-gray-200 rounded-lg p-6">
+            <h3 className="text-xl font-bold mb-4 text-center">How Participation is Recorded</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="text-center">
+                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">🪙</span>
+                </div>
+                <p className="font-semibold mb-1">PHNX Governance</p>
+                <p className="text-xs text-gray-600">0.9 to buyer • 0.1 developer</p>
+                <p className="text-xs text-gray-400 mt-1">No cash value</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">⭐</span>
+                </div>
+                <p className="font-semibold mb-1">TRUST / DONT TRUST</p>
+                <p className="text-xs text-gray-600">Permanent on-chain reputation</p>
+                <p className="text-xs text-gray-400 mt-1">Amendable only under extenuating circumstances</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Reference Prices */}
+        <div className="w-full max-w-3xl mx-auto mb-10">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+              <span className="font-medium text-gray-700">Reference:</span>
+              <span className="text-amber-700">🥇 $5,105</span>
+              <span className="text-gray-600">🥈 $84.52</span>
+              <span className="text-gray-600">🔷 $2,157</span>
+              <span className="text-gray-600">🔶 $1,743</span>
+              <span className="text-xs text-gray-400">Feb 20 close</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Featured Auctions - REPLACE THIS WHOLE SECTION */}
+        <div className="w-full max-w-5xl mx-auto mb-10">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-bold">Featured Auctions</h2>
+            <Link href="/auctions" className="text-amber-600 text-sm hover:underline">
+              View all →
+            </Link>
+          </div>
+          
+          {/* Replace the grid with this placeholder */}
+          <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+            <p className="text-gray-500 mb-2">🚀 First auctions go live March 6, 2026</p>
+            <p className="text-2xl mb-2">🥇 Gold • 🥈 Silver • 🔷 Platinum • 🔶 Palladium</p>
+            <p className="text-sm text-gray-400">Be the first to create an auction</p>
+          </div>
+        </div>
+
+        {/* ⚙️ Detailed Protocol Explanation */}
+        <div className="w-full max-w-4xl mx-auto mt-8 mb-10">
+          <div className="bg-white border-2 border-amber-200 rounded-xl p-8">
             
-            <div className="space-y-4">
-              {/* Problem */}
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-1">
-                  <span className="text-red-500">⚠️</span> The Problem
-                </h3>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>Dealers offer <span className="font-bold text-red-600">$10-15 BELOW spot</span> for constitutional silver</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-red-500 mt-1">•</span>
-                    <span>eBay takes <span className="font-bold text-red-600">15%</span> of your sale</span>
-                  </li>
-                </ul>
+            {/* Section Header */}
+            <div className="text-center mb-8">
+              <div className="inline-block bg-amber-100 rounded-full px-4 py-1 text-sm font-semibold text-amber-800 mb-3">
+                HOW THE PROTOCOL WORKS
+              </div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-3">Built on Trust, Enforced by Code</h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                The PhoenixPME protocol is an experimental concept built on the TX blockchain ecosystem, 
+                leveraging Coreum's infrastructure and Sologenic's asset tokenization expertise.
+              </p>
+            </div>
+
+            {/* Process Steps */}
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Left Column - Collateral */}
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-amber-700 font-bold">1</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">10% Collateral (Both Parties)</h3>
+                    <p className="text-gray-600 text-sm">
+                      Sellers and buyers each post <span className="font-semibold">10% collateral</span> before the buyer pays the seller. 
+                      This keeps all participants honest — both have skin in the game.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-amber-700 font-bold">2</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">Funds Held in Escrow</h3>
+                    <p className="text-gray-600 text-sm">
+                      All funds are locked in smart contract escrow until all parties are satisfied. 
+                      No one can touch them.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-amber-700 font-bold">3</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">48-Hour Buyer Verification</h3>
+                    <p className="text-gray-600 text-sm">
+                      After delivery, the buyer has a <span className="font-semibold">48-hour verification period</span> to inspect the item. 
+                      Escrow is only released after successful delivery confirmation and 48 hour time lapse.
+                    </p>
+                  </div>
+                </div>
               </div>
 
-              {/* Solution */}
-              <div>
-                <h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-1">
-                  <span className="text-green-500">✅</span> Our Solution
-                </h3>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Trade at fair market prices (<span className="font-bold text-green-600">1.1% fee</span>)</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Smart contract escrow <span className="font-bold text-green-600">(no one can freeze)</span></span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-green-500 mt-1">•</span>
-                    <span>Both parties post collateral <span className="font-bold text-green-600">(trust through code)</span></span>
-                  </li>
-                </ul>
-              </div>
+              {/* Right Column - Rewards & Reputation */}
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-amber-700 font-bold">4</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">Collateral Returned + PHNX Rewards</h3>
+                    <p className="text-gray-600 text-sm">
+                      Upon successful completion, both parties get their <span className="font-semibold">10% collateral back</span>. 
+                      The buyer receives <span className="font-semibold">0.9 PHNX</span> governance weight, 
+                      and <span className="font-semibold">0.1 PHNX</span> is allocated to protocol development.
+                    </p>
+                  </div>
+                </div>
 
-              {/* Launch Date - Removed countdown */}
-              <div className="mt-4 pt-4 border-t border-amber-200">
-                <div className="bg-amber-100 rounded-lg p-3 text-center">
-                  <p className="text-amber-800 font-bold">
-                    Launching March 6, 2026 on TX blockchain
+                <div className="flex items-start gap-4">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-amber-700 font-bold">5</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">TRUST / DONT TRUST Issued</h3>
+                    <p className="text-gray-600 text-sm">
+                      After the verification period, permanent reputation tokens are issued:
+                      <span className="block mt-1"><span className="text-green-600 font-semibold">TRUST</span> for successful completions</span>
+                      <span><span className="text-red-600 font-semibold">DONT TRUST</span> for failed obligations</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                    <span className="text-amber-700 font-bold">6</span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-2">Permanent Record</h3>
+                    <p className="text-gray-600 text-sm">
+                      TRUST/DONT TRUST is a <span className="font-semibold">permanent on-chain record</span> — 
+                      amendable only under extenuating circumstances, but never erased. 
+                      Your history follows you forever.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* TX Blockchain Context */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mt-4">
+              <div className="flex items-start gap-4">
+                <div className="bg-amber-200 rounded-lg p-2">
+                  <span className="text-2xl">🔷</span>
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Built on the TX Blockchain Ecosystem</h3>
+                  <p className="text-gray-700 text-sm mb-2">
+                    PhoenixPME is an <span className="font-semibold">experimental concept</span> built on the <span className="font-semibold">TX blockchain</span> — 
+                    the merger of <span className="font-semibold">Coreum's enterprise-grade infrastructure</span> and 
+                    <span className="font-semibold"> Sologenic's asset tokenization expertise</span>.
+                  </p>
+                  <p className="text-gray-600 text-sm italic">
+                    This protocol leans on the success and security of the TX ecosystem, 
+                    but is entirely separate open source software. Users interact directly 
+                    with smart contracts — no company, no middlemen, no custodians.
                   </p>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Reference Prices Banner */}
-        <div className="mb-8">
-          <div className="bg-gray-100 rounded-lg p-3">
-            <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-              <div className="flex items-center space-x-4">
-                <span className="font-medium text-gray-700">Reference Prices:</span>
-                <span className="text-amber-700">🥇 Gold ${REFERENCE_PRICES.gold}</span>
-                <span className="text-gray-600">🥈 Silver ${REFERENCE_PRICES.silver}</span>
-                <span className="text-gray-600">🔷 Platinum ${REFERENCE_PRICES.platinum}</span>
-                <span className="text-gray-600">🔶 Palladium ${REFERENCE_PRICES.palladium}</span>
-              </div>
-              <span className="text-xs text-gray-500">
-                Market close • {REFERENCE_PRICES.lastUpdated}
-              </span>
+            {/* Legal/Experimental Disclaimer */}
+            <div className="mt-6 text-center">
+              <p className="text-xs text-gray-400 border-t border-gray-200 pt-4">
+                ⚠️ This is an experimental concept in active development. All mechanisms described are 
+                subject to change based on testing and community input. No guarantees, no warranties. 
+                PHNX, TRUST, and DONT TRUST tokens will have no cash value and will be non-transferable.
+              </p>
             </div>
           </div>
         </div>
 
-        {/* Market Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">24h Volume</p>
-                <p className="text-lg font-bold">${totalVolume.toLocaleString()}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <Users className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Active Auctions</p>
-                <p className="text-lg font-bold">{activeAuctions}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Total Bids</p>
-                <p className="text-lg font-bold">{totalBids}</p>
-              </div>
-            </div>
-          </div>
-          
-          <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                <Clock className="w-5 h-5 text-amber-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Ending Today</p>
-                <p className="text-lg font-bold">3</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Tabs */}
-        <div className="mb-8">
-          <FilterTabs activeTab={activeTab} onTabChange={setActiveTab} />
-        </div>
-
-        {/* Auction Grid */}
-        {filteredAuctions.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredAuctions.map(auction => (
-              <AuctionCard key={auction.id} {...auction} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12 bg-white rounded-xl border border-gray-200">
-            <p className="text-gray-500 mb-4">No auctions found for this metal type</p>
-            <Button variant="gold" href="/auctions/create">
-              Create First Auction
+        {/* Improved CTA - REPLACE THE EXISTING CTA */}
+        <div className="w-full max-w-3xl mx-auto text-center bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 p-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            🚀 Be Part of the First Wave
+          </h2>
+          <p className="text-gray-700 mb-4 max-w-xl mx-auto">
+            Join the first community of peer-to-peer precious metals traders. 
+            No listing fees. 1.1% to Community Reserve Fund. 10% collateral returned.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-3">
+            <Button variant="gold" size="lg" href="/auctions/create" className="text-base">
+              Create Auction (March 6)
+            </Button>
+            <Button variant="outline" size="lg" href="/auctions" className="text-base">
+              View Demo Auctions
             </Button>
           </div>
-        )}
-
-        {/* Create Auction CTA */}
-        <div className="mt-12 text-center">
-          <Button variant="gold" size="lg" href="/auctions/create">
-            Create Your First Auction
-          </Button>
-          <p className="text-sm text-gray-500 mt-3">
-            No listing fees • 1.1% final value fee goes to Community Reserve Fund
+          <p className="text-xs text-gray-500 mt-4">
+            🔥 March 6, 2026 — TX testnet launch. Be ready.
           </p>
         </div>
       </main>
