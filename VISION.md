@@ -13,7 +13,7 @@
 > **TL;DR:** Three tokens. Zero cash value. Maximum accountability. Can't be sold. 
 > Can't be bought. Can't be speculated on. Just proof you showed up and delivered.
 > 
-> **Current Status:** Frontend reorganized, static prices live, contracts ready.
+> **Current Status:** Frontend reorganized, static prices, contracts ready.
 > **Next Milestone:** TX testnet launch - March 6, 2026 (13 days)
 > 
 > Read on for the full vision. 👇
@@ -85,7 +85,7 @@ This isn't a company. This isn't a token sale. This is a marketplace with a buil
 
 **How you get it:** Fail to deliver, scam a buyer, lose a dispute → 1 DONT TRUST token minted to your wallet.
 
-**Why you can't sell it:** You wouldn't want to. And neither would anyone else.
+**Why you can't sell it:** You wouldn't want to buy it. And neither would anyone else.
 
 **What it signals:** "Warning: This person has failed to complete X trades."
 
