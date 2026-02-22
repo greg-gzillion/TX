@@ -13,7 +13,7 @@
 > **TL;DR:** Three tokens. Zero cash value. Maximum accountability. Can't be sold. 
 > Can't be bought. Can't be speculated on. Just proof you showed up and delivered.
 > 
-> **Current Status:** Frontend reorganized, static prices live, contracts ready.
+> **Current Status:** Frontend reorganized, static prices, contracts ready.
 > **Next Milestone:** TX testnet launch - March 6, 2026 (13 days)
 > 
 > Read on for the full vision. 👇
