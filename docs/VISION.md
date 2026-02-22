@@ -183,7 +183,7 @@ Feature	Why It Matters
 ✅ Transparent	Reserves audited and verifiable
 Collateral Requirements:
 
-Both parties post 10-20% of item value in RLUSD
+Both parties post 10% of item value in RLUSD
 
 Collateral ensures good behavior
 
@@ -288,7 +288,7 @@ Read the code	github.com/greg-gzillion/TX
 Share feedback	Open a GitHub Issue
 Contribute	Submit a PR
 Discuss	Email gjf20842@gmail.com
-Spread the word	Tell others, share on social
+Spread the word	Tell others, share on social media
 🌟 The Dream
 A world where:
 
