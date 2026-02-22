@@ -14,7 +14,7 @@ To create an **online auction platform specifically designed for peer-to-peer tr
 ✅ **KYC/AML** enables trusted collateral and regulatory compliance  
 ✅ **On-chain reputation** prevents bad behavior and builds trust  
 ✅ **RLUSD** provides stable, reliable value with no crypto volatility  
-✅ **Community governance** through usage-based voting in the **PHNX Fund**
+✅ **Community governance** through usage-based voting in the **PHNX** 
 
 ---
 
