@@ -154,26 +154,27 @@ export default function AdminPage() {
             )}
           </form>
         </div>
-        
+
+        {/* Price Disclaimer */}
+        <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-sm text-blue-800 font-medium mb-1">
+            ⓘ About Reference Prices
+          </p>
+          <p className="text-xs text-blue-700">
+            These reference prices are updated manually by the admin. 
+            Metal prices fluctuate constantly during market hours. 
+            The prices shown are a snapshot at the time of last update 
+            and may not reflect current market conditions.
+          </p>
+          <p className="text-xs text-blue-600 mt-2">
+            Last manual update: {currentPrices ? new Date(currentPrices.createdAt).toLocaleString() : 'Never'}
+          </p>
+        </div>
+
         <p className="text-xs text-gray-500 mt-4 text-center">
           ⚠️ Admin page - keep this URL secret
         </p>
       </div>
     </div>
-{/* Price Disclaimer */}
-<div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-  <p className="text-sm text-blue-800 font-medium mb-1">
-    ⓘ About Reference Prices
-  </p>
-  <p className="text-xs text-blue-700">
-    These reference prices are updated manually by the admin. 
-    Metal prices fluctuate constantly during market hours. 
-    The prices shown are a snapshot at the time of last update 
-    and may not reflect current market conditions.
-  </p>
-  <p className="text-xs text-blue-600 mt-2">
-    Last manual update: {currentPrices ? new Date(currentPrices.createdAt).toLocaleString() : 'Never'}
-  </p>
-</div>
-);
+  );
 }
