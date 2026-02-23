@@ -14,13 +14,17 @@ pub struct Auction {
     pub id: u64,
     pub creator: Addr,
     pub starting_bid: Uint128,
+    pub reserve_price: Option<Uint128>,      // Add this
     pub current_bid: Uint128,
     pub highest_bidder: Option<Addr>,
+    pub buy_it_now_price: Option<Uint128>,   // Add this
     pub description: String,
     pub created_at: u64,
     pub expires_at: u64,
     pub status: String,
     pub bids: Vec<Bid>,
+    pub seller_collateral: Uint128,          // Add this
+    pub buyer_collateral: Option<Uint128>,   // Add this
 }
 
 #[cw_serde]

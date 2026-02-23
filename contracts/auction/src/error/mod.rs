@@ -1,24 +1,24 @@
 use cosmwasm_std::StdError;
 use thiserror::Error;
 
-#[derive(Error, Debug)]
+#[derive(Error, Debug, PartialEq)]
 pub enum ContractError {
     #[error("{0}")]
     Std(#[from] StdError),
-
+    
     #[error("Unauthorized")]
     Unauthorized,
-
+    
     #[error("Auction not found")]
-    AuctionNotFound,
-
+    AuctionNotFound,  
+    
     #[error("Auction not active")]
     AuctionNotActive,
 
     #[error("Bid too low")]
     BidTooLow,
 
-    #[error("Invalid amount format")]
+    #[error("Invalid amount")]
     InvalidAmount,
     
     #[error("Insufficient funds")]
@@ -41,4 +41,25 @@ pub enum ContractError {
     
     #[error("No winner")]
     NoWinner,
+    
+    #[error("Reserve not met")]
+    ReserveNotMet,
+    
+    #[error("Invalid reserve price")]
+    InvalidReservePrice,
+    
+    #[error("Invalid buy it now price")]
+    InvalidBuyItNowPrice,
+    
+    #[error("Buy it now not available")]
+    BuyItNowNotAvailable,
+    
+    #[error("Use buy it now")]
+    UseBuyItNow,
+    
+    #[error("Insufficient collateral")]
+    InsufficientCollateral,
+    
+    #[error("No collateral sent")]
+    NoCollateralSent,
 }

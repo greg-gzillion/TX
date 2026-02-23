@@ -8,8 +8,15 @@ crate-type = ["cdylib"]
 name = "auction_guaranteed"  # Explicit library name
 
 [dependencies]
-cosmwasm-std = { version = "=1.1.10", default-features = false }
+cosmwasm-std = "2.3.2"
 serde = { version = "1", features = ["derive"] }
+cw-storage-plus = "2.0"
+cosmwasm-schema = "2.3"
+schemars = "0.8"
+thiserror = "2.0"
+
+[dev-dependencies]
+proptest = "1.4"
 
 [profile.release]
 opt-level = "z"
