@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { getSpotPrice, priceCache, updateSpotPrices } from '../services/priceOracle';
+import prisma from '../lib/prisma';
 
 const router = Router();
 
@@ -77,22 +78,33 @@ router.get('/:metal', async (req, res) => {
   }
 });
 
-// Manual update endpoint (protected - you can add auth later)
+// Manual update endpoint (optional - can be removed entirely)
 router.post('/update', async (req, res) => {
+  const { password } = req.body;
+  
+  if (password !== process.env.ADMIN_PASSWORD) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+  
   try {
-    console.log('🔄 Manual price update triggered');
-    await updateSpotPrices();
-    res.json({
-      success: true,
-      message: 'Prices updated successfully',
-      data: priceCache
+    const latest = await prisma.priceHistory.findFirst({
+      orderBy: { createdAt: 'desc' }
     });
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    res.status(500).json({ 
-      success: false, 
-      error: errorMessage 
-    });
+    
+    if (!latest) {
+      return res.status(404).json({ error: 'No prices found' });
+    }
+    
+    await updateSpotPrices(
+      latest.gold,
+      latest.silver,
+      latest.platinum,
+      latest.palladium
+    );
+    
+    res.json({ success: true, message: 'Prices updated' });
+  } catch (error: any) {  // ← Add ': any' here
+    res.status(500).json({ error: error.message });
   }
 });
 
