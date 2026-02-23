@@ -5,47 +5,91 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  schedule:
-    - cron: '24 10 * * 1'
 
 jobs:
-  analyze:
-    name: Analyze (${{ matrix.language }})
+  javascript-typescript:
+    name: JavaScript/TypeScript
     runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-
-    strategy:
-      fail-fast: false
-      matrix:
-        language: [ 'javascript-typescript', 'rust', 'python' ]
-
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        
+    - name: Install frontend dependencies
+      run: |
+        cd apps/frontend
+        npm ci
+        
+    - name: Install backend dependencies
+      run: |
+        cd apps/backend
+        npm ci
+        
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: ${{ matrix.language }}
+        languages: 'javascript-typescript'
+        
+    - name: Build frontend
+      run: |
+        cd apps/frontend
+        npm run build
+        
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
 
-    # Special handling for Rust (needs explicit build)
-    - name: Build Rust
-      if: matrix.language == 'rust'
+  rust:
+    name: Rust
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: 'rust'
+        
+    - name: Build Phoenix Escrow
       run: |
         cd contracts/phoenix-escrow
         cargo build
-        cd ../auction
+        
+    - name: Build Auction contract
+      run: |
+        cd contracts/auction
         cargo build
-
-    # Autobuild works for JS/TS and Python
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
-      if: matrix.language != 'rust'
-
+        
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+
+  python:
+    name: Python
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
       with:
-        category: "/language:${{matrix.language}}"
+        python-version: '3.11'
+        
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: 'python'
+        
+    - name: Install dependencies
+      run: |
+        # Find and install any Python requirements
+        find . -name "requirements.txt" -exec pip install -r {} \;
+        
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
