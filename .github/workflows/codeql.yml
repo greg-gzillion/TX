@@ -1,75 +1,36 @@
 name: "CodeQL"
 
-permissions:
-  contents: read
-  security-events: write
-  actions: read
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-jobs: 
-j  javascript-typescript:
-    name: JavaScript/TypeScript
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        
-    - name: Install frontend dependencies
-      run: |
-        cd apps/frontend
-        npm ci
-        
-    - name: Install backend dependencies
-      run: |
-        cd apps/backend
-        npm ci
-        
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
-      with:
-        languages: 'javascript-typescript'
-        
-    - name: Build frontend
-      run: |
-        cd apps/frontend
-        npm run build
-        
-    - name: Build backend
-      run: |
-        cd apps/backend
-        npm run build
-        
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
 
-  python:
-    name: Python
+jobs:
+  analyze:
+    name: Analyze
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript-typescript', 'rust', 'python' ]
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
-        
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
-        languages: 'python'
-        
-    - name: Install dependencies
-      run: |
-        # Find and install any Python requirements
-        find . -name "requirements.txt" -exec pip install -r {} \;
-        
+        languages: ${{ matrix.language }}
+
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v3
+
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
