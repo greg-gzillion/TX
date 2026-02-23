@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/shared/ui/Button';
@@ -21,6 +21,7 @@ interface WalletInfo {
 }
 
 export default function WalletSelector({ onConnect }: WalletSelectorProps) {
+  const [mounted, setMounted] = useState(false);
   const [wallet, setWallet] = useState<WalletInfo>({
     address: '',
     chainId: '',
@@ -34,6 +35,10 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
   const REST_ENDPOINT = 'https://rest-full-node.testnet-1.coreum.dev';
   const BECH32_PREFIX = 'testcore';
   const COIN_TYPE = 990;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Check if Keplr is installed
   const isKeplrInstalled = () => {
@@ -60,9 +65,7 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
         chainName: CHAIN_NAME,
         rpc: RPC_ENDPOINT,
         rest: REST_ENDPOINT,
-        bip44: {
-          coinType: COIN_TYPE,
-        },
+        bip44: { coinType: COIN_TYPE },
         bech32Config: {
           bech32PrefixAccAddr: BECH32_PREFIX,
           bech32PrefixAccPub: `${BECH32_PREFIX}pub`,
@@ -71,30 +74,22 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
           bech32PrefixConsAddr: `${BECH32_PREFIX}valcons`,
           bech32PrefixConsPub: `${BECH32_PREFIX}valconspub`,
         },
-        currencies: [
-          {
-            coinDenom: 'TESTCORE',
-            coinMinimalDenom: 'utestcore',
-            coinDecimals: 6,
-          },
-        ],
-        feeCurrencies: [
-          {
-            coinDenom: 'TESTCORE',
-            coinMinimalDenom: 'utestcore',
-            coinDecimals: 6,
-          },
-        ],
+        currencies: [{
+          coinDenom: 'TESTCORE',
+          coinMinimalDenom: 'utestcore',
+          coinDecimals: 6,
+        }],
+        feeCurrencies: [{
+          coinDenom: 'TESTCORE',
+          coinMinimalDenom: 'utestcore',
+          coinDecimals: 6,
+        }],
         stakeCurrency: {
           coinDenom: 'TESTCORE',
           coinMinimalDenom: 'utestcore',
           coinDecimals: 6,
         },
-        gasPriceStep: {
-          low: 0.01,
-          average: 0.025,
-          high: 0.03,
-        },
+        gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
       });
 
       await window.keplr.enable(CHAIN_ID);
@@ -110,8 +105,6 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
       if (onConnect) {
         onConnect(accounts[0].address);
       }
-
-      console.log('Connected to Keplr:', accounts[0].address);
     } catch (error) {
       console.error('Error connecting to Keplr:', error);
       alert('Failed to connect to Keplr');
@@ -135,9 +128,7 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
         chainName: CHAIN_NAME,
         rpc: RPC_ENDPOINT,
         rest: REST_ENDPOINT,
-        bip44: {
-          coinType: COIN_TYPE,
-        },
+        bip44: { coinType: COIN_TYPE },
         bech32Config: {
           bech32PrefixAccAddr: BECH32_PREFIX,
           bech32PrefixAccPub: `${BECH32_PREFIX}pub`,
@@ -146,30 +137,22 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
           bech32PrefixConsAddr: `${BECH32_PREFIX}valcons`,
           bech32PrefixConsPub: `${BECH32_PREFIX}valconspub`,
         },
-        currencies: [
-          {
-            coinDenom: 'TESTCORE',
-            coinMinimalDenom: 'utestcore',
-            coinDecimals: 6,
-          },
-        ],
-        feeCurrencies: [
-          {
-            coinDenom: 'TESTCORE',
-            coinMinimalDenom: 'utestcore',
-            coinDecimals: 6,
-          },
-        ],
+        currencies: [{
+          coinDenom: 'TESTCORE',
+          coinMinimalDenom: 'utestcore',
+          coinDecimals: 6,
+        }],
+        feeCurrencies: [{
+          coinDenom: 'TESTCORE',
+          coinMinimalDenom: 'utestcore',
+          coinDecimals: 6,
+        }],
         stakeCurrency: {
           coinDenom: 'TESTCORE',
           coinMinimalDenom: 'utestcore',
           coinDecimals: 6,
         },
-        gasPriceStep: {
-          low: 0.01,
-          average: 0.025,
-          high: 0.03,
-        },
+        gasPriceStep: { low: 0.01, average: 0.025, high: 0.03 },
       });
 
       await window.leap.enable(CHAIN_ID);
@@ -185,8 +168,6 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
       if (onConnect) {
         onConnect(accounts[0].address);
       }
-
-      console.log('Connected to Leap:', accounts[0].address);
     } catch (error) {
       console.error('Error connecting to Leap:', error);
       alert('Failed to connect to Leap');
@@ -206,6 +187,15 @@ export default function WalletSelector({ onConnect }: WalletSelectorProps) {
       onConnect('');
     }
   };
+
+  // Don't render anything on server to prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="flex items-center space-x-4">
+        <div className="w-32 h-10 bg-gray-200 rounded animate-pulse"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center space-x-4">

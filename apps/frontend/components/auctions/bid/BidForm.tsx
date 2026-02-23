@@ -1,27 +1,30 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useWallet } from '@/hooks/useWallet';
+import { useToast } from '@/lib/contexts/ToastContext';
 import { PhoenixEscrowClient } from '@/lib/contract/phoenix-escrow';
 
 interface BidFormProps {
   auctionId: number;
   currentBid?: string;
   startingPrice: string;
-  minBidIncrement?: number; // Default 1% or 0.01 CORE
+  minBidIncrement?: number;
+  onBidPlaced?: () => void; // For auto-update
 }
 
 export default function BidForm({ 
   auctionId, 
   currentBid, 
   startingPrice,
-  minBidIncrement = 0.01 
+  minBidIncrement = 0.01,
+  onBidPlaced
 }: BidFormProps) {
   const { address, isConnected, client } = useWallet();
+  const { showToast } = useToast();
   const [bidAmount, setBidAmount] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [balance, setBalance] = useState<string>('0');
 
   // Calculate minimum bid
   const minBid = currentBid 
@@ -33,28 +36,50 @@ export default function BidForm({
   const collateral = (bidNum * 0.10).toFixed(2);
   const total = (bidNum * 1.10).toFixed(2);
 
+  // Fetch balance when connected
+  useEffect(() => {
+    if (isConnected && client) {
+      fetchBalance();
+    }
+  }, [isConnected, client]);
+
+  const fetchBalance = async () => {
+    try {
+      const balance = await client?.getBalance(address, 'ucore');
+      setBalance(balance?.amount || '0');
+    } catch (err) {
+      console.error('Failed to fetch balance:', err);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+    setLoading(true);
 
     // Validation
     if (!isConnected) {
-      setError('Please connect your wallet first');
+      showToast('Please connect your wallet first', 'error');
+      setLoading(false);
       return;
     }
 
     if (!bidAmount || bidNum <= 0) {
-      setError('Please enter a valid bid amount');
+      showToast('Please enter a valid bid amount', 'error');
+      setLoading(false);
       return;
     }
 
     if (bidNum < parseFloat(minBid)) {
-      setError(`Minimum bid is ${minBid} CORE`);
+      showToast(`Minimum bid is ${minBid} CORE`, 'error');
+      setLoading(false);
       return;
     }
 
-    setLoading(true);
+    if (bidNum * 1.1 > (parseInt(balance) / 1_000_000)) {
+      showToast(`Insufficient funds. Need ${total} CORE`, 'error');
+      setLoading(false);
+      return;
+    }
 
     try {
       // Convert to ucore (1 CORE = 1,000,000 ucore)
@@ -63,23 +88,16 @@ export default function BidForm({
       const escrowClient = new PhoenixEscrowClient(client!, address);
       const result = await escrowClient.placeBid(auctionId, bidUcore);
 
-      setSuccess(`✅ Bid placed successfully! Transaction: ${result.transactionHash.slice(0, 10)}...`);
+      showToast(`✅ Bid placed successfully!`, 'success');
       setBidAmount('');
       
-      // Refresh the page after 2 seconds to show new bid
-      setTimeout(() => window.location.reload(), 2000);
+      if (onBidPlaced) {
+        onBidPlaced();
+      }
 
     } catch (err: any) {
       console.error('Bid failed:', err);
-      
-      // Handle specific errors
-      if (err.message.includes('insufficient funds')) {
-        setError(`Insufficient funds. You need at least ${total} CORE (bid + 10% collateral)`);
-      } else if (err.message.includes('below reserve')) {
-        setError('Bid is below reserve price');
-      } else {
-        setError(err.message || 'Failed to place bid');
-      }
+      showToast(err.message || 'Failed to place bid', 'error');
     } finally {
       setLoading(false);
     }
@@ -87,105 +105,88 @@ export default function BidForm({
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
-      <h3 className="text-xl font-semibold text-gray-900 mb-4">Place Your Bid</h3>
-      
+      {/* eBay-style header */}
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <span className="text-sm text-gray-500">Current bid:</span>
+          <span className="text-2xl font-bold ml-2">
+            {currentBid ? `$${currentBid}` : `$${startingPrice} (start)`}
+          </span>
+        </div>
+      </div>
+
       {!isConnected ? (
         <div className="text-center py-6">
-          <p className="text-gray-600 mb-4">Connect your wallet to place a bid</p>
+          <p className="text-gray-600 mb-4">Connect your wallet to bid</p>
           <button
             onClick={() => window.location.href = '/wallet'}
-            className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700 transition-colors"
+            className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700"
           >
             Connect Wallet
           </button>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Bid Input */}
+          {/* Bid Input - eBay style */}
           <div>
-            <label htmlFor="bidAmount" className="block text-sm font-medium text-gray-700 mb-1">
-              Your Bid (CORE)
+            <label className="block text-sm font-medium mb-2">
+              Your maximum bid (CORE)
             </label>
-            <input
-              type="number"
-              id="bidAmount"
-              value={bidAmount}
-              onChange={(e) => setBidAmount(e.target.value)}
-              step="0.01"
-              min={minBid}
-              placeholder={`Minimum ${minBid} CORE`}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-              disabled={loading}
-              required
-            />
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                $
+              </span>
+              <input
+                type="number"
+                value={bidAmount}
+                onChange={(e) => setBidAmount(e.target.value)}
+                step="0.01"
+                min={minBid}
+                placeholder={`Enter ${minBid} or more`}
+                className="w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500"
+                disabled={loading}
+              />
+            </div>
             <p className="text-xs text-gray-500 mt-1">
-              Minimum bid: {minBid} CORE
-              {currentBid && ` (current bid: ${currentBid} CORE)`}
+              ℹ️ We'll bid for you up to this amount
             </p>
           </div>
 
-          {/* Collateral Breakdown */}
+          {/* Balance check */}
           {bidAmount && bidNum > 0 && (
-            <div className="bg-amber-50 rounded-lg p-4 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Your bid:</span>
-                <span className="font-medium">{bidAmount} CORE</span>
+            <div className="bg-blue-50 rounded-lg p-3 text-sm">
+              <div className="flex justify-between">
+                <span>Your balance:</span>
+                <span className="font-mono">{(parseInt(balance) / 1_000_000).toFixed(2)} CORE</span>
               </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Collateral (10%):</span>
-                <span className="font-medium">{collateral} CORE</span>
+              <div className="flex justify-between mt-1">
+                <span>Total needed:</span>
+                <span className="font-mono">{total} CORE</span>
               </div>
-              <div className="border-t border-amber-200 my-2 pt-2">
-                <div className="flex justify-between font-semibold">
-                  <span>Total required:</span>
-                  <span className="text-amber-800">{total} CORE</span>
-                </div>
-              </div>
-              <p className="text-xs text-amber-700 mt-2">
-                🔒 Collateral is fully refundable when auction completes
-              </p>
-            </div>
-          )}
-
-          {/* Error/Success Messages */}
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
-            </div>
-          )}
-          
-          {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-              {success}
+              {bidNum * 1.1 > (parseInt(balance) / 1_000_000) && (
+                <p className="text-red-600 text-xs mt-1">
+                  ⚠️ Insufficient balance
+                </p>
+              )}
             </div>
           )}
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading || !bidAmount}
-            className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
+            disabled={loading || !bidAmount || (bidNum * 1.1 > (parseInt(balance) / 1_000_000))}
+            className={`w-full py-3 rounded-lg font-medium transition-colors ${
               loading || !bidAmount
                 ? 'bg-gray-300 cursor-not-allowed'
                 : 'bg-amber-600 hover:bg-amber-700 text-white'
             }`}
           >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Processing...
-              </span>
-            ) : (
-              'Place Bid'
-            )}
+            {loading ? 'Placing Bid...' : 'Place Bid'}
           </button>
 
-          {/* Wallet Info */}
-          <p className="text-xs text-gray-500 text-center mt-4">
-            Connected: {address?.slice(0, 10)}...{address?.slice(-6)}
+          {/* Fine print */}
+          <p className="text-xs text-gray-400 text-center">
+            🔒 Your max bid is hidden from other bidders
           </p>
         </form>
       )}
