@@ -172,15 +172,15 @@ export default function HomePage() {
         {prices && (
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-10 max-w-3xl mx-auto">
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-              <span className="font-medium text-gray-700">Reference:</span>
-              <span className="text-amber-700">🥇 ${prices.gold}</span>
-              <span className="text-gray-600">🥈 ${prices.silver}</span>
-              <span className="text-gray-600">🔷 ${prices.platinum}</span>
-              <span className="text-gray-600">🔶 ${prices.palladium}.toFixed(2)}</span>
-              <span className="text-xs text-gray-400">
-                {new Date(prices.createdAt).toLocaleDateString()}
-              </span>
-            </div>
+  <span className="font-medium text-gray-700">Reference:</span>
+  <span className="text-amber-700">🥇 ${prices.gold}</span>
+  <span className="text-gray-600">🥈 ${prices.silver}</span>
+  <span className="text-gray-600">🔷 ${prices.platinum}</span>
+  <span className="text-gray-600">🔶 ${prices.palladium.toFixed(2)}</span>
+  <span className="text-xs text-gray-400">
+    {new Date(prices.createdAt).toLocaleDateString()}
+  </span>
+</div>
             <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
               ⓘ Reference prices updated manually. Metal prices fluctuate constantly. 
               Last update: {new Date(prices.createdAt).toLocaleString()}
