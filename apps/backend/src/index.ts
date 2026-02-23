@@ -8,7 +8,8 @@ import authRoutes from './routes/auth.routes';
 import auctionRoutes from './routes/auction.routes';
 import blockchainRoutes from './routes/blockchain.routes';
 import priceRoutes from './routes/price.routes';
-import debugRoutes from './routes/debug.routes';  // Add this import
+import debugRoutes from './routes/debug.routes';
+import adminRoutes from './routes/admin.routes';  // ← Keep import here
 import coreumService from './services/blockchain/coreum.service';
 import { initPriceOracle, priceCache } from './services/priceOracle';
 import prisma from './lib/prisma';
@@ -33,7 +34,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/auctions', auctionRoutes);
 app.use('/api/blockchain', blockchainRoutes);
 app.use('/api/prices', priceRoutes);
-app.use('/api/debug', debugRoutes);  // This line is now in the correct place
+app.use('/api/debug', debugRoutes);
+app.use('/api/admin', adminRoutes);  // ← Moved here, AFTER app is defined
 
 // Health check with Coreum testnet info
 app.get('/health', async (req, res) => {

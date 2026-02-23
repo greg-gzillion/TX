@@ -11,103 +11,47 @@ export let priceCache: {
   palladium: number;
   lastUpdated: Date | null;
 } = {
-  gold: 5004.80,     // Mock values as fallback
+  gold: 5004.80,
   silver: 78.04,
   platinum: 2094.00,
   palladium: 1716.00,
   lastUpdated: new Date()
 };
 
-interface KitcoResponse {
-  gold: { usd: number };
-  silver: { usd: number };
-  platinum: { usd: number };
-  palladium: { usd: number };
-}
-
-// Fetch from Kitco API
-export async function fetchSpotPrices(): Promise<{
-  gold: number;
-  silver: number;
-  platinum: number;
-  palladium: number;
-}> {
+// Update prices (called by admin panel)
+export async function updateSpotPrices(
+  gold: number,
+  silver: number,
+  platinum: number,
+  palladium: number
+): Promise<void> {
   try {
-    const response = await fetch('https://api.kitco.com/metals/prices', {
-      headers: {
-        'Accept': 'application/json'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Kitco API error: ${response.status}`);
-    }
-    
-    const data = await response.json() as KitcoResponse;
-    
-    return {
-      gold: data.gold.usd,
-      silver: data.silver.usd,
-      platinum: data.platinum.usd,
-      palladium: data.palladium.usd
-    };
-  } catch (error) {
-    console.error('Error fetching spot prices:', error);
-    
-    // Fallback to last known prices from database
-    const lastPrice = await prisma.priceHistory.findFirst({
-      orderBy: { createdAt: 'desc' }
-    });
-    
-    if (lastPrice) {
-      return {
-        gold: lastPrice.gold,
-        silver: lastPrice.silver,
-        platinum: lastPrice.platinum,
-        palladium: lastPrice.palladium
-      };
-    }
-    
-    // Ultimate fallback (keep mock values)
-    return {
-      gold: 5004.80,
-      silver: 78.04,
-      platinum: 2094.00,
-      palladium: 1716.00
-    };
-  }
-}
-
-// Update prices and store in database
-export async function updateSpotPrices(): Promise<void> {
-  try {
-    const prices = await fetchSpotPrices();
-    
     // Update cache
     priceCache = {
-      gold: prices.gold,
-      silver: prices.silver,
-      platinum: prices.platinum,
-      palladium: prices.palladium,
+      gold,
+      silver,
+      platinum,
+      palladium,
       lastUpdated: new Date()
     };
     
     // Store in database for history
     await prisma.priceHistory.create({
       data: {
-        gold: prices.gold,
-        silver: prices.silver,
-        platinum: prices.platinum,
-        palladium: prices.palladium
+        gold,
+        silver,
+        platinum,
+        palladium
       }
     });
     
-    console.log('✅ Spot prices updated:', {
-      ...prices,
+    console.log('✅ Spot prices updated manually:', {
+      gold, silver, platinum, palladium,
       timestamp: new Date().toISOString()
     });
   } catch (error) {
     console.error('❌ Failed to update spot prices:', error);
+    throw error;
   }
 }
 
@@ -126,7 +70,6 @@ export function getPriceDifference(metal: MetalType, auctionPrice: number): numb
 // Initialize - run once at startup
 export async function initPriceOracle() {
   try {
-    // STEP 1: Load latest prices from database FIRST
     console.log('📊 Loading latest spot prices from database...');
     const lastPrice = await prisma.priceHistory.findFirst({
       orderBy: { createdAt: 'desc' }
@@ -151,36 +94,8 @@ export async function initPriceOracle() {
       console.log('⚠️ No database records found, using default values');
     }
     
-    // STEP 2: Try to fetch fresh prices in the background
-    setTimeout(async () => {
-      try {
-        console.log('🔄 Fetching fresh spot prices in background...');
-        await updateSpotPrices();
-      } catch (error) {
-        console.error('Background price update failed:', error);
-      }
-    }, 5000);
-    
-    // STEP 3: Schedule daily updates (8am EST)
-    const scheduleDaily = () => {
-      const now = new Date();
-      const target = new Date();
-      target.setUTCHours(13, 0, 0, 0); // 8am EST = 13:00 UTC
-      
-      if (now > target) {
-        target.setUTCDate(target.getUTCDate() + 1);
-      }
-      
-      const msUntilTarget = target.getTime() - now.getTime();
-      console.log(`📅 Next scheduled update in ${Math.round(msUntilTarget / 1000 / 60)} minutes`);
-      
-      setTimeout(async () => {
-        await updateSpotPrices();
-        scheduleDaily();
-      }, msUntilTarget);
-    };
-    
-    scheduleDaily();
+    // No more scheduled Kitco updates
+    console.log('📅 Manual updates only (admin panel)');
     
   } catch (error) {
     console.error('❌ Failed to initialize price oracle:', error);
