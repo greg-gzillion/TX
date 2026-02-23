@@ -160,3 +160,4 @@ router.get('/debug-env', async (req, res) => {
 });
 
 export default router;// Deployment trigger Mon Feb 23 04:10:52 PM MST 2026
+// Force clean rebuild Mon Feb 23 04:18:54 PM MST 2026
