@@ -1,11 +1,11 @@
 {
-  "name": "phoenix-insurance-module",
+  "name": "phoenix-crf-service",
   "version": "1.0.0",
-  "description": "Phoenix PME Insurance Module",
-  "main": "server.js",
+  "description": "Community Reserve Fund Service - Manages fee collection and distribution",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
