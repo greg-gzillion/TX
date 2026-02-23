@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import NavBar from '@/components/layout/NavBar';
 import { Button } from '@/components/shared/ui/Button';
@@ -8,6 +8,18 @@ import { Search, Award } from 'lucide-react';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [prices, setPrices] = useState<any>(null);
+
+  useEffect(() => {
+    fetch('http://localhost:3001/api/admin/prices/latest')
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          setPrices(data.data);
+        }
+      })
+      .catch(console.error);
+  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -156,21 +168,27 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Reference Prices */}
-        <div className="w-full max-w-3xl mx-auto mb-10">
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        {/* Reference Prices Banner with Disclaimer */}
+        {prices && (
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-10 max-w-3xl mx-auto">
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
               <span className="font-medium text-gray-700">Reference:</span>
-              <span className="text-amber-700">🥇 $5,105</span>
-              <span className="text-gray-600">🥈 $84.52</span>
-              <span className="text-gray-600">🔷 $2,157</span>
-              <span className="text-gray-600">🔶 $1,743</span>
-              <span className="text-xs text-gray-400">Feb 20 close</span>
+              <span className="text-amber-700">🥇 ${prices.gold}</span>
+              <span className="text-gray-600">🥈 ${prices.silver}</span>
+              <span className="text-gray-600">🔷 ${prices.platinum}</span>
+              <span className="text-gray-600">🔶 ${prices.palladium}.toFixed(2)}</span>
+              <span className="text-xs text-gray-400">
+                {new Date(prices.createdAt).toLocaleDateString()}
+              </span>
+            </div>
+            <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
+              ⓘ Reference prices updated manually. Metal prices fluctuate constantly. 
+              Last update: {new Date(prices.createdAt).toLocaleString()}
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Featured Auctions - REPLACE THIS WHOLE SECTION */}
+        {/* Featured Auctions */}
         <div className="w-full max-w-5xl mx-auto mb-10">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Featured Auctions</h2>
@@ -179,7 +197,6 @@ export default function HomePage() {
             </Link>
           </div>
           
-          {/* Replace the grid with this placeholder */}
           <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
             <p className="text-gray-500 mb-2">🚀 First auctions go live March 6, 2026</p>
             <p className="text-2xl mb-2">🥇 Gold • 🥈 Silver • 🔷 Platinum • 🔶 Palladium</p>
@@ -187,7 +204,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* ⚙️ Detailed Protocol Explanation */}
+        {/* Detailed Protocol Explanation */}
         <div className="w-full max-w-4xl mx-auto mt-8 mb-10">
           <div className="bg-white border-2 border-amber-200 rounded-xl p-8">
             
@@ -326,7 +343,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Improved CTA - REPLACE THE EXISTING CTA */}
+        {/* Improved CTA */}
         <div className="w-full max-w-3xl mx-auto text-center bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
             🚀 Be Part of the First Wave
