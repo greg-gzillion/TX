@@ -21,7 +21,6 @@ jobs:
       fail-fast: false
       matrix:
         language: [ 'javascript-typescript', 'rust', 'python' ]
-        # Note: javascript-typescript covers both JS and TS
 
     steps:
     - name: Checkout repository
@@ -31,12 +30,20 @@ jobs:
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-        # If you have mixed JS/TS files, use 'javascript-typescript'
-        # If you have separate TS build, you may need: 
-        # build-mode: none
 
+    # Special handling for Rust (needs explicit build)
+    - name: Build Rust
+      if: matrix.language == 'rust'
+      run: |
+        cd contracts/phoenix-escrow
+        cargo build
+        cd ../auction
+        cargo build
+
+    # Autobuild works for JS/TS and Python
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
+      if: matrix.language != 'rust'
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
