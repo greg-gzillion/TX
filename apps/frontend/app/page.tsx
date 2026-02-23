@@ -11,7 +11,9 @@ export default function HomePage() {
   const [prices, setPrices] = useState<any>(null);
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/admin/prices/latest')
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://phoenix-api-756y.onrender.com';
+    
+    fetch(`${apiUrl}/api/prices`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -81,7 +83,7 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-			 				                 
+        
         {/* Comparison Cards */}
         <div className="w-full max-w-4xl mx-auto mb-10">
           <div className="grid md:grid-cols-2 gap-6">
@@ -172,18 +174,18 @@ export default function HomePage() {
         {prices && (
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-10 max-w-3xl mx-auto">
             <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-  <span className="font-medium text-gray-700">Reference:</span>
-  <span className="text-amber-700">🥇 ${prices.gold}</span>
-  <span className="text-gray-600">🥈 ${prices.silver}</span>
-  <span className="text-gray-600">🔷 ${prices.platinum}</span>
-  <span className="text-gray-600">🔶 ${prices.palladium.toFixed(2)}</span>
-  <span className="text-xs text-gray-400">
-    {new Date(prices.createdAt).toLocaleDateString()}
-  </span>
-</div>
+              <span className="font-medium text-gray-700">Reference:</span>
+              <span className="text-amber-700">🥇 ${prices.gold?.toFixed(2) || prices.gold}</span>
+              <span className="text-gray-600">🥈 ${prices.silver?.toFixed(2) || prices.silver}</span>
+              <span className="text-gray-600">🔷 ${prices.platinum?.toFixed(2) || prices.platinum}</span>
+              <span className="text-gray-600">🔶 ${prices.palladium?.toFixed(2) || prices.palladium}</span>
+              <span className="text-xs text-gray-400">
+                {prices.lastUpdated ? new Date(prices.lastUpdated).toLocaleDateString() : ''}
+              </span>
+            </div>
             <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
               ⓘ Reference prices updated manually. Metal prices fluctuate constantly. 
-              Last update: {new Date(prices.createdAt).toLocaleString()}
+              Last update: {prices.lastUpdated ? new Date(prices.lastUpdated).toLocaleString() : 'N/A'}
             </div>
           </div>
         )}
