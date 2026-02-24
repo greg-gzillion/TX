@@ -96,57 +96,61 @@ export default function HomePage() {
         {/* Comparison Cards - Centered Grid */}
         <div className="max-w-4xl mx-auto mb-12">
           <div className="grid md:grid-cols-2 gap-6">
+            
             {/* Traditional Platforms */}
-<div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-  <div className="flex items-center gap-2 mb-4">
-    <span className="text-2xl">🏛️</span>
-    <h3 className="text-xl font-bold">Traditional Platforms</h3>
-  </div>
-  <ul className="space-y-2 text-sm">
-    <li className="flex items-start gap-2">
-      <span className="text-gray-400 font-bold">•</span>
-      <span>10-15% fees — gone forever</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-gray-400 font-bold">•</span>
-      <span>Fees are higher to cover costs and pay shareholders</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-gray-400 font-bold">•</span>
-      <span>Users have no ability to direct decisions</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-gray-400 font-bold">•</span>
-      <span>Centralized entities have final authority</span>
-    </li>
-  </ul>
-</div>
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl">🏛️</span>
+                <h3 className="text-xl font-bold">Traditional Platforms</h3>
+              </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>10-15% fees — gone forever</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>Fees are higher to cover costs and pay shareholders</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>Users have no ability to direct decisions</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-gray-400 font-bold">•</span>
+                  <span>Centralized entities have final authority</span>
+                </li>
+              </ul>
+            </div>
 
-{/* PhoenixPME */}
-<div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
-  <div className="flex items-center gap-2 mb-4">
-    <span className="text-2xl">⚙️</span>
-    <h3 className="text-xl font-bold text-amber-900">PhoenixPME</h3>
-  </div>
-  <ul className="space-y-2 text-sm">
-    <li className="flex items-start gap-2">
-      <span className="text-green-600 font-bold">✓</span>
-      <span>10% collateral — <span className="font-semibold">returned</span> upon successful completion</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-green-600 font-bold">✓</span>
-      <span>1.1% fees to <span className="font-semibold">Community Reserve Fund</span> — predominately user controlled</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-green-600 font-bold">✓</span>
-      <span>Users accumulate <span className="font-semibold">voting weight</span> to direct CRF utilization</span>
-    </li>
-    <li className="flex items-start gap-2">
-      <span className="text-green-600 font-bold">✓</span>
-      <span>48-hour buyer verification period</span>
-    </li>
-  </ul>
-</div>
+            {/* PhoenixPME */}
+            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-2xl">⚙️</span>
+                <h3 className="text-xl font-bold text-amber-900">PhoenixPME</h3>
+              </div>
+              <ul className="space-y-2 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>10% collateral — <span className="font-semibold">returned</span> upon successful completion</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>1.1% fees to <span className="font-semibold">Community Reserve Fund</span> — predominately user controlled</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>Users accumulate <span className="font-semibold">voting weight</span> to direct CRF utilization</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 font-bold">✓</span>
+                  <span>48-hour buyer verification period</span>
+                </li>
+              </ul>
+            </div>
+
+          </div> {/* Closes grid */}
+        </div> {/* Closes comparison container */}
 
         {/* Tagline - Centered */}
         <div className="max-w-2xl mx-auto text-center mb-12 border-t border-b border-gray-200 py-6">
