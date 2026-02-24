@@ -2,95 +2,81 @@
 
 interface PhoenixIconProps {
   className?: string;
+  size?: number;
+  showBackground?: boolean;
 }
 
-export default function PhoenixIcon({ className = "" }: PhoenixIconProps) {
-  return (
-    <div className={`phoenix-container ${className}`}>
-      <svg 
-        width="120" 
-        height="120" 
-        viewBox="0 0 120 120" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-        className="drop-shadow-xl"
-      >
-        {/* Phoenix Body - Gradient */}
-        <defs>
-          <linearGradient id="phoenixGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#F59E0B" />
-            <stop offset="50%" stopColor="#D97706" />
-            <stop offset="100%" stopColor="#B45309" />
-          </linearGradient>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-        </defs>
+export default function PhoenixIcon({ 
+  className = "", 
+  size = 32,
+  showBackground = true 
+}: PhoenixIconProps) {
+  
+  const icon = (
+    <svg 
+      width={size} 
+      height={size} 
+      viewBox="0 0 32 32" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      className={!showBackground ? className : ""}
+    >
+      {/* Phoenix body - simplified geometric shape */}
+      <path 
+        d="M16 6 L22 13 L16 22 L10 13 L16 6" 
+        fill="url(#phoenixGradient)" 
+      />
+      
+      {/* Head */}
+      <circle cx="16" cy="12" r="3" fill="#FBBF24" />
+      
+      {/* Eye */}
+      <circle cx="15" cy="11" r="0.8" fill="white" />
+      <circle cx="17" cy="11" r="0.8" fill="white" />
+      <circle cx="16" cy="11.5" r="0.4" fill="#92400E" />
+      
+      {/* Beak */}
+      <polygon points="16 13 18 14 14 14" fill="#D97706" />
+      
+      {/* Wings - simplified */}
+      <path 
+        d="M10 10 L6 6 L8 11 L10 10" 
+        fill="#F59E0B" 
+        opacity="0.8" 
+      />
+      <path 
+        d="M22 10 L26 6 L24 11 L22 10" 
+        fill="#F59E0B" 
+        opacity="0.8" 
+      />
+      
+      {/* Tail/Flame */}
+      <path 
+        d="M14 21 L12 26 L16 23 L20 26 L18 21" 
+        fill="#F59E0B" 
+        opacity="0.9" 
+      />
 
-        {/* Phoenix Shape - Stylized */}
-        <path 
-          d="M60 20 L75 45 L60 70 L45 45 L60 20" 
-          fill="url(#phoenixGradient)" 
-          filter="url(#glow)"
-          className="phoenix-flame"
-        />
-        
-        {/* Wings */}
-        <path 
-          d="M40 35 L20 20 L30 40 L40 35" 
-          fill="#F59E0B" 
-          opacity="0.8"
-          className="phoenix-flame" 
-          style={{ animationDelay: '0.2s' }}
-        />
-        <path 
-          d="M80 35 L100 20 L90 40 L80 35" 
-          fill="#F59E0B" 
-          opacity="0.8"
-          className="phoenix-flame" 
-          style={{ animationDelay: '0.3s' }}
-        />
-        
-        {/* Tail Feathers */}
-        <path 
-          d="M55 70 L50 90 L60 95 L70 90 L65 70" 
-          fill="#D97706" 
-          opacity="0.9"
-          className="phoenix-flame" 
-          style={{ animationDelay: '0.4s' }}
-        />
-        
-        {/* Head/Crest */}
-        <circle 
-          cx="60" 
-          cy="35" 
-          r="8" 
-          fill="#FBBF24" 
-          filter="url(#glow)"
-        />
-        <circle 
-          cx="57" 
-          cy="32" 
-          r="2" 
-          fill="white" 
-        />
-        <circle 
-          cx="63" 
-          cy="32" 
-          r="2" 
-          fill="white" 
-        />
-        <circle 
-          cx="60" 
-          cy="38" 
-          r="1.5" 
-          fill="#B45309" 
-        />
-      </svg>
-    </div>
+      {/* Gradient definition */}
+      <defs>
+        <linearGradient id="phoenixGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#F59E0B" />
+          <stop offset="50%" stopColor="#D97706" />
+          <stop offset="100%" stopColor="#B45309" />
+        </linearGradient>
+      </defs>
+    </svg>
   );
+
+  if (showBackground) {
+    return (
+      <div className={`flex items-center justify-center ${className}`}>
+        <div className="bg-amber-100 p-2 rounded-full shadow-sm">
+          {icon}
+        </div>
+      </div>
+    );
+  }
+
+  return icon;
 }
