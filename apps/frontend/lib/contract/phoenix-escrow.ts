@@ -155,10 +155,10 @@ export class PhoenixEscrowClient {
    */
   async getActiveAuctions(): Promise<Auction[]> {
     const query = { get_active_auctions: {} };
-    const response = await this.client.queryContractSmart<AuctionListResponse>(
+    const response = await this.client.queryContractSmart(
       CONTRACT_ADDRESS, 
       query
-    );
+    ) as AuctionListResponse;
     return response.auctions;
   }
 
@@ -169,10 +169,10 @@ export class PhoenixEscrowClient {
     const query = {
       get_auctions_by_seller: { seller }
     };
-    const response = await this.client.queryContractSmart<AuctionListResponse>(
+    const response = await this.client.queryContractSmart(
       CONTRACT_ADDRESS, 
       query
-    );
+    ) as AuctionListResponse;
     return response.auctions;
   }
 
@@ -183,10 +183,10 @@ export class PhoenixEscrowClient {
     const query = {
       get_auctions_by_bidder: { bidder }
     };
-    const response = await this.client.queryContractSmart<AuctionListResponse>(
+    const response = await this.client.queryContractSmart(
       CONTRACT_ADDRESS, 
       query
-    );
+    ) as AuctionListResponse;
     return response.auctions;
   }
 

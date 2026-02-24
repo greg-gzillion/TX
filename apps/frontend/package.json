@@ -19,6 +19,9 @@
     "lint": "echo 'Linting skipped for now'"
   },
   "dependencies": {
+    "@cosmjs/amino": "^0.38.1",
+    "@cosmjs/cosmwasm-stargate": "^0.38.1",
+    "@cosmjs/stargate": "^0.38.1",
     "@walletconnect/modal": "^2.7.0",
     "@walletconnect/sign-client": "^2.23.5",
     "@walletconnect/types": "^2.23.5",

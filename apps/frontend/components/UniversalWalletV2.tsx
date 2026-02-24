@@ -119,6 +119,11 @@ export default function UniversalWalletV2({ onConnect, className = '' }: Univers
         installed: true,
         connect: async () => {
           try {
+            // Safe check for phantom
+            if (!window.phantom) {
+              throw new Error('Phantom wallet not detected');
+            }
+            
             const response = await window.phantom.connect();
             return {
               name: 'Phantom',

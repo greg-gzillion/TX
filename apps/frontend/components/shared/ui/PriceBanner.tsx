@@ -52,7 +52,13 @@ export default function PriceBanner() {
       }
     } catch (err) {
       console.error('Fetch error:', err);
-      setError(err.message);
+      
+      // Type-safe error handling
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
       
       // Fallback for development - remove in production
       if (process.env.NODE_ENV === 'development') {
