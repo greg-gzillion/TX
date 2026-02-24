@@ -26,18 +26,44 @@ export default function PriceBanner() {
 
   const fetchPrices = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/prices`);
+      console.log('Fetching from:', `${API_URL}/api/prices`);
+      
+      const response = await fetch(`${API_URL}/api/prices`, {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+        cache: 'no-cache'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
       const data = await response.json();
+      console.log('Price data:', data);
       
       if (data.success) {
         setPrices(data.data);
         setError(null);
       } else {
-        setError('Failed to load prices');
+        throw new Error('API returned success: false');
       }
     } catch (err) {
-      console.error('Error fetching prices:', err);
-      setError('Cannot connect to price server');
+      console.error('Fetch error:', err);
+      setError(err.message);
+      
+      // Fallback for development - remove in production
+      if (process.env.NODE_ENV === 'development') {
+        setPrices({
+          gold: 5160.2,
+          silver: 87.59,
+          platinum: 2169,
+          palladium: 1774
+        });
+        setError(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -45,36 +71,38 @@ export default function PriceBanner() {
 
   if (loading) {
     return (
-      <div className="bg-gray-50 border-b border-gray-200 text-xs py-1.5">
-        <div className="max-w-7xl mx-auto px-4 text-center text-gray-400">
-          Loading reference prices...
-        </div>
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
+        <p className="text-sm text-gray-500">Loading reference prices...</p>
       </div>
     );
   }
 
   if (error || !prices) {
     return (
-      <div className="bg-gray-50 border-b border-gray-200 text-xs py-1.5">
-        <div className="max-w-7xl mx-auto px-4 text-center text-red-400">
-          {error || 'Prices unavailable'}
-        </div>
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
+        <p className="text-sm text-red-500">Prices temporarily unavailable</p>
+        <p className="text-xs text-gray-400 mt-1">Using latest known values</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-gray-50 border-b border-gray-200 text-xs py-1.5">
-      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <div className="flex space-x-4 text-gray-600">
-          <span>🥇 Gold ${prices.gold?.toFixed(2)}</span>
-          <span>🥈 Silver ${prices.silver?.toFixed(2)}</span>
-          <span>🔷 Platinum ${prices.platinum?.toFixed(2)}</span>
-          <span>🔶 Palladium ${prices.palladium?.toFixed(2)}</span>
-        </div>
-        <span className="text-gray-400">
-          Ref prices {prices.createdAt ? new Date(prices.createdAt).toLocaleDateString() : 'N/A'}
-        </span>
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto">
+      <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
+        <span className="font-medium text-gray-700">Reference:</span>
+        <span className="text-amber-700 font-semibold">🥇 ${prices.gold?.toFixed(2)}</span>
+        <span className="text-gray-600">🥈 ${prices.silver?.toFixed(2)}</span>
+        <span className="text-gray-600">🔷 ${prices.platinum?.toFixed(2)}</span>
+        <span className="text-gray-600">🔶 ${prices.palladium?.toFixed(2)}</span>
+        {prices.createdAt && (
+          <span className="text-xs text-gray-400">
+            {new Date(prices.createdAt).toLocaleDateString()}
+          </span>
+        )}
+      </div>
+      <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
+        ⓘ Reference prices updated manually. Metal prices fluctuate constantly.
+        Last update: {prices.createdAt ? new Date(prices.createdAt).toLocaleString() : 'N/A'}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { Button } from '@/components/shared/ui/Button';
 import { Search } from 'lucide-react';
 import PriceBanner from '@/components/shared/ui/PriceBanner';
 import PhoenixIcon from '@/components/phoenix/PhoenixIcon';
+import Tools from '@/components/phoenix/Tools';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -350,6 +351,10 @@ export default function HomePage() {
             🔥 March 6, 2026 — TX testnet launch. Be ready.
           </p>
         </div>
+
+        {/* Tools Section - Add this AFTER CTA but BEFORE closing tags */}	
+        {/* Tools Section */}
+        <Tools />
       </main>
     </div>
   );
