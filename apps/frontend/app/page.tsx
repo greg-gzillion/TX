@@ -233,43 +233,43 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Right Column */}
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">4</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">Collateral Returned + PHNX</h3>
-                    <p className="text-gray-600 text-sm">
-                      10% back + 0.9 PHNX to buyer, 0.1 PHNX to protocol.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">5</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">TRUST / DONT TRUST</h3>
-                    <p className="text-gray-600 text-sm">
-                      Permanent reputation tokens issued based on outcome.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">6</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">Permanent Record</h3>
-                    <p className="text-gray-600 text-sm">
-                      On-chain history follows you forever. Never erased.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+             {/* Right Column */}
+<div className="text-center">
+  <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+    <span className="text-3xl">🪙</span>
+  </div>
+  <p className="font-semibold mb-1">PHNX Governance</p>
+  <p className="text-sm text-gray-600">0.9 buyer • 0.1 developer</p>
+  <p className="text-xs text-gray-400 mt-2">Voting weight only - No cash value</p>
+  <p className="text-xs text-gray-400">Developer weight: 10% voting rights</p>
+</div>
+
+  {/* Step 5 */}
+  <div className="flex items-start gap-4">
+    <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
+      <span className="text-amber-700 font-bold">5</span>
+    </div>
+    <div>
+      <h3 className="font-bold text-lg mb-1">TRUST / DONT TRUST</h3>
+      <p className="text-gray-600 text-sm">
+        Permanent reputation tokens issued based on outcome.
+      </p>
+    </div>
+  </div>
+
+  {/* Step 6 */}
+  <div className="flex items-start gap-4">
+    <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
+      <span className="text-amber-700 font-bold">6</span>
+    </div>
+    <div>
+      <h3 className="font-bold text-lg mb-1">Permanent Record</h3>
+      <p className="text-gray-600 text-sm">
+        On-chain history follows you forever. Never erased.
+      </p>
+    </div>
+  </div>
+</div>
 
             {/* TX Blockchain Context */}
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mt-4">
