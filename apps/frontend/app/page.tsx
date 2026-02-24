@@ -6,6 +6,7 @@ import NavBar from '@/components/layout/NavBar';
 import { Button } from '@/components/shared/ui/Button';
 import { Search } from 'lucide-react';
 import PriceBanner from '@/components/shared/ui/PriceBanner';
+import PhoenixIcon from '@/components/phoenix/PhoenixIcon';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -18,14 +19,17 @@ export default function HomePage() {
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
         
         {/* Hero Section - Centered */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Trade Precious Metals
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Direct peer-to-peer. No middlemen. No hidden fees.
-          </p>
-        </div>
+<div className="text-center mb-12">
+  <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+    Phoenix Precious Metal Exchange
+  </h1>
+  <p className="text-lg text-amber-600 font-semibold mb-2">
+    🦅 PhoenixPME
+  </p>
+  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+    Direct peer-to-peer. No middlemen. No hidden fees.
+  </p>
+</div>
 
         {/* Search Bar - Centered */}
         <div className="max-w-2xl mx-auto mb-12">
