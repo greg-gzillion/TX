@@ -142,6 +142,7 @@ export default function BidForm({
                 onChange={(e) => setBidAmount(e.target.value)}
                 step="0.01"
                 min={minBid}
+								max={(parseInt(balance) / 1_000_000 / 1.1).toFixed(2)}
                 placeholder={`Enter ${minBid} or more`}
                 className="w-full pl-8 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-amber-500"
                 disabled={loading}

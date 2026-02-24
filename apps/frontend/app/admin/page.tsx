@@ -14,44 +14,100 @@ export default function AdminPage() {
   });
   const [currentPrices, setCurrentPrices] = useState<any>(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState({ text: '', type: '' });
+  const [fetchError, setFetchError] = useState(false);
 
   // Load current prices on page load
   useEffect(() => {
-    fetch(`${API_URL}/api/admin/prices/latest`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setCurrentPrices(data.data);
-        }
-      })
-      .catch(console.error);
+    fetchCurrentPrices();
   }, []);
+
+  const fetchCurrentPrices = async () => {
+    try {
+      const res = await fetch(`${API_URL}/api/admin/prices/latest`, {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors',
+        credentials: 'omit'
+      });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+      
+      const data = await res.json();
+      if (data.success) {
+        setCurrentPrices(data.data);
+        setFetchError(false);
+      }
+    } catch (err) {
+      console.error('Error fetching prices:', err);
+      setFetchError(true);
+      setMessage({ 
+        text: '❌ Cannot connect to backend. Please check CORS configuration.', 
+        type: 'error' 
+      });
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setMessage({ text: '', type: '' });
+    
+    // Validate all fields are filled
+    if (!formPrices.gold || !formPrices.silver || !formPrices.platinum || !formPrices.palladium) {
+      setMessage({ text: '❌ Please fill in all price fields', type: 'error' });
+      setLoading(false);
+      return;
+    }
+
+    if (!password) {
+      setMessage({ text: '❌ Please enter admin password', type: 'error' });
+      setLoading(false);
+      return;
+    }
     
     try {
       const res = await fetch(`${API_URL}/api/admin/prices`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formPrices, password })
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors',
+        credentials: 'omit',
+        body: JSON.stringify({ 
+          password: password,
+          gold: parseFloat(formPrices.gold),
+          silver: parseFloat(formPrices.silver),
+          platinum: parseFloat(formPrices.platinum),
+          palladium: parseFloat(formPrices.palladium)
+        })
       });
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
       
       const data = await res.json();
       if (data.success) {
-        setMessage('✅ Prices updated!');
+        setMessage({ text: '✅ Prices updated successfully!', type: 'success' });
         setFormPrices({ gold: '', silver: '', platinum: '', palladium: '' });
         // Refresh current prices
-        const updated = await fetch(`${API_URL}/api/admin/prices/latest`).then(r => r.json());
-        setCurrentPrices(updated.data);
+        await fetchCurrentPrices();
       } else {
-        setMessage('❌ Failed: ' + data.error);
+        setMessage({ text: '❌ Failed: ' + (data.error || 'Unknown error'), type: 'error' });
       }
     } catch (err) {
-      setMessage('❌ Error updating prices');
+      console.error('Error updating prices:', err);
+      setMessage({ 
+        text: '❌ Error updating prices. Check CORS configuration.', 
+        type: 'error' 
+      });
     } finally {
       setLoading(false);
     }
@@ -62,17 +118,28 @@ export default function AdminPage() {
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold mb-8">Admin: Update Prices</h1>
         
+        {/* CORS Warning - Show only if fetch error */}
+        {fetchError && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <p className="text-red-800 font-medium">⚠️ CORS Configuration Issue</p>
+            <p className="text-sm text-red-700 mt-1">
+              Unable to connect to backend. This is likely a CORS issue. 
+              Make sure your backend allows requests from this domain.
+            </p>
+          </div>
+        )}
+        
         {/* Current Prices */}
         {currentPrices && (
           <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
             <h2 className="text-lg font-semibold mb-4">Current Prices</h2>
             <div className="grid grid-cols-2 gap-4">
-              <div>🥇 Gold: ${currentPrices.gold}</div>
-              <div>🥈 Silver: ${currentPrices.silver}</div>
-              <div>🔷 Platinum: ${currentPrices.platinum}</div>
-              <div>🔶 Palladium: ${currentPrices.palladium}</div>
+              <div className="p-3 bg-gray-50 rounded">🥇 Gold: <span className="font-bold">${currentPrices.gold}</span></div>
+              <div className="p-3 bg-gray-50 rounded">🥈 Silver: <span className="font-bold">${currentPrices.silver}</span></div>
+              <div className="p-3 bg-gray-50 rounded">🔷 Platinum: <span className="font-bold">${currentPrices.platinum}</span></div>
+              <div className="p-3 bg-gray-50 rounded">🔶 Palladium: <span className="font-bold">${currentPrices.palladium}</span></div>
             </div>
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-500 mt-4">
               Last updated: {new Date(currentPrices.createdAt).toLocaleString()}
             </p>
           </div>
@@ -89,7 +156,7 @@ export default function AdminPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
                 required
               />
             </div>
@@ -102,7 +169,8 @@ export default function AdminPage() {
                   step="0.01"
                   value={formPrices.gold}
                   onChange={(e) => setFormPrices({ ...formPrices, gold: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  placeholder="5230.30"
                   required
                 />
               </div>
@@ -113,7 +181,8 @@ export default function AdminPage() {
                   step="0.01"
                   value={formPrices.silver}
                   onChange={(e) => setFormPrices({ ...formPrices, silver: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  placeholder="87.83"
                   required
                 />
               </div>
@@ -124,7 +193,8 @@ export default function AdminPage() {
                   step="0.01"
                   value={formPrices.platinum}
                   onChange={(e) => setFormPrices({ ...formPrices, platinum: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  placeholder="2145"
                   required
                 />
               </div>
@@ -135,7 +205,8 @@ export default function AdminPage() {
                   step="0.01"
                   value={formPrices.palladium}
                   onChange={(e) => setFormPrices({ ...formPrices, palladium: e.target.value })}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 border rounded focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                  placeholder="1717"
                   required
                 />
               </div>
@@ -144,14 +215,16 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700 disabled:bg-gray-400"
+              className="w-full bg-amber-600 text-white py-2 rounded hover:bg-amber-700 disabled:bg-gray-400 transition-colors font-medium"
             >
               {loading ? 'Updating...' : 'Update Prices'}
             </button>
             
-            {message && (
-              <div className="p-3 bg-gray-100 rounded text-center">
-                {message}
+            {message.text && (
+              <div className={`p-3 rounded text-center ${
+                message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+              }`}>
+                {message.text}
               </div>
             )}
           </form>
