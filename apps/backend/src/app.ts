@@ -9,6 +9,7 @@ import auctionRoutes from './routes/auction.routes';
 import healthRoutes from './routes/health.routes';
 import sandboxRoutes from './routes/sandbox.routes';
 import priceRoutes from './routes/price.routes';
+import adminRoutes from './routes/admin.routes';
 
 // Import middleware
 import { requestLogger } from './middleware/requestLogger';
@@ -19,11 +20,34 @@ const app = express();
 // Security middleware
 app.use(helmet());
 
-// CORS middleware - Update with your frontend URL
+// COMPREHENSIVE CORS CONFIGURATION
+const allowedOrigins = [
+  'https://phoenix-frontend-seven.vercel.app',
+  'http://localhost:3000',
+  'https://phoenix-frontend-seven.vercel.app'
+];
+
 app.use(cors({
-  origin: ['https://phoenix-frontend-seven.vercel.app', 'http://localhost:3000'],
+  origin: function(origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+  exposedHeaders: ['Content-Range', 'X-Content-Range'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 }));
+
+// Explicitly handle preflight requests
+app.options('*', cors());
 
 // Other middleware
 app.use(compression());
@@ -33,7 +57,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Request logging
 app.use(requestLogger);
 
-// Root route - welcome message (add BEFORE API routes)
+// Root route - welcome message
 app.get('/', (req, res) => {
   res.json({
     success: true,
@@ -45,8 +69,19 @@ app.get('/', (req, res) => {
       auctions: '/api/auctions',
       prices: '/api/prices',
       sandbox: '/api/sandbox/auctions',
-      auth: '/api/auth/login'
+      auth: '/api/auth/login',
+      admin: '/api/admin/prices'
     }
+  });
+});
+
+// Health check route (simple)
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString(),
+    service: 'phoenixpme-backend',
+    version: '1.0.0'
   });
 });
 
@@ -55,7 +90,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/auctions', auctionRoutes);
 app.use('/api/health', healthRoutes);
 app.use('/api/sandbox', sandboxRoutes);
-app.use('/api/prices', priceRoutes); // Note: priceRoutes (singular), not pricesRoutes
+app.use('/api/prices', priceRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Error handling
 app.use(errorHandler);
@@ -64,11 +100,8 @@ app.use(errorHandler);
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    error: 'Route not found',
-    path: req.originalUrl,
+    error: 'Route not found'
   });
 });
 
-export { app };
-// CORS fix deployed Mon Feb 23 05:16:12 PM MST 2026
-// FORCE REDEPLOY WITH CORS FIX Mon Feb 23 05:30:14 PM MST 2026
+export default app;
