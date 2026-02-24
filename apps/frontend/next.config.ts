@@ -1,8 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  async redirects() {
+    return [
+      {
+        source: '/create',
+        destination: '/auctions/create',
+        permanent: true,
+      },
+    ]
   },
 };
 
