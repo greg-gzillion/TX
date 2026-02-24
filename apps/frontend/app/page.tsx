@@ -276,6 +276,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
 
             {/* TX Blockchain Context */}
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mt-4">
