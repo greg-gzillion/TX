@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import NavBar from '@/components/layout/NavBar';
 import { Button } from '@/components/shared/ui/Button';
-import { Search, Award } from 'lucide-react';
+import { Search } from 'lucide-react';
 import PriceBanner from '@/components/shared/ui/PriceBanner';
 
 export default function HomePage() {
@@ -14,12 +14,12 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <NavBar />
       
-      {/* Main content - fully centered with viewport constraints */}
-      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      {/* Main content - perfectly centered */}
+      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
         
-        {/* Hero Section */}
-        <div className="text-center mb-8 w-full">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-3">
+        {/* Hero Section - Centered */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
             Trade Precious Metals
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
@@ -27,8 +27,8 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Search Bar */}
-        <div className="w-full max-w-2xl mx-auto mb-10">
+        {/* Search Bar - Centered */}
+        <div className="max-w-2xl mx-auto mb-12">
           <div className="flex gap-2">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -45,19 +45,19 @@ export default function HomePage() {
             </Button>
           </div>
           
-          {/* Quick Categories */}
-          <div className="flex flex-wrap justify-center gap-4 mt-3 text-sm text-gray-600">
-            <Link href="/auctions?metal=gold" className="hover:text-amber-600">Gold</Link>
-            <Link href="/auctions?metal=silver" className="hover:text-amber-600">Silver</Link>
-            <Link href="/auctions?metal=platinum" className="hover:text-amber-600">Platinum</Link>
-            <Link href="/auctions?metal=palladium" className="hover:text-amber-600">Palladium</Link>
-            <Link href="/auctions?form=coin" className="hover:text-amber-600">Coins</Link>
-            <Link href="/auctions?form=bar" className="hover:text-amber-600">Bars</Link>
+          {/* Quick Categories - Centered */}
+          <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm text-gray-600">
+            <Link href="/auctions?metal=gold" className="hover:text-amber-600 transition">Gold</Link>
+            <Link href="/auctions?metal=silver" className="hover:text-amber-600 transition">Silver</Link>
+            <Link href="/auctions?metal=platinum" className="hover:text-amber-600 transition">Platinum</Link>
+            <Link href="/auctions?metal=palladium" className="hover:text-amber-600 transition">Palladium</Link>
+            <Link href="/auctions?form=coin" className="hover:text-amber-600 transition">Coins</Link>
+            <Link href="/auctions?form=bar" className="hover:text-amber-600 transition">Bars</Link>
           </div>
         </div>
 
-        {/* Disclaimer */}
-        <div className="w-full max-w-3xl mx-auto mb-10">
+        {/* Disclaimer - Centered */}
+        <div className="max-w-3xl mx-auto mb-12">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <div className="flex items-start gap-3">
               <span className="text-2xl">🧪</span>
@@ -70,9 +70,9 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        
-        {/* Comparison Cards */}
-        <div className="w-full max-w-4xl mx-auto mb-10">
+
+        {/* Comparison Cards - Centered Grid */}
+        <div className="max-w-4xl mx-auto mb-12">
           <div className="grid md:grid-cols-2 gap-6">
             {/* Traditional */}
             <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -124,68 +124,46 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Tagline */}
-        <div className="w-full max-w-2xl mx-auto text-center mb-8 border-t border-b border-gray-200 py-6">
+        {/* Tagline - Centered */}
+        <div className="max-w-2xl mx-auto text-center mb-12 border-t border-b border-gray-200 py-6">
           <p className="text-xl">
             <span className="line-through text-gray-400 mr-2">10% fees?</span>
             <span className="font-semibold text-amber-600">10% collateral — returned.</span>
           </p>
         </div>
 
-        {/* PHNX & Reputation */}
-        <div className="w-full max-w-4xl mx-auto mb-10">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-center">How Participation is Recorded</h3>
-            <div className="grid md:grid-cols-2 gap-6">
+        {/* PHNX & Reputation - Centered */}
+        <div className="max-w-3xl mx-auto mb-12">
+          <div className="bg-white border border-gray-200 rounded-lg p-8">
+            <h3 className="text-xl font-bold mb-6 text-center">How Participation is Recorded</h3>
+            <div className="grid md:grid-cols-2 gap-8">
               <div className="text-center">
-                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-2xl">🪙</span>
+                <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-3xl">🪙</span>
                 </div>
                 <p className="font-semibold mb-1">PHNX Governance</p>
-                <p className="text-xs text-gray-600">0.9 to buyer • 0.1 developer</p>
-                <p className="text-xs text-gray-400 mt-1">No cash value</p>
+                <p className="text-sm text-gray-600">0.9 to buyer • 0.1 developer</p>
+                <p className="text-xs text-gray-400 mt-2">No cash value</p>
               </div>
               <div className="text-center">
-                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-2xl">⭐</span>
+                <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-3xl">⭐</span>
                 </div>
                 <p className="font-semibold mb-1">TRUST / DONT TRUST</p>
-                <p className="text-xs text-gray-600">Permanent on-chain reputation</p>
-                <p className="text-xs text-gray-400 mt-1">Amendable only under extenuating circumstances</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* PHNX & Reputation */}
-        <div className="w-full max-w-4xl mx-auto mb-10">
-          <div className="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 className="text-xl font-bold mb-4 text-center">How Participation is Recorded</h3>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="text-center">
-                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-2xl">🪙</span>
-                </div>
-                <p className="font-semibold mb-1">PHNX Governance</p>
-                <p className="text-xs text-gray-600">0.9 to buyer • 0.1 developer</p>
-                <p className="text-xs text-gray-400 mt-1">No cash value</p>
-              </div>
-              <div className="text-center">
-                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-2xl">⭐</span>
-                </div>
-                <p className="font-semibold mb-1">TRUST / DONT TRUST</p>
-                <p className="text-xs text-gray-600">Permanent on-chain reputation</p>
-                <p className="text-xs text-gray-400 mt-1">Amendable only under extenuating circumstances</p>
+                <p className="text-sm text-gray-600">Permanent on-chain reputation</p>
+                <p className="text-xs text-gray-400 mt-2">Amendable only under extenuating circumstances</p>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Price Banner */}
-        <PriceBanner />
+        {/* Price Banner - Centered */}
+        <div className="max-w-3xl mx-auto mb-12">
+          <PriceBanner />
+        </div>
 
-        {/* Featured Auctions */}
-        <div className="w-full max-w-5xl mx-auto mb-10">
+        {/* Featured Auctions - Centered */}
+        <div className="max-w-4xl mx-auto mb-12">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Featured Auctions</h2>
             <Link href="/auctions" className="text-amber-600 text-sm hover:underline">
@@ -200,8 +178,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Detailed Protocol Explanation */}
-        <div className="w-full max-w-4xl mx-auto mt-8 mb-10">
+        {/* Detailed Protocol Explanation - Centered */}
+        <div className="max-w-4xl mx-auto mb-12">
           <div className="bg-white border-2 border-amber-200 rounded-xl p-8">
             
             {/* Section Header */}
@@ -216,90 +194,77 @@ export default function HomePage() {
               </p>
             </div>
 
-            {/* Process Steps */}
+            {/* Process Steps - Two Column Layout */}
             <div className="grid md:grid-cols-2 gap-8 mb-8">
-              {/* Left Column - Collateral */}
+              {/* Left Column */}
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                     <span className="text-amber-700 font-bold">1</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">10% Collateral (Both Parties)</h3>
+                    <h3 className="font-bold text-lg mb-1">10% Collateral (Both Parties)</h3>
                     <p className="text-gray-600 text-sm">
-                      Sellers and buyers each post <span className="font-semibold">10% collateral</span> before the buyer pays the seller. 
-                      This keeps all participants honest — both have skin in the game.
+                      Sellers and buyers each post <span className="font-semibold">10% collateral</span>. Both have skin in the game.
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                     <span className="text-amber-700 font-bold">2</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">Funds Held in Escrow</h3>
+                    <h3 className="font-bold text-lg mb-1">Funds Held in Escrow</h3>
                     <p className="text-gray-600 text-sm">
-                      All funds are locked in smart contract escrow until all parties are satisfied. 
-                      No one can touch them.
+                      All funds locked in smart contract escrow. No one can touch them.
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                     <span className="text-amber-700 font-bold">3</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">48-Hour Buyer Verification</h3>
+                    <h3 className="font-bold text-lg mb-1">48-Hour Buyer Verification</h3>
                     <p className="text-gray-600 text-sm">
-                      After delivery, the buyer has a <span className="font-semibold">48-hour verification period</span> to inspect the item. 
-                      Escrow is only released after successful delivery confirmation and 48 hour time lapse.
+                      Buyer has 48 hours to inspect after delivery.
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Right Column - Rewards & Reputation */}
+              {/* Right Column */}
               <div className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                     <span className="text-amber-700 font-bold">4</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">Collateral Returned + PHNX Rewards</h3>
+                    <h3 className="font-bold text-lg mb-1">Collateral Returned + PHNX</h3>
                     <p className="text-gray-600 text-sm">
-                      Upon successful completion, both parties get their <span className="font-semibold">10% collateral back</span>. 
-                      The buyer receives <span className="font-semibold">0.9 PHNX</span> governance weight, 
-                      and <span className="font-semibold">0.1 PHNX</span> is allocated to protocol development.
+                      10% back + 0.9 PHNX to buyer, 0.1 PHNX to protocol.
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                     <span className="text-amber-700 font-bold">5</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">TRUST / DONT TRUST Issued</h3>
+                    <h3 className="font-bold text-lg mb-1">TRUST / DONT TRUST</h3>
                     <p className="text-gray-600 text-sm">
-                      After the verification period, permanent reputation tokens are issued:
-                      <span className="block mt-1"><span className="text-green-600 font-semibold">TRUST</span> for successful completions</span>
-                      <span><span className="text-red-600 font-semibold">DONT TRUST</span> for failed obligations</span>
+                      Permanent reputation tokens issued based on outcome.
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0 mt-1">
+                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
                     <span className="text-amber-700 font-bold">6</span>
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">Permanent Record</h3>
+                    <h3 className="font-bold text-lg mb-1">Permanent Record</h3>
                     <p className="text-gray-600 text-sm">
-                      TRUST/DONT TRUST is a <span className="font-semibold">permanent on-chain record</span> — 
-                      amendable only under extenuating circumstances, but never erased. 
-                      Your history follows you forever.
+                      On-chain history follows you forever. Never erased.
                     </p>
                   </div>
                 </div>
@@ -314,39 +279,29 @@ export default function HomePage() {
                 </div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">Built on the TX Blockchain Ecosystem</h3>
-                  <p className="text-gray-700 text-sm mb-2">
-                    PhoenixPME is an <span className="font-semibold">experimental concept</span> built on the <span className="font-semibold">TX blockchain</span> — 
-                    the merger of <span className="font-semibold">Coreum's enterprise-grade infrastructure</span> and 
-                    <span className="font-semibold"> Sologenic's asset tokenization expertise</span>.
-                  </p>
-                  <p className="text-gray-600 text-sm italic">
-                    This protocol leans on the success and security of the TX ecosystem, 
-                    but is entirely separate open source software. Users interact directly 
-                    with smart contracts — no company, no middlemen, no custodians.
+                  <p className="text-gray-700 text-sm">
+                    An experimental concept built on the TX blockchain — the merger of Coreum and Sologenic.
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Legal/Experimental Disclaimer */}
+            {/* Legal Disclaimer */}
             <div className="mt-6 text-center">
               <p className="text-xs text-gray-400 border-t border-gray-200 pt-4">
-                ⚠️ This is an experimental concept in active development. All mechanisms described are 
-                subject to change based on testing and community input. No guarantees, no warranties. 
-                PHNX, TRUST, and DONT TRUST tokens will have no cash value and will be non-transferable.
+                ⚠️ Experimental concept. No guarantees. PHNX, TRUST, and DONT TRUST have no cash value and are non-transferable.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Improved CTA */}
-        <div className="w-full max-w-3xl mx-auto text-center bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 p-8">
+        {/* CTA - Centered */}
+        <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">
             🚀 Be Part of the First Wave
           </h2>
-          <p className="text-gray-700 mb-4 max-w-xl mx-auto">
-            Join the first community of peer-to-peer precious metals traders. 
-            No listing fees. 1.1% to Community Reserve Fund. 10% collateral returned.
+          <p className="text-gray-700 mb-6 max-w-xl mx-auto">
+            Join the first community of peer-to-peer precious metals traders.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3">
             <Button variant="gold" size="lg" href="/auctions/create" className="text-base">
