@@ -5,23 +5,10 @@ import Link from 'next/link';
 import NavBar from '@/components/layout/NavBar';
 import { Button } from '@/components/shared/ui/Button';
 import { Search, Award } from 'lucide-react';
+import PriceBanner from '@/components/shared/ui/PriceBanner';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const [prices, setPrices] = useState<any>(null);
-
-  useEffect(() => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://phoenix-api-756y.onrender.com';
-    
-    fetch(`${apiUrl}/api/prices`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          setPrices(data.data);
-        }
-      })
-      .catch(console.error);
-  }, []);
 
   return (
     <div className="min-h-screen bg-white">
@@ -169,26 +156,33 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-
-        {/* Reference Prices Banner with Disclaimer */}
-        {prices && (
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-10 max-w-3xl mx-auto">
-            <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
-              <span className="font-medium text-gray-700">Reference:</span>
-              <span className="text-amber-700">🥇 ${prices.gold?.toFixed(2) || prices.gold}</span>
-              <span className="text-gray-600">🥈 ${prices.silver?.toFixed(2) || prices.silver}</span>
-              <span className="text-gray-600">🔷 ${prices.platinum?.toFixed(2) || prices.platinum}</span>
-              <span className="text-gray-600">🔶 ${prices.palladium?.toFixed(2) || prices.palladium}</span>
-              <span className="text-xs text-gray-400">
-                {prices.lastUpdated ? new Date(prices.lastUpdated).toLocaleDateString() : ''}
-              </span>
-            </div>
-            <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
-              ⓘ Reference prices updated manually. Metal prices fluctuate constantly. 
-              Last update: {prices.lastUpdated ? new Date(prices.lastUpdated).toLocaleString() : 'N/A'}
+        {/* PHNX & Reputation */}
+        <div className="w-full max-w-4xl mx-auto mb-10">
+          <div className="bg-white border border-gray-200 rounded-lg p-6">
+            <h3 className="text-xl font-bold mb-4 text-center">How Participation is Recorded</h3>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="text-center">
+                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">🪙</span>
+                </div>
+                <p className="font-semibold mb-1">PHNX Governance</p>
+                <p className="text-xs text-gray-600">0.9 to buyer • 0.1 developer</p>
+                <p className="text-xs text-gray-400 mt-1">No cash value</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-amber-100 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <span className="text-2xl">⭐</span>
+                </div>
+                <p className="font-semibold mb-1">TRUST / DONT TRUST</p>
+                <p className="text-xs text-gray-600">Permanent on-chain reputation</p>
+                <p className="text-xs text-gray-400 mt-1">Amendable only under extenuating circumstances</p>
+              </div>
             </div>
           </div>
-        )}
+        </div>
+
+        {/* Price Banner */}
+        <PriceBanner />
 
         {/* Featured Auctions */}
         <div className="w-full max-w-5xl mx-auto mb-10">
