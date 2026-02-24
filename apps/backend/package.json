@@ -20,7 +20,7 @@
     "@prisma/client": "5.22.0",
     "@prisma/engines": "^7.4.0",
     "@types/decimal.js": "^7.4.3",
-    "@types/nodemailer": "^7.0.10",
+    "@types/nodemailer": "^7.0.11",
     "bcryptjs": "^3.0.3",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
