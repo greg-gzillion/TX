@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 
+const API_URL = 'https://phoenix-api-756y.onrender.com';
+
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [formPrices, setFormPrices] = useState({
@@ -16,7 +18,7 @@ export default function AdminPage() {
 
   // Load current prices on page load
   useEffect(() => {
-    fetch('http://localhost:3001/api/admin/prices/latest')
+    fetch(`${API_URL}/api/admin/prices/latest`)
       .then(res => res.json())
       .then(data => {
         if (data.success) {
@@ -32,7 +34,7 @@ export default function AdminPage() {
     setMessage('');
     
     try {
-      const res = await fetch('http://localhost:3001/api/admin/prices', {
+      const res = await fetch(`${API_URL}/api/admin/prices`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...formPrices, password })
@@ -43,8 +45,8 @@ export default function AdminPage() {
         setMessage('✅ Prices updated!');
         setFormPrices({ gold: '', silver: '', platinum: '', palladium: '' });
         // Refresh current prices
-        const updated = await fetch('http://localhost:3001/api/admin/prices/latest').then(r => r.json());
-        setCurrentPrices(updated);
+        const updated = await fetch(`${API_URL}/api/admin/prices/latest`).then(r => r.json());
+        setCurrentPrices(updated.data);
       } else {
         setMessage('❌ Failed: ' + data.error);
       }
