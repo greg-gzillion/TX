@@ -1,69 +1,39 @@
 import { Router } from 'express';
-import { getSpotPrice, priceCache, updateSpotPrices } from '../services/priceOracle';
 import prisma from '../lib/prisma';
 
 const router = Router();
 
-// Get current spot prices from cache
+// Get latest prices
 router.get('/', async (req, res) => {
   try {
-    const { gold, silver, platinum, palladium, lastUpdated } = priceCache;
+    // Set CORS headers explicitly for this route
+    res.header('Access-Control-Allow-Origin', 'https://phoenix-frontend-seven.vercel.app');
+    res.header('Access-Control-Allow-Credentials', 'true');
     
-    console.log('📊 Price API called - Current cache:', {
-      gold, silver, platinum, palladium, lastUpdated
+    const prices = await prisma.priceHistory.findFirst({
+      orderBy: { createdAt: 'desc' }
     });
     
     res.json({
       success: true,
-      data: {
-        gold,
-        silver,
-        platinum,
-        palladium,
-        lastUpdated,
-        source: 'Manual updates (admin panel)',
-        nextUpdate: 'Manual only'
-      }
+      data: prices
     });
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    res.status(500).json({ 
-      success: false, 
-      error: errorMessage 
+  } catch (error) {
+    console.error('Error fetching prices:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to fetch prices'
     });
   }
 });
 
-// Get price for specific metal
-router.get('/:metal', async (req, res) => {
-  try {
-    const { metal } = req.params;
-    const validMetals = ['gold', 'silver', 'platinum', 'palladium'];
-    
-    if (!validMetals.includes(metal)) {
-      return res.status(400).json({ 
-        success: false, 
-        error: `Invalid metal type. Must be one of: ${validMetals.join(', ')}` 
-      });
-    }
-    
-    const price = getSpotPrice(metal as any);
-    res.json({
-      success: true,
-      data: {
-        metal,
-        price,
-        lastUpdated: priceCache.lastUpdated,
-        source: 'Manual updates (admin panel)'
-      }
-    });
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    res.status(500).json({ 
-      success: false, 
-      error: errorMessage 
-    });
-  }
+// Handle OPTIONS requests for CORS preflight
+router.options('/', (req, res) => {
+  res.header('Access-Control-Allow-Origin', 'https://phoenix-frontend-seven.vercel.app');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(204);
 });
 
 export default router;
