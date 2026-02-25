@@ -1,6 +1,10 @@
-# Phoenix PME - Quick Start Guide
-## 🚧 Important Note About Smart Contracts
-## 🚧 Critical Timeline Information
+# PhoenixPME - Quick Start Guide
+
+**Last Updated:** February 24, 2026  
+**Project Status:** ✅ **LIVE!** Deployed on Render & Vercel  
+**Next Milestone:** TX Testnet 6.0 Launch - March 6, 2026 (9 days)
+
+## 🚧 Important Timeline Information
 
 **The current Coreum testnet (v3.x) is NOT compatible with our smart contracts (built for v5.0+).**
 
@@ -8,55 +12,15 @@
 **This is when REAL TESTING BEGINS, NOT mainnet launch.**
 
 On March 6:
-- ✅ TX unified testnet goes live
+- ✅ TX unified testnet (v6.0) goes live
 - ✅ Smart contracts CAN be deployed
 - ✅ Real testing of auctions/bids starts
 - ⏳ Mainnet is still weeks/months away
 
 ### What This Means For You:
-- **Now:** Use the live UI with mock data
+- **Now:** Use the live UI with mock data (testnet mode)
 - **March 6+:** Help test real contracts on testnet
 - **Future:** Mainnet launch after successful testing
-
-**We're not launching March 6 - we're STARTING REAL TESTING March 6.**
-
-**Why?** TX (Coreum + Sologenic merger) launches March 6 with unified v6.0 testnet and backward compatibility. Your contracts will work immediately.
-## Project Status: ✅ **LIVE!** Deployed on Render & Vercel
-
-This guide will help you get PhoenixPME running locally OR connect to the live cloud deployment.
-
-# 🚀 PhoenixPME Quick Start Guide
-
-+ **Last Updated:** February 21, 2026
-**Purpose:** For users who want to use the PhoenixPME platform
-
----
-
-## 📍 Project Status
-
-| Aspect | Status |
-|--------|--------|
-| **Live Frontend** | ✅ [phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app) |
-| **Live API** | ✅ [phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
-| **Metal Prices** | ✅ Reference prices (updated manually)
-| **Wallet Connection** | ✅ Working |
-| **Smart Contracts** | ⏳ March 6, 2026 |
-	**Metal Prices** | ✅ Reference prices (market close) |---
-
-
-+ ⚠️ Note: The testnet is currently unstable. A mock wallet is available for UI testing until March 6.
-
-## ⚠️ Important Timeline
-
-**The current Coreum testnet (v3.x) is NOT compatible with our smart contracts (built for v5.0+).**
-
-### 📅 March 6, 2026 - TX TESTNET LAUNCHES
-**This is when REAL TESTING BEGINS, NOT mainnet launch.**
-
-On March 6:
-- ✅ TX unified testnet goes live
-- ✅ Smart contracts CAN be deployed
-- ✅ Real testing of auctions/bids starts
 
 **We're not launching March 6 - we're STARTING REAL TESTING March 6.**
 
@@ -69,28 +33,41 @@ No installation needed! Visit:
 | Service | URL |
 |---------|-----|
 | **Frontend App** | [https://phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app) |
+| **Backend API** | [https://phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
 | **Live Prices** | [https://phoenix-api-756y.onrender.com/api/prices](https://phoenix-api-756y.onrender.com/api/prices) |
+| **Health Check** | [https://phoenix-api-756y.onrender.com/health](https://phoenix-api-756y.onrender.com/health) |
+| **Admin Panel** | [https://phoenix-frontend-seven.vercel.app/admin](password protected) |
+| **Developer Sandbox** | [https://phoenix-frontend-seven.vercel.app/sandbox](https://phoenix-frontend-seven.vercel.app/sandbox) |
 
 ⚠️ Free tier spins down after inactivity. First request may take 30-50 seconds.
 
 ---
-## 🔧 Wallet Setup
-+ 
-+ ⚠️ Note: The testnet is currently unstable. A mock wallet is available for UI testing until March 6.
 
-### Step 1: Install a Wallet
+## 🔧 Wallet Setup
+
+### ✅ Multi-Wallet Support Now Available!
+
+We now support **4 different wallets** through our UniversalWalletV2:
+
+| Wallet | Chain | Icon | Status |
+|--------|-------|------|--------|
+| **Keplr** | Cosmos | 🪐 | ✅ Working |
+| **Leap** | Cosmos | 🐆 | ✅ Working |
+| **MetaMask** | EVM | 🦊 | ✅ Working |
+| **Phantom** | Solana | 👻 | ✅ Working |
+
+### Step 1: Install Your Preferred Wallet
 
 | Wallet | Installation | Best For |
 |--------|--------------|----------|
-| **Keplr** | [keplr.app](https://www.keplr.app) | Most users |
-| **Leap** | [leapwallet.io](https://www.leapwallet.io) | Alternative |
+| **Keplr** | [keplr.app](https://www.keplr.app) | Cosmos users |
+| **Leap** | [leapwallet.io](https://www.leapwallet.io) | Cosmos users |
+| **MetaMask** | [metamask.io](https://metamask.io) | EVM users |
+| **Phantom** | [phantom.app](https://phantom.app) | Solana users |
 
-### Step 2: Add Coreum Testnet
+### Step 2: Add Coreum Testnet to Your Wallet
 
-#### For Keplr:
-1. Open Keplr → Hamburger menu (☰) → "Add Chain"
-2. Enter this configuration:
-
+#### For Keplr & Leap:
 ```json
 {
   "chainId": "coreum-testnet-1",
@@ -119,8 +96,25 @@ No installation needed! Visit:
   },
   "gasPriceStep": { "low": 0.01, "average": 0.025, "high": 0.03 }
 }
-For Leap:
-Similar process - search for "Coreum Testnet" in the network selector.
+For MetaMask:
+Open MetaMask
+
+Click network dropdown → "Add Network"
+
+Enter:
+
+Network Name: Coreum Testnet
+
+New RPC URL: https://full-node.testnet-1.coreum.dev:26657
+
+Chain ID: 990
+
+Currency Symbol: TESTCORE
+
+Block Explorer URL: https://explorer.testnet-1.coreum.dev
+
+For Phantom:
+Phantom doesn't natively support Coreum yet. Use the sandbox mode for testing until March 6.
 
 💰 Getting Test Tokens
 ⚠️ IMPORTANT: Token Order Matters
@@ -150,6 +144,7 @@ Step 2: Activate Your Address
 
 Step 3: Get TESTUSD (For Auctions)
 Manual Addition (Until March 6):
+
 In Keplr, go to "Add Token" and enter:
 
 Denom: utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6
@@ -168,14 +163,27 @@ curl -X POST https://phoenix-api-756y.onrender.com/api/faucet \
 ✅ Verify Everything Works
 Visit PhoenixPME
 
-Click "Connect Wallet"
+Click "Connect Wallet" (or go to Sandbox for multi-wallet testing)
 
 Your address should appear
 
 You should see TESTCORE balance
 
+Price banner should show live metal prices
+
 TESTUSD will appear after March 6
 
+📊 Current Status (as of Feb 24, 2026)
+Aspect	Status	Notes
+Live Frontend	✅ Working	8 pages, responsive
+Live Backend	✅ Working	API operational
+Metal Prices	✅ Live	Updated manually via admin
+Wallet Connection	✅ Multi-wallet	Keplr, Leap, MetaMask, Phantom
+Admin Panel	✅ Working	Password protected
+Sandbox Mode	✅ Working	Test wallets, auctions
+Smart Contracts	✅ Ready	7 contracts, 16 tests
+TESTUSD Token	✅ Ready	6 decimals, denom configured
+TX Testnet	⏳ March 6	Launch in 9 days
 📚 Official Coreum Documentation
 Resource	Link	Purpose
 Coreum Docs	docs.coreum.dev	Official documentation
@@ -198,6 +206,8 @@ Problem	Solution
 "Transaction fails"	Not enough TESTCORE for gas
 TESTUSD not visible	Add manually using denom above
 "Chain not found"	Double-check chain ID: coreum-testnet-1
+Wallet not connecting	Try different wallet (MetaMask/Phantom in sandbox)
+Price banner not showing	Check CORS, refresh page
 🚀 Quick Commands Reference
 Action	Command/URL
 Live Frontend	https://phoenix-frontend-seven.vercel.app
@@ -226,21 +236,21 @@ Terminal 2: Start Backend
 bash
 cd ~/dev/TX/apps/backend
 npm install
-npm start
+npm run dev
 Terminal 3: Start Frontend
 
 bash
 cd ~/dev/TX/apps/frontend
 npm install
 npm run dev
-For more detailed technical setup, see setup_guide.md
+For more detailed technical setup, see SETUP_GUIDE.md
 
-## 📍 Project Status (as of Feb 21, 2026)
-
-| Aspect | Status |
-|--------|--------|
-| **Live Frontend** | ✅ [phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app) |
-| **Live API** | ✅ [phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
-| **Metal Prices** | ✅ Reference prices (market close, manual updates) |
-| **Wallet Connection** | ✅ Working (mock wallet for testing) |
-| **Smart Contracts** | ⏳ March 6, 2026 |
+🔗 Quick Links
+Resource	URL
+GitHub Repo	https://github.com/greg-gzillion/TX
+Architecture Docs	/docs/architecture/
+Legal Documents	/docs/legal/
+Current Focus	CURRENT-FOCUS.md
+Roadmap	ROADMAP.md
+Last Updated: February 24, 2026
+*Next Milestone: March 6, 2026 - TX Testnet Launch (9 days)* 🚀

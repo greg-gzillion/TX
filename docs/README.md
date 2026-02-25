@@ -1,125 +1,218 @@
-# PhoenixPME - Precious Metals Exchange
+# PhoenixPME - Precious Metals Exchange Protocol
 
-## Overview
-Blockchain-based auction platform for physical precious metals with integrated Community Reserveing mechanism.
+**Last Updated:** February 24, 2026  
+**Current Phase:** Pre-TX Testnet Launch (9 days remaining)  
+**Live Frontend:** [phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app)  
+**Live Backend:** [phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com)  
+**GitHub:** [github.com/greg-gzillion/TX](https://github.com/greg-gzillion/TX)
 
-## Core Components
+---
 
-### 1. Auction Platform
-- **Purpose**: Peer-to-peer trading of physical precious metals
-- **Fee**: 1.1% per successful transaction
-For detailed fee model, see: docs/FEE_MODEL.md
-- **Features**:
-  - Buy It Now & bidding functionality
-  - Real-time market data integration
-  - Seller-set grading premiums
-  - Coreum blockchain settlement
+## 🏛️ Overview
+A blockchain-based auction protocol for physical precious metals (gold, silver, platinum, palladium) with integrated **dual collateral** and **Community Reserve Fund**.
 
-### 2. Fee Distribution
-For detailed fee model, see: docs/FEE_MODEL.md
-**Auction Platform Fees (1.1%):**
-For detailed fee model, see: docs/FEE_MODEL.md
-- **100% goes to Community Reserve Fund** (building capital for future insurance)
-- **Developer stake**: 10% ownership of accumulated Community Reserve Fund
+**Built on TX Blockchain** (Coreum + Sologenic merger)  
+**Target Testnet Launch:** March 6, 2026
 
-**Future Insurance Transaction Fees:**
-For detailed fee model, see: docs/FEE_MODEL.md
-- **10% to Developer** (per insurance transaction)
-- **90% to Insurance Pool** (per insurance transaction)
+---
 
-### 3. Future Initiatives (Future)
-- **Activation**: When Community Reserve Fund reaches sufficient capital
-- **Developer Stake**: 10% ownership of Community Reserve Fund
-- **Insurance Fee**: Will be competitive percentage (TBD)
-For detailed fee model, see: docs/FEE_MODEL.md
-- **Developer Share**: 10% of all insurance transaction fees
+## ✅ Current Status (as of Feb 24, 2026)
 
-## Financial Structure
-**Phase 1: Building Capital (Current)**
+| Component | Status | Details |
+|-----------|--------|---------|
+| **Frontend** | ✅ LIVE | [phoenix-frontend-seven.vercel.app](https://phoenix-frontend-seven.vercel.app) |
+| **Backend** | ✅ LIVE | [phoenix-api-756y.onrender.com](https://phoenix-api-756y.onrender.com) |
+| **Multi-Wallet** | ✅ SUPPORTED | Keplr, Leap, MetaMask, Phantom |
+| **TESTUSD Token** | ✅ READY | 6 decimals, denom configured |
+| **Smart Contracts** | ✅ READY | 7 contracts, 16 tests passing |
+| **Price Banner** | ✅ WORKING | Live metal prices from API |
+| **Admin Panel** | ✅ WORKING | Password-protected updates |
+| **TX Testnet** | ⏳ March 6 | 9 days to launch |
 
-
-## Implementation Details
-- **Single escrow account**: All auction fees accumulate in Community Reserve Fund
-- **Developer ownership**: 10% stake in total Community Reserve Fund
-- **Future insurance**: Developer receives 10% of all insurance transaction fees
-- **Transparency**: All allocations verifiable on XRPL ledger
-
-## Technical Architecture
-- **Frontend**: React/TypeScript (port 3000)
-- **Backend**: Express.js/PostgreSQL (port 3001)
-- **Blockchain**: Coreum (CosmWasm smart contracts)
-- **Insurance Services**: Ports 3200-3204 (calculator, risk assessment, quotes, RLUSD monitor)
-
-## Current Status
-- ✅ Auction platform functional (http://localhost:3000)
-- ✅ Backend API operational (http://localhost:3001)
-- ✅ Insurance module services ready (ports 3200-3204)
-- 🔄 Insurance pool: Building capital (0 → 50,000 RLUSD goal)
-- 🔄 Smart contract deployment: In progress
-
-## Development
-- **Repository**: https://github.com/PhoenixPME/coreum-pme
-- **Primary Developer**: Greg (@greg-gzillion)
-- **Contact**: gjf20842@gmail.com
-
-## Key Files
-- `apps/frontend/` - Auction interface
-- `apps/backend/` - API server
-- `apps/insurance-module/` - Insurance services
-- `contracts/` - Coreum smart contracts
-- `legal/` - License and commercial terms
-
-## Notes
-- Auction platform fee (1.1%) builds insurance capital
-- Developer owns 10% stake in Community Reserve Fund
-- When insurance launches: developer gets 10% of insurance transaction fees
-- All fees escrowed in RLUSD on XRPL
-- Insurance activates automatically when pool reaches threshold
-- Built for Coreum blockchain, compatible with upcoming tx (Coreum + Sologenic)
-Use Control + Shift + m to toggle the tab key moving focus. Alternatively, use esc then tab to move to the next interactive element on the page.
-No file chosen
-Attach files by dragging & dropping, selecting or pasting them.
-
-## Fee Model (Single Source of Truth)
-For detailed fee model, see: docs/FEE_MODEL.md
-See: legal/FEE_MODEL_SIMPLE.md
-
-
-## Legal Status Facts
-
-### Copyright:
-- Code is original work by Greg (@greg-gzillion)
-- Copyright exists automatically
-- Licensed under GNU GPL v3.0
-
-### Trademark:
-- "PhoenixPME" name is in use
-- Not a registered trademark
-- Consider registration for formal protection
-
-### Commercial Model:
-- Open source code: GPL v3.0
-- Potential revenue: Hosted service, consulting, custom development
-- Competition: Others can fork under GPL terms
+---
 
 ## 🪙 TESTUSD Token - Live on Coreum Testnet
 
-We've successfully deployed the TESTUSD token as the foundation for our precious metals trading protocol.
+The foundation token for PhoenixPME auctions is operational on Coreum testnet (TX-compatible).
 
-- **Documentation:** [TESTUSD Token Creation](docs/TESTUSD_TOKEN_CREATION.md)
-- **Transaction:** `37EC84596A02687D8F77E7D92538F518CCE847D8B4A325732B911FD0B0D35E9A`
-- **Token:** TESTUSD (6 decimals, 1000 initial supply)
+| Detail | Value |
+|--------|-------|
+| **Symbol** | TESTUSD |
+| **Denom** | `utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6` |
+| **Decimals** | 6 |
+| **Transaction** | [37EC84596A02687D8F77E7D92538F518CCE847D8B4A325732B911FD0B0D35E9A](https://explorer.testnet-1.coreum.dev/coreum/transaction/37EC84596A02687D8F77E7D92538F518CCE847D8B4A325732B911FD0B0D35E9A) |
 
-## 🪙 TESTUSD Token Status
+📄 [TESTUSD Token Creation Docs](docs/TESTUSD_TOKEN_CREATION.md)
 
-✅ **LIVE ON COREM TESTNET**
+---
 
-The foundation token for PhoenixPME auctions is now operational.
+## 🔧 Core Components
 
-- **Symbol:** TESTUSD
-- **Denom:** `utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6`
-- **Decimals:** 6
-- **Created:** $(date)
-- **Transaction:** [37EC84...5E9A](https://explorer.testnet-1.coreum.dev/coreum/transaction/37EC84596A02687D8F77E7D92538F518CCE847D8B4A325732B911FD0B0D35E9A)
+### 1. Auction Platform
+| Aspect | Detail |
+|--------|--------|
+| **Purpose** | Peer-to-peer trading of physical precious metals |
+| **Fee** | **1.1%** per successful transaction (hardcoded) |
+| **Destination** | Community Reserve Fund |
+| **Collateral** | **10% both parties** (seller + buyer) |
+| **Verification** | 48-hour buyer inspection period |
 
-See [docs/TESTUSD_TOKEN_CREATION.md](docs/TESTUSD_TOKEN_CREATION.md) for details.
+**Features:**
+- ✅ Buy It Now & bidding functionality
+- ✅ Reference market prices (updated manually via admin)
+- ✅ Seller-set grading premiums (purity, certification)
+- ✅ TX blockchain settlement (March 6+)
+
+### 2. Token System (Non-Transferable)
+
+| Token | Purpose | How You Get It |
+|-------|---------|----------------|
+| **PHNX** | Governance weight | 1 PHNX per 1 TESTUSD in fees generated |
+| **TRUST** | Positive reputation | 1 per successful trade |
+| **DONT TRUST** | Negative reputation | 1 per failed obligation |
+
+**All tokens:**
+- ❌ NON-TRANSFERABLE
+- 💰 $0 CASH VALUE
+- 🔗 KYC-bound via TX blockchain
+- ⏳ Permanent on-chain record
+
+### 3. Community Reserve Fund
+| Aspect | Detail |
+|--------|--------|
+| **Source** | 1.1% of all successful trades |
+| **Control** | Future DAO (PHNX holders) |
+| **Withdrawal** | ❌ **NO INDIVIDUAL** can withdraw (not even founder) |
+| **Founder** | 10% voting weight only (permanent) |
+| **Address** | `testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv` |
+
+---
+
+## 📊 Fee Structure (Immutable)
+
+```solidity
+// Cannot be changed by any governance vote
+1. 1.1% protocol fee → Community Reserve Fund
+2. NO INDIVIDUAL can withdraw from CRF
+3. PHNX, TRUST, DONT TRUST are non-transferable
+4. Founder retains 10% voting weight (permanent)
+
+🦊 Multi-Wallet Support
+UniversalWalletV2 supports:
+
+Wallet	Chain	Status
+Keplr	Cosmos	✅ Supported
+Leap	Cosmos	✅ Supported
+MetaMask	EVM	✅ Supported
+Phantom	Solana	✅ Supported
+🚀 Technical Architecture
+Layer	Technology	Port/URL
+Frontend	Next.js 14, TypeScript, Tailwind	3000
+Backend	Express.js, PostgreSQL, Prisma	3001
+Blockchain	TX (Coreum + Sologenic)	Testnet March 6
+Smart Contracts	CosmWasm (Rust)	7 contracts, 16 tests
+Database	PostgreSQL on Render	Connected
+📁 Repository Structure
+text
+/home/greg/dev/TX/
+├── apps/
+│   ├── frontend/          # Next.js app (Vercel)
+│   │   ├── app/           # Pages & layouts
+│   │   ├── components/     # React components
+│   │   ├── hooks/         # Custom hooks
+│   │   ├── lib/           # Contract client, API
+│   │   └── public/        # Static assets
+│   └── backend/           # Express API (Render)
+│       ├── src/
+│       │   ├── routes/    # API endpoints
+│       │   ├── services/  # Business logic
+│       │   └── lib/       # Utilities
+│       └── prisma/        # Database schema
+├── contracts/             # Smart contracts
+│   └── phoenix-escrow/    # Main escrow contract
+├── docs/                  # Documentation
+│   ├── architecture/      # System design
+│   ├── legal/             # 14 legal documents
+│   └── setup/             # Setup guides
+└── scripts/               # Automation scripts
+    └── update-prices.sh   # Price update script
+🚀 Quick Start
+Use Live Version (No Installation)
+Frontend: https://phoenix-frontend-seven.vercel.app
+
+Sandbox: /sandbox
+
+Admin: /admin (password protected)
+
+Run Locally
+bash
+# Clone repo
+git clone https://github.com/greg-gzillion/TX.git
+cd TX
+
+# Backend
+cd apps/backend
+npm install
+npm run dev
+
+# Frontend (new terminal)
+cd apps/frontend
+npm install
+npm run dev
+See QUICK_START.md for details.
+
+📅 Roadmap
+Phase	Timeline	Status
+Foundation	Jan-Feb 2026	✅ Complete
+TX Testnet Launch	March 6, 2026	🔜 9 days
+Testnet Testing	March-April 2026	⏳ Planned
+TRUST/DONT TRUST	Q2 2026	📝 Planned
+PHNX Governance	Q2 2026	📝 Planned
+Mainnet Launch	Q3 2026	📝 Planned
+🤝 Contributing
+We welcome contributors! See:
+
+CONTRIBUTING.md
+
+CURRENT-FOCUS.md
+
+ROADMAP.md
+
+Current priorities:
+
+✅ Multi-wallet integration
+
+✅ TESTUSD token support
+
+✅ Build system stabilization
+
+🔜 Contract deployment (March 6)
+
+🔜 Testnet testing
+
+⚖️ Legal & Compliance
+Document	Purpose
+Terms of Service	Platform usage agreement
+Privacy Policy	Data handling
+Risk Disclosure	Important risks
+Contributor Agreement	Contribution terms
+Key Legal Facts:
+
+✅ Code is original work by Greg (@greg-gzillion)
+
+✅ Licensed under GNU GPL v3.0
+
+✅ "PhoenixPME" name in use (not registered trademark)
+
+✅ No securities - tokens have no cash value
+
+📞 Contact
+Purpose	Contact
+Technical Questions	gjf20842@gmail.com
+GitHub Issues	github.com/greg-gzillion/TX/issues
+Security	security@phoenixpme.com (private)
+🦅 Keywords
+TX Blockchain Coreum Sologenic CosmWasm Precious Metals Gold Silver Platinum Palladium RWA DEX Escrow P2P Marketplace Dual Collateral Community Reserve Fund TESTUSD
+
+Last Updated: February 24, 2026
+*Next Milestone: March 6, 2026 - TX Testnet Launch* 🚀
