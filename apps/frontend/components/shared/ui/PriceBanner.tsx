@@ -88,10 +88,10 @@ export default function PriceBanner() {
         <p className="text-sm text-red-500">Prices temporarily unavailable</p>
         <p className="text-xs text-gray-400 mt-1">Using latest known values</p>
         <div className="flex flex-wrap items-center justify-center gap-4 mt-2 text-sm">
-          <span className="text-amber-700">🥇 $5187.80</span>
-          <span className="text-gray-600">🥈 $89.45</span>
-          <span className="text-gray-600">🔷 $2245.00</span>
-          <span className="text-gray-600">🔶 $1791.00</span>
+          <span className="text-amber-700">🥇 $5193.00</span>
+          <span className="text-gray-600">🥈 $90.52</span>
+          <span className="text-gray-600">🔷 $2274.00</span>
+          <span className="text-gray-600">🔶 $1794.00</span>
         </div>
       </div>
     );
