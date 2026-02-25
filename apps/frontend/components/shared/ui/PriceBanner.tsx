@@ -53,21 +53,31 @@ export default function PriceBanner() {
   };
 
   useEffect(() => {
+  // Small delay to ensure component is mounted
+  const timer = setTimeout(() => {
     const fetchWithRetry = async (retries = 3) => {
       for (let i = 0; i < retries; i++) {
         try {
           await fetchPrices();
-          return; // Success - exit retry loop
+          return;
         } catch (err) {
           console.log(`Retry ${i + 1}/${retries} failed`);
           if (i === retries - 1) {
             console.error('All retries failed');
           } else {
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Wait 1s, 2s, 3s
+            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
           }
         }
       }
     };
+
+    fetchWithRetry();
+    const interval = setInterval(fetchPrices, 60000);
+    return () => clearInterval(interval);
+  }, 100); // 100ms delay
+
+  return () => clearTimeout(timer);
+}, []);
 
     fetchWithRetry();
     const interval = setInterval(fetchPrices, 60000);
