@@ -97,14 +97,11 @@ The foundation token for PhoenixPME auctions is operational on Coreum testnet (T
 3. PHNX, TRUST, DONT TRUST are non-transferable
 4. Founder retains 10% voting weight (permanent)
 
-🦊 Multi-Wallet Support
-UniversalWalletV2 supports:
+Wallet Support
 
 Wallet	Chain	Status
 Keplr	Cosmos	✅ Supported
 Leap	Cosmos	✅ Supported
-MetaMask	EVM	✅ Supported
-Phantom	Solana	✅ Supported
 🚀 Technical Architecture
 Layer	Technology	Port/URL
 Frontend	Next.js 14, TypeScript, Tailwind	3000
