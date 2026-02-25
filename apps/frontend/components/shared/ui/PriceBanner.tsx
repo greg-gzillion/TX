@@ -16,40 +16,60 @@ export default function PriceBanner() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const fetchPrices = async () => {
+    try {
+      console.log('🔄 Fetching prices...');
+      const response = await fetch(`${API_URL}/api/prices`, {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        mode: 'cors',
+        credentials: 'omit',
+        cache: 'no-cache'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('✅ Prices received:', data);
+      
+      if (data.success && data.data) {
+        setPrices(data.data);
+        setError(null);
+      } else {
+        throw new Error('Invalid data format');
+      }
+    } catch (err) {
+      console.error('❌ Fetch failed:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch');
+      throw err; // Re-throw so retry mechanism catches it
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPrices = async () => {
-      try {
-        console.log('🔄 Fetching prices...');
-        const response = await fetch(`${API_URL}/api/prices`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          mode: 'cors',
-          cache: 'no-cache'
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
+    const fetchWithRetry = async (retries = 3) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          await fetchPrices();
+          return; // Success - exit retry loop
+        } catch (err) {
+          console.log(`Retry ${i + 1}/${retries} failed`);
+          if (i === retries - 1) {
+            console.error('All retries failed');
+          } else {
+            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Wait 1s, 2s, 3s
+          }
         }
-        
-        const data = await response.json();
-        console.log('✅ Prices received:', data);
-        
-        if (data.success && data.data) {
-          setPrices(data.data);
-          setError(null);
-        } else {
-          throw new Error('Invalid data format');
-        }
-      } catch (err) {
-        console.error('❌ Fetch failed:', err);
-        setError(err instanceof Error ? err.message : 'Failed to fetch');
-        setPrices(null);
-      } finally {
-        setLoading(false);
       }
     };
 
-    fetchPrices();
+    fetchWithRetry();
     const interval = setInterval(fetchPrices, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -67,7 +87,6 @@ export default function PriceBanner() {
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
         <p className="text-sm text-red-500">Prices temporarily unavailable</p>
         <p className="text-xs text-gray-400 mt-1">Using latest known values</p>
-        {/* Show fallback prices even on error */}
         <div className="flex flex-wrap items-center justify-center gap-4 mt-2 text-sm">
           <span className="text-amber-700">🥇 $5187.80</span>
           <span className="text-gray-600">🥈 $89.45</span>
