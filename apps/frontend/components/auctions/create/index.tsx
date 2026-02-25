@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 export default function CreateAuctionForm() {
   const router = useRouter();
   const { address, isConnected } = useWallet();
-  const { createAuction, coreToUcore } = usePhoenixEscrow();
+  const { createAuction, testusdToUtestusd } = usePhoenixEscrow();
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -44,31 +44,31 @@ export default function CreateAuctionForm() {
     setError("");
 
     try {
-      // Convert CORE to ucore (1 CORE = 1,000,000 ucore)
-      const startingUcore = coreToUcore(startingPrice);
-      const reserveUcore = coreToUcore(reservePrice);
+      // Convert TESTUSD to uTESTUSD (1 TESTUSD = 1,000,000 uTESTUSD)
+      const startingUtestusd = testusdToUtestusd(startingPrice);
+      const reserveUtestusd = testusdToUtestusd(reservePrice);
       
       console.log("🚀 Creating auction:", {
         itemId,
         description,
-        startingPrice: `${startingPrice} CORE (${startingUcore} ucore)`,
-        reservePrice: `${reservePrice} CORE (${reserveUcore} ucore)`,
-        collateral: `${collateralRequired} CORE (10%)`,
+        startingPrice: `${startingPrice} TESTUSD (${startingUtestusd} uTESTUSD)`,
+        reservePrice: `${reservePrice} TESTUSD (${reserveUtestusd} uTESTUSD)`,
+        collateral: `${collateralRequired} TESTUSD (10%)`,
         duration
       });
       
       const result = await createAuction(
         itemId,
         description,
-        startingUcore,
-        reserveUcore,
+        startingUtestusd,
+        reserveUtestusd,
         parseInt(duration)
       );
 
       console.log("✅ Auction created! TX:", result.transactionHash);
       
       // Show success message
-      alert(`🎉 Auction created successfully!\n\nTransaction: ${result.transactionHash}\n\nYour ${collateralRequired} CORE collateral has been locked.`);
+      alert(`🎉 Auction created successfully!\n\nTransaction: ${result.transactionHash}\n\nYour ${collateralRequired} TESTUSD collateral has been locked.`);
       
       // Redirect to auctions page
       router.push("/auctions");
@@ -78,7 +78,7 @@ export default function CreateAuctionForm() {
       
       // Handle specific error messages
       if (err.message.includes("insufficient funds")) {
-        setError(`Insufficient funds. You need at least ${collateralRequired} CORE for collateral.`);
+        setError(`Insufficient funds. You need at least ${collateralRequired} TESTUSD for collateral.`);
       } else if (err.message.includes("unauthorized")) {
         setError("Please check your wallet connection and try again.");
       } else {
@@ -115,7 +115,7 @@ export default function CreateAuctionForm() {
           value={itemId}
           onChange={(e) => setItemId(e.target.value)}
           placeholder="e.g., GOLD-2024-001"
-          className="input input-bordered w-full"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           disabled={loading}
           required
         />
@@ -133,7 +133,7 @@ export default function CreateAuctionForm() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Describe your item in detail..."
-          className="textarea textarea-bordered w-full h-24"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500 h-24"
           disabled={loading}
           required
         />
@@ -142,7 +142,7 @@ export default function CreateAuctionForm() {
       {/* Starting Price */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Starting Price (CORE)
+          Starting Price (TESTUSD)
         </label>
         <input
           type="number"
@@ -151,7 +151,7 @@ export default function CreateAuctionForm() {
           value={startingPrice}
           onChange={(e) => setStartingPrice(e.target.value)}
           placeholder="0.00"
-          className="input input-bordered w-full"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           disabled={loading}
           required
         />
@@ -160,7 +160,7 @@ export default function CreateAuctionForm() {
       {/* Reserve Price */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
-          Reserve Price (CORE)
+          Reserve Price (TESTUSD)
         </label>
         <input
           type="number"
@@ -169,7 +169,7 @@ export default function CreateAuctionForm() {
           value={reservePrice}
           onChange={(e) => setReservePrice(e.target.value)}
           placeholder="0.00"
-          className="input input-bordered w-full"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           disabled={loading}
           required
         />
@@ -186,7 +186,7 @@ export default function CreateAuctionForm() {
         <select
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
-          className="select select-bordered w-full"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-amber-500"
           disabled={loading}
         >
           <option value="24">24 Hours</option>
@@ -203,16 +203,16 @@ export default function CreateAuctionForm() {
           <div className="space-y-1 text-sm">
             <div className="flex justify-between">
               <span className="text-blue-800">Reserve Price:</span>
-              <span className="font-mono">{reservePrice} CORE</span>
+              <span className="font-mono">{reservePrice} TESTUSD</span>
             </div>
             <div className="flex justify-between">
               <span className="text-blue-800">Your Collateral (10%):</span>
-              <span className="font-mono font-bold">{collateralRequired} CORE</span>
+              <span className="font-mono font-bold">{collateralRequired} TESTUSD</span>
             </div>
             <div className="border-t border-blue-200 my-2 pt-2">
               <div className="flex justify-between font-bold">
                 <span className="text-blue-900">Total Locked:</span>
-                <span className="font-mono">{(reservePriceNum * 1.10).toFixed(2)} CORE</span>
+                <span className="font-mono">{(reservePriceNum * 1.10).toFixed(2)} TESTUSD</span>
               </div>
             </div>
           </div>
@@ -224,8 +224,8 @@ export default function CreateAuctionForm() {
 
       {/* Error Message */}
       {error && (
-        <div className="alert alert-error">
-          <span>{error}</span>
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {error}
         </div>
       )}
 
@@ -233,14 +233,14 @@ export default function CreateAuctionForm() {
       <button
         type="submit"
         disabled={loading || !isValid}
-        className={`btn btn-primary w-full ${loading ? 'loading' : ''}`}
+        className={`w-full py-2 px-4 bg-amber-600 text-white font-medium rounded-md hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ${loading ? 'opacity-75 cursor-wait' : ''}`}
       >
         {loading ? 'Creating Auction...' : 'Create Auction'}
       </button>
 
       {/* Info Text */}
       <p className="text-xs text-center text-gray-500">
-        By creating an auction, you agree to lock {collateralRequired || '0'} CORE as collateral
+        By creating an auction, you agree to lock {collateralRequired || '0'} TESTUSD as collateral
         (10% of reserve price). This will be returned when the auction ends.
       </p>
     </form>

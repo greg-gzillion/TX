@@ -63,10 +63,10 @@ export default function PriceBanner() {
       // Fallback for development - remove in production
       if (process.env.NODE_ENV === 'development') {
         setPrices({
-          gold: 5160.2,
-          silver: 87.59,
-          platinum: 2169,
-          palladium: 1774
+          gold: 5142.5,
+          silver: 87.02,
+          platinum: 2161,
+          palladium: 1764
         });
         setError(null);
       }

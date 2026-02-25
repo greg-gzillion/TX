@@ -7,7 +7,7 @@ import { Button } from '@/components/shared/ui/Button';
 import { Search } from 'lucide-react';
 import PriceBanner from '@/components/shared/ui/PriceBanner';
 import PhoenixIcon from '@/components/phoenix/PhoenixIcon';
-import Tools from '@/components/phoenix/Tools';
+import UniversalWalletV2 from '@/components/UniversalWalletV2';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -19,36 +19,36 @@ export default function HomePage() {
       {/* Main content - perfectly centered */}
       <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
         
-       {/* Hero Section - Centered with Phoenix */}
-<div className="text-center mb-12">
-  {/* Animated Phoenix Icon */}
-  <div className="flex justify-center mb-6">
-    <PhoenixIcon />
-  </div>
-  
-  {/* Main Title with Gradient */}
-  <h1 className="text-5xl md:text-6xl font-bold mb-3">
-    <span className="phoenix-gradient-text">Phoenix</span>
-    <span className="text-gray-900">PME</span>
-  </h1>
-  
-  {/* Subtitle */}
-  <p className="text-xl text-amber-600 font-semibold mb-3">
-    Precious Metal Exchange
-  </p>
-  
-  {/* Tagline */}
-  <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-    Direct peer-to-peer. No middlemen. No hidden fees.
-  </p>
-  
-  {/* Optional: Small flame accents */}
-  <div className="flex justify-center gap-2 mt-4">
-    <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.1s' }}>🔥</span>
-    <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.3s' }}>🔥</span>
-    <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.5s' }}>🔥</span>
-  </div>
-</div>
+        {/* Hero Section - Centered with Phoenix */}
+        <div className="text-center mb-12">
+          {/* Animated Phoenix Icon */}
+          <div className="flex justify-center mb-6">
+            <PhoenixIcon />
+          </div>
+          
+          {/* Main Title with Gradient */}
+          <h1 className="text-5xl md:text-6xl font-bold mb-3">
+            <span className="phoenix-gradient-text">Phoenix</span>
+            <span className="text-gray-900">PME</span>
+          </h1>
+          
+          {/* Subtitle */}
+          <p className="text-xl text-amber-600 font-semibold mb-3">
+            Precious Metal Exchange
+          </p>
+          
+          {/* Tagline */}
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Direct peer-to-peer. No middlemen. No hidden fees.
+          </p>
+          
+          {/* Eagle accents */}
+          <div className="flex justify-center gap-2 mt-4">
+            <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.1s' }}>🦅</span>
+            <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.3s' }}>🦅</span>
+            <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.5s' }}>🦅</span>
+          </div>
+        </div>
 
         {/* Search Bar - Centered */}
         <div className="max-w-2xl mx-auto mb-12">
@@ -189,6 +189,15 @@ export default function HomePage() {
         {/* Price Banner - Centered */}
         <div className="max-w-3xl mx-auto mb-12">
           <PriceBanner />
+        </div>
+
+        {/* Universal Wallet - Multi-Chain Support */}
+        <div className="max-w-3xl mx-auto mb-12">
+          <h2 className="text-xl font-semibold mb-4 text-center">Connect Your Wallet</h2>
+          <UniversalWalletV2 onConnect={(wallet) => {
+            console.log('Connected wallet:', wallet);
+            // Store wallet in context/state when implemented
+          }} />
         </div>
 
         {/* Featured Auctions - Centered */}
@@ -352,9 +361,6 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* Tools Section - Add this AFTER CTA but BEFORE closing tags */}	
-        {/* Tools Section */}
-        <Tools />
       </main>
     </div>
   );

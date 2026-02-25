@@ -24,6 +24,7 @@ export interface AuctionListResponse {
 }
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
+const TESTUSD_DENOM = "utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6"; // TESTUSD denom
 
 export class PhoenixEscrowClient {
   constructor(
@@ -37,15 +38,15 @@ export class PhoenixEscrowClient {
    * Create a new auction with 10% seller collateral
    * @param itemId Unique identifier for the item
    * @param description Item description
-   * @param startingPrice Starting bid in ucore (1 CORE = 1,000,000 ucore)
-   * @param reservePrice Minimum acceptable price in ucore
+   * @param startingPrice Starting bid in uTESTUSD (1 TESTUSD = 1,000,000 uTESTUSD)
+   * @param reservePrice Minimum acceptable price in uTESTUSD
    * @param durationHours Auction duration in hours
    */
   async createAuction(
     itemId: string,
     description: string,
-    startingPrice: string,  // in ucore
-    reservePrice: string,   // in ucore
+    startingPrice: string,  // in uTESTUSD
+    reservePrice: string,   // in uTESTUSD
     durationHours: number
   ) {
     // Calculate 10% seller collateral (based on reserve price)
@@ -62,7 +63,7 @@ export class PhoenixEscrowClient {
     };
 
     const funds: Coin[] = [
-      { denom: "ucore", amount: collateral }
+      { denom: TESTUSD_DENOM, amount: collateral }
     ];
 
     console.log("Creating auction with:", {
@@ -84,7 +85,7 @@ export class PhoenixEscrowClient {
   /**
    * Place a bid on an auction with 10% buyer collateral
    * @param auctionId ID of the auction
-   * @param bidAmount Bid amount in ucore
+   * @param bidAmount Bid amount in uTESTUSD
    */
   async placeBid(auctionId: number, bidAmount: string) {
     // Calculate 10% buyer collateral
@@ -106,7 +107,7 @@ export class PhoenixEscrowClient {
     };
 
     const funds: Coin[] = [
-      { denom: "ucore", amount: total }
+      { denom: TESTUSD_DENOM, amount: total }
     ];
 
     return await this.client.execute(
@@ -154,59 +155,74 @@ export class PhoenixEscrowClient {
    * Get all active auctions
    */
   async getActiveAuctions(): Promise<Auction[]> {
-    const query = { get_active_auctions: {} };
-    const response = await this.client.queryContractSmart(
-      CONTRACT_ADDRESS, 
-      query
-    ) as AuctionListResponse;
-    return response.auctions;
+    try {
+      const query = { get_active_auctions: {} };
+      const response = await this.client.queryContractSmart(
+        CONTRACT_ADDRESS, 
+        query
+      ) as AuctionListResponse;
+      return response.auctions || [];
+    } catch (error) {
+      console.error('Failed to fetch active auctions:', error);
+      return [];
+    }
   }
 
   /**
    * Get auctions by seller address
    */
   async getAuctionsBySeller(seller: string): Promise<Auction[]> {
-    const query = {
-      get_auctions_by_seller: { seller }
-    };
-    const response = await this.client.queryContractSmart(
-      CONTRACT_ADDRESS, 
-      query
-    ) as AuctionListResponse;
-    return response.auctions;
+    try {
+      const query = {
+        get_auctions_by_seller: { seller }
+      };
+      const response = await this.client.queryContractSmart(
+        CONTRACT_ADDRESS, 
+        query
+      ) as AuctionListResponse;
+      return response.auctions || [];
+    } catch (error) {
+      console.error('Failed to fetch auctions by seller:', error);
+      return [];
+    }
   }
 
   /**
    * Get auctions where user has placed bids
    */
   async getAuctionsByBidder(bidder: string): Promise<Auction[]> {
-    const query = {
-      get_auctions_by_bidder: { bidder }
-    };
-    const response = await this.client.queryContractSmart(
-      CONTRACT_ADDRESS, 
-      query
-    ) as AuctionListResponse;
-    return response.auctions;
+    try {
+      const query = {
+        get_auctions_by_bidder: { bidder }
+      };
+      const response = await this.client.queryContractSmart(
+        CONTRACT_ADDRESS, 
+        query
+      ) as AuctionListResponse;
+      return response.auctions || [];
+    } catch (error) {
+      console.error('Failed to fetch auctions by bidder:', error);
+      return [];
+    }
   }
 
   // ==================== UTILITY METHODS ====================
 
   /**
-   * Convert CORE amount to ucore (1 CORE = 1,000,000 ucore)
+   * Convert TESTUSD amount to uTESTUSD (1 TESTUSD = 1,000,000 uTESTUSD)
    */
-  static coreToUcore(coreAmount: string): string {
-    const parts = coreAmount.split('.');
+  static testusdToUtestusd(testusdAmount: string): string {
+    const parts = testusdAmount.split('.');
     const whole = parts[0];
     const fraction = parts[1]?.padEnd(6, '0').slice(0, 6) || '000000';
     return whole + fraction;
   }
 
   /**
-   * Convert ucore to CORE for display
+   * Convert uTESTUSD to TESTUSD for display
    */
-  static ucoreToCore(ucoreAmount: string): string {
-    const amount = BigInt(ucoreAmount);
+  static utestusdToTestusd(utestusdAmount: string): string {
+    const amount = BigInt(utestusdAmount);
     const whole = amount / 1_000_000n;
     const fraction = amount % 1_000_000n;
     
@@ -232,14 +248,14 @@ export class PhoenixEscrowClient {
   formatAuctionForDisplay(auction: Auction) {
     return {
       ...auction,
-      starting_price_core: PhoenixEscrowClient.ucoreToCore(auction.starting_price),
-      reserve_price_core: PhoenixEscrowClient.ucoreToCore(auction.reserve_price),
-      current_bid_core: auction.current_bid 
-        ? PhoenixEscrowClient.ucoreToCore(auction.current_bid)
+      starting_price_testusd: PhoenixEscrowClient.utestusdToTestusd(auction.starting_price),
+      reserve_price_testusd: PhoenixEscrowClient.utestusdToTestusd(auction.reserve_price),
+      current_bid_testusd: auction.current_bid 
+        ? PhoenixEscrowClient.utestusdToTestusd(auction.current_bid)
         : null,
-      seller_collateral_core: PhoenixEscrowClient.ucoreToCore(auction.seller_collateral),
-      buyer_collateral_core: auction.buyer_collateral
-        ? PhoenixEscrowClient.ucoreToCore(auction.buyer_collateral)
+      seller_collateral_testusd: PhoenixEscrowClient.utestusdToTestusd(auction.seller_collateral),
+      buyer_collateral_testusd: auction.buyer_collateral
+        ? PhoenixEscrowClient.utestusdToTestusd(auction.buyer_collateral)
         : null,
       end_time_local: new Date(auction.end_time * 1000).toLocaleString(),
       created_at_local: new Date(auction.created_at * 1000).toLocaleString(),
@@ -313,8 +329,8 @@ export function usePhoenixEscrow() {
     getAuction,
     getActiveAuctions,
     formatAuction: escrowClient?.formatAuctionForDisplay.bind(escrowClient),
-    coreToUcore: PhoenixEscrowClient.coreToUcore,
-    ucoreToCore: PhoenixEscrowClient.ucoreToCore,
+    testusdToUtestusd: PhoenixEscrowClient.testusdToUtestusd,
+    utestusdToTestusd: PhoenixEscrowClient.utestusdToTestusd,
     calculateTotalForBid: PhoenixEscrowClient.calculateTotalForBid,
   };
 }
