@@ -62,11 +62,11 @@ export default function PriceBanner() {
       
       // FALLBACK PRICES - USE THESE WHEN API FAILS
       setPrices({
-        gold: 5182.20,
-        silver: 89.20,
-        platinum: 2239.00,
-        palladium: 1796.00
-      });
+  gold: 5182.60,   // Updated
+  silver: 89.29,    // Updated
+  platinum: 2243.00, // Updated
+  palladium: 1790.00 // Updated
+});
       setError(null);
     } finally {
       setLoading(false);
