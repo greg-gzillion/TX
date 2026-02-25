@@ -7,7 +7,7 @@ import { Button } from '@/components/shared/ui/Button';
 import { Search } from 'lucide-react';
 import PriceBanner from '@/components/shared/ui/PriceBanner';
 import PhoenixIcon from '@/components/phoenix/PhoenixIcon';
-import UniversalWalletV2 from '@/components/UniversalWalletV2';
+import { WalletSelector } from '@/components/features/sandbox/WalletSelector';
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -179,17 +179,19 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Price Banner - Centered - MOVED UP */}
+        {/* Price Banner - Centered */}
         <div className="max-w-3xl mx-auto mb-12">
           <PriceBanner />
         </div>
 
-        {/* Universal Wallet - Multi-Chain Support */}
+        {/* Wallet Connection - Simple (Keplr/Leap only) */}
         <div className="max-w-3xl mx-auto mb-12">
           <h2 className="text-xl font-semibold mb-4 text-center">Connect Your Wallet</h2>
-          <UniversalWalletV2 onConnect={(wallet) => {
-            console.log('Connected wallet:', wallet);
-          }} />
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-200">
+            <WalletSelector onSelect={(wallet) => {
+              console.log('Connected wallet:', wallet);
+            }} />
+          </div>
         </div>
 
         {/* Featured Auctions - Centered */}
