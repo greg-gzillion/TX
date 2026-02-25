@@ -60,13 +60,6 @@ export default function PriceBanner() {
         setError('An unknown error occurred');
       }
       
-      // FALLBACK PRICES - USE THESE WHEN API FAILS
-      setPrices({
-  gold: 5182.60,   // Updated
-  silver: 89.29,    // Updated
-  platinum: 2243.00, // Updated
-  palladium: 1790.00 // Updated
-});
       setError(null);
     } finally {
       setLoading(false);
