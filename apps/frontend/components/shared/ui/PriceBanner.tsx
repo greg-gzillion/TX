@@ -46,15 +46,13 @@ export default function PriceBanner() {
     } catch (err) {
       console.error('❌ Fetch failed:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch');
-      throw err; // Re-throw so retry mechanism catches it
+      throw err;
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-  // Small delay to ensure component is mounted
-  const timer = setTimeout(() => {
     const fetchWithRetry = async (retries = 3) => {
       for (let i = 0; i < retries; i++) {
         try {
@@ -70,14 +68,6 @@ export default function PriceBanner() {
         }
       }
     };
-
-    fetchWithRetry();
-    const interval = setInterval(fetchPrices, 60000);
-    return () => clearInterval(interval);
-  }, 100); // 100ms delay
-
-  return () => clearTimeout(timer);
-}, []);
 
     fetchWithRetry();
     const interval = setInterval(fetchPrices, 60000);
