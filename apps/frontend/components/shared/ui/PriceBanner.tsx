@@ -25,62 +25,49 @@ export default function PriceBanner() {
   }, []);
 
   const fetchPrices = async () => {
-  try {
-    console.log('Fetching from:', `${API_URL}/api/prices`);
-    
-    const response = await fetch(`${API_URL}/api/prices`, {
-      method: 'GET',
-      headers: { 
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors',
-      cache: 'no-cache'
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    console.log('Price data:', data);
-    
-    if (data.success) {
-      setPrices(data.data);
-      setError(null);
-    } else {
-      throw new Error('API returned success: false');
-    }
-  } catch (err) {
-    console.error('Fetch error:', err);
-    
-    // Type-safe error handling
-    if (err instanceof Error) {
-      setError(err.message);
-    } else {
-      setError('An unknown error occurred');
-    }
-    
-    // FALLBACK PRICES - USE THESE WHEN API FAILS
-    setPrices({
-      gold: 5182.20,  // Update these to current prices
-      silver: 89.20,
-      platinum: 2239.00,
-      palladium: 1796.00
-    });
-    setError(null);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      console.log('Fetching from:', `${API_URL}/api/prices`);
+      
+      const response = await fetch(`${API_URL}/api/prices`, {
+        method: 'GET',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        mode: 'cors',
+        cache: 'no-cache'
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Price data:', data);
+      
+      if (data.success) {
+        setPrices(data.data);
+        setError(null);
+      } else {
+        throw new Error('API returned success: false');
+      }
+    } catch (err) {
+      console.error('Fetch error:', err);
+      
+      // Type-safe error handling
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
       
       // FALLBACK PRICES - USE THESE WHEN API FAILS
       setPrices({
-        gold: 5155.00,
-        silver: 87.14,
-        platinum: 2165.00,
-        palladium: 1762.00
+        gold: 5182.20,
+        silver: 89.20,
+        platinum: 2239.00,
+        palladium: 1796.00
       });
-      setError(null); // Clear error so fallback shows
+      setError(null);
     } finally {
       setLoading(false);
     }
