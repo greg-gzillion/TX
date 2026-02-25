@@ -1,17 +1,17 @@
 # Oracle Design & Delivery Verification
 
 **Document Status:** Living Document  
-**Last Updated:** February 15, 2026  
+**Last Updated:** February 24, 2026  
 **Owner:** Greg (@greg-gzillion)  
 **Review Cycle:** Monthly
 
 ## Executive Summary
 
-PhoenixPME faces a unique challenge: verifying **physical delivery** of precious metals in a blockchain auction system. This requires oracles to bridge off-chain events (USPS delivery) to on-chain state (Coreum smart contracts).
+PhoenixPME faces a unique challenge: verifying **physical delivery** of precious metals in a blockchain auction system. This requires oracles to bridge off-chain events (USPS delivery) to on-chain state (TX blockchain smart contracts).
 
 This document outlines our oracle architecture, current implementation, planned improvements, and dispute resolution mechanisms.
 
-**Current Status:** ⚠️ Single Oracle (Testnet) → Multi-Oracle Consensus (Production)
+**Current Status:** ⚠️ Testnet Preparation → Multi-Oracle Consensus (Production)
 
 ---
 
@@ -23,6 +23,7 @@ This document outlines our oracle architecture, current implementation, planned 
 4. [Delivery Verification](#delivery-verification)
 5. [Dispute Resolution](#dispute-resolution)
 6. [Oracle Incentives](#oracle-incentives)
+7. [Recent Updates (Feb 2026)](#recent-updates)
 
 ---
 
@@ -32,7 +33,7 @@ This document outlines our oracle architecture, current implementation, planned 
 
 For each auction, we need verifiable answers to:
 
-1. **Did the buyer pay?** (XRPL payment verification)
+1. **Did the buyer pay?** (TESTUSD payment verification)
 2. **Did the seller ship?** (Tracking number verification)
 3. **Was it delivered?** (Delivery confirmation)
 4. **Did the buyer receive it?** (Recipient confirmation)
@@ -50,39 +51,56 @@ For each auction, we need verifiable answers to:
 - Tracking shows "delivered" but buyer claims non-receipt
 - Seller could ship fake tracking number
 
+**TX Blockchain Context:**
+- Leveraging Coreum's enterprise infrastructure
+- Sologenic's asset tokenization expertise
+- Built for Real World Assets (RWA)
+
 ---
 
-## Current Implementation (Testnet)
+## Current Implementation (Testnet Preparation)
 
-### Architecture
+### Architecture (Planned)
+Seller ships → USPS tracking # → Oracle Service → TX Contract
+↓
+USPS API Check
+↓
+"Delivered" Status
+↓
+Funds Released
 
-```
-Seller ships → USPS tracking # → Oracle Service → Coreum Contract
-                                         ↓
-                                  USPS API Check
-                                         ↓
-                                "Delivered" Status
-                                         ↓
-                                Funds Released
-```
-
-### How It Works
+### How It Will Work (Post-March 6)
 
 1. **Seller provides tracking number** when auction ends
 2. **Oracle polls USPS API** every 6 hours
 3. **Status checked:** "In Transit" → "Out for Delivery" → "Delivered"
-4. **On "Delivered":** Oracle submits transaction to Coreum
+4. **On "Delivered":** Oracle submits transaction to TX blockchain
 5. **Smart contract releases funds** to seller and fees to Community Reserve Fund
 
-### Current Oracle Implementation
+### Current Status (Pre-Launch)
+
+As of February 24, 2026, the following oracle components are ready:
+
+| Component | Status | Details |
+|-----------|--------|---------|
+| Smart Contract | ✅ Ready | 193KB optimized WASM, 7/7 tests passing |
+| Escrow Logic | ✅ Ready | Dual collateral (10% both parties) |
+| TX Integration | ⏳ March 6 | Waiting for TX Testnet 6.0 launch |
+| Oracle Nodes | 🚧 In Design | Multi-oracle architecture planned |
+| USPS API Integration | 📝 Planned | Will be implemented post-launch |
+
+### Testnet Plan (Starting March 6)
 
 ```javascript
-// Simplified oracle logic (testnet)
+// Planned oracle logic (post-March 6 testnet)
 async function checkDelivery(trackingNumber) {
+  // Will use multi-oracle consensus in production
+  // Testnet will start with single oracle for simplicity
+  
   const uspsResponse = await usps.track(trackingNumber);
   
   if (uspsResponse.status === "Delivered") {
-    const tx = await coreumContract.confirmDelivery(
+    const tx = await txContract.confirmDelivery(
       auctionId,
       trackingNumber,
       uspsResponse.timestamp,
@@ -93,33 +111,26 @@ async function checkDelivery(trackingNumber) {
   
   return null; // Not delivered yet
 }
-```
+Known Limitations (Will Address in Production)
+Issue	Impact	Production Solution
+Single Point of Failure	USPS API down = bridge down	Multi-oracle with 5+ nodes
+Single Source of Truth	USPS could be wrong	Consensus + buyer confirmation
+No Dispute Mechanism	Buyer claims non-receipt	3-party arbitration panel
+Oracle Centralization	Must trust Greg	Decentralized oracle operators
+API Changes	USPS changes API → code breaks	Multiple carrier APIs + monitoring
+Multi-Oracle Architecture (Production)
+Design Goals
+No single point of failure: 5+ independent oracles
 
-### Limitations (Why This Isn't Production-Ready)
+Consensus required: 4/5 oracles must agree
 
-| Issue | Impact | Example |
-|-------|--------|---------|
-| **Single Point of Failure** | USPS API down = bridge down | USPS maintenance → all auctions halted |
-| **Single Source of Truth** | USPS could be wrong | Delivered to wrong apartment |
-| **No Dispute Mechanism** | Buyer claims non-receipt | Who decides? |
-| **Oracle Centralization** | Must trust me (Greg) | I could confirm fake deliveries |
-| **API Changes** | USPS changes API → code breaks | No notification, silent failure |
+Economic security: Oracles stake value, slashed if dishonest
 
----
+Multiple data sources: USPS + FedEx + buyer confirmation
 
-## Multi-Oracle Architecture (Production)
+Dispute resolution: 3-party arbitration for contested deliveries
 
-### Design Goals
-
-1. **No single point of failure:** 5+ independent oracles
-2. **Consensus required:** 4/5 oracles must agree
-3. **Economic security:** Oracles stake value, slashed if dishonest
-4. **Multiple data sources:** USPS + FedEx + buyer confirmation
-5. **Dispute resolution:** 3-party arbitration for contested deliveries
-
-### Architecture Overview
-
-```
+Architecture Overview
 ┌─────────────┐
 │   Seller    │
 │   Ships     │
@@ -149,39 +160,40 @@ async function checkDelivery(trackingNumber) {
                │
                ▼
       ┌────────────────┐
-      │  Coreum Smart  │
+      │  TX Smart      │
       │   Contract     │
       └────────────────┘
-```
+Oracle Nodes
+Oracle 1-3: Carrier APIs
+Oracle 1: USPS tracking verification
 
-### Oracle Nodes
+Oracle 2: FedEx tracking verification (if used)
 
-#### Oracle 1-3: Carrier APIs
-- **Oracle 1:** USPS tracking verification
-- **Oracle 2:** FedEx tracking verification (if used)
-- **Oracle 3:** UPS tracking verification (if used)
+Oracle 3: UPS tracking verification (if used)
 
-**Role:** Poll carrier APIs for delivery status
+Role: Poll carrier APIs for delivery status
 
-**Operated By:** Independent node operators (geographically distributed)
+Operated By: Independent node operators (geographically distributed)
 
-**Stake Required:** 10,000 TESTUSD per oracle
+Stake Required: 10,000 TESTUSD per oracle
 
-#### Oracle 4: Buyer Confirmation
-- **Role:** Buyer signs message confirming receipt
-- **Implementation:** Wallet signature required within 72 hours of "delivered"
-- **Fallback:** If buyer doesn't sign within 72 hours, assume confirmed
+Oracle 4: Buyer Confirmation
+Role: Buyer signs message confirming receipt
 
-**Why This Matters:** Prevents "delivered to wrong address" attacks
+Implementation: Wallet signature required within 72 hours of "delivered"
 
-#### Oracle 5: Physical Verification (Optional)
-- **Role:** Third-party inspection service
-- **Use Case:** High-value items (>$10,000)
-- **Implementation:** Inspector photographs item + buyer signature
+Fallback: If buyer doesn't sign within 72 hours, assume confirmed
 
-### Consensus Mechanism
+Why This Matters: Prevents "delivered to wrong address" attacks
 
-```rust
+Oracle 5: Physical Verification (Optional)
+Role: Third-party inspection service
+
+Use Case: High-value items (>$10,000)
+
+Implementation: Inspector photographs item + buyer signature
+
+Consensus Mechanism
 // Simplified consensus logic
 fn check_delivery_consensus(auction_id: u64) -> DeliveryStatus {
     let oracle_reports = collect_oracle_reports(auction_id);
@@ -201,30 +213,25 @@ fn check_delivery_consensus(auction_id: u64) -> DeliveryStatus {
         return DeliveryStatus::Disputed; // Oracles disagree
     }
 }
-```
+Oracle Slashing
+If Oracle is Dishonest:
 
-### Oracle Slashing
+Evidence collected (conflicting reports, proven false data)
 
-**If Oracle is Dishonest:**
+Arbitration panel reviews (3 randomly selected community members)
 
-1. **Evidence collected** (conflicting reports, proven false data)
-2. **Arbitration panel reviews** (3 randomly selected community members)
-3. **If found guilty:** Oracle's stake is slashed
-   - 50% burned (removed from supply)
-   - 50% to reporter (whistleblower reward)
-4. **Oracle removed** from approved list
+If found guilty: Oracle's stake is slashed
 
-**This creates economic incentive for honesty.**
+50% burned (removed from supply)
 
----
+50% to reporter (whistleblower reward)
 
-## Delivery Verification
+Oracle removed from approved list
 
-### Multi-Source Verification
-
+This creates economic incentive for honesty.
+Delivery Verification
+Multi-Source Verification
 Rather than trust a single source (USPS), we verify across multiple:
-
-```typescript
 interface DeliveryProof {
   // Carrier tracking
   usps_tracking: TrackingStatus;
@@ -243,42 +250,35 @@ interface DeliveryProof {
   // Dispute window
   dispute_period_end: number; // 72 hours after delivery
 }
-```
-
-### Delivery States
-
-```
+Delivery States
 Pending → Shipped → In Transit → Out for Delivery → Delivered → Confirmed
                                                          ↓
                                                     [72 hour dispute window]
                                                          ↓
                                                   Finalized (funds released)
-```
+Timeline
+T+0: Seller ships, provides tracking
 
-### Timeline
+T+3 days: Package delivered (avg)
 
-1. **T+0:** Seller ships, provides tracking
-2. **T+3 days:** Package delivered (avg)
-3. **T+3 days + 72 hours:** Dispute window closes
-4. **T+6 days:** Funds released (if no dispute)
+T+3 days + 72 hours: Dispute window closes
 
----
+T+6 days: Funds released (if no dispute)
 
-## Dispute Resolution
+Dispute Resolution
+When Disputes Arise
+Common scenarios:
 
-### When Disputes Arise
+Buyer claims: "Package delivered to wrong apartment"
 
-**Common scenarios:**
-- Buyer claims: "Package delivered to wrong apartment"
-- Buyer claims: "Package was empty"
-- Seller claims: "Buyer lying to get free item"
-- Carrier claims: "Delivered" but buyer has no package
+Buyer claims: "Package was empty"
 
-### Dispute Process
+Seller claims: "Buyer lying to get free item"
 
-#### Phase 1: Automatic Halt (Immediate)
+Carrier claims: "Delivered" but buyer has no package
 
-```rust
+Dispute Process
+Phase 1: Automatic Halt (Immediate)
 fn raise_dispute(auction_id: u64, reason: String) {
     // Freeze funds
     auction.status = AuctionStatus::Disputed;
@@ -290,294 +290,376 @@ fn raise_dispute(auction_id: u64, reason: String) {
     // Start arbitration
     select_arbitrators(auction_id);
 }
-```
+Impact:
 
-**Impact:**
-- Funds frozen (not released to seller)
-- Both parties notified
-- 72-hour evidence collection period
+Funds frozen (not released to seller)
 
-#### Phase 2: Evidence Collection (72 hours)
+Both parties notified
 
-**Buyer Provides:**
-- Delivery photos (if available)
-- Communication with carrier
-- Neighbor confirmation (if applicable)
-- Other evidence
+72-hour evidence collection period
 
-**Seller Provides:**
-- Packing photos (showing item in box)
-- Weight/dimensions documentation
-- Carrier receipt
-- Communication history
+Phase 2: Evidence Collection (72 hours)
+Buyer Provides:
 
-**Oracle Provides:**
-- Tracking history
-- Delivery photo (if available from carrier)
-- GPS coordinates (if available)
+Delivery photos (if available)
 
-#### Phase 3: Arbitration (3-5 days)
+Communication with carrier
 
-**Arbitration Panel:**
-- 3 randomly selected community members
-- Must have:
-  - Account age >6 months
-  - Completed >10 transactions
-  - Staked 1,000 TESTUSD
-- Cannot be buyer, seller, or related party
+Neighbor confirmation (if applicable)
 
-**Voting:**
-- Each arbitrator reviews evidence
-- Votes: "Buyer Wins" or "Seller Wins"
-- 2/3 majority required
-- Arbitrators paid 10 TESTUSD from Community Reserve Fund
+Other evidence
 
-**Outcomes:**
+Seller Provides:
 
-| Vote | Funds Go To | Fee Handling | Notes |
-|------|-------------|--------------|-------|
-| Buyer Wins | Buyer refunded | Seller pays 1.1% | Seller may be flagged |
-| Seller Wins | Seller paid | Buyer pays 1.1% | Buyer may be flagged |
-| Tie (rare) | 50/50 split | Both pay 0.55% | Insurance covers gap |
+Packing photos (showing item in box)
 
-#### Phase 4: Appeal (Optional)
+Weight/dimensions documentation
 
+Carrier receipt
+
+Communication history
+
+Oracle Provides:
+
+Tracking history
+
+Delivery photo (if available from carrier)
+
+GPS coordinates (if available)
+
+Phase 3: Arbitration (3-5 days)
+Arbitration Panel:
+
+3 randomly selected community members
+
+Must have:
+
+Account age >6 months
+
+Completed >10 transactions
+
+Staked 1,000 TESTUSD
+
+Cannot be buyer, seller, or related party
+
+Voting:
+
+Each arbitrator reviews evidence
+
+Votes: "Buyer Wins" or "Seller Wins"
+
+2/3 majority required
+
+Arbitrators paid 10 TESTUSD from Community Reserve Fund
+
+Outcomes:
+
+Vote	Funds Go To	Fee Handling	Notes
+Buyer Wins	Buyer refunded	Seller pays 1.1%	Seller may be flagged
+Seller Wins	Seller paid	Buyer pays 1.1%	Buyer may be flagged
+Tie (rare)	50/50 split	Both pay 0.55%	Insurance covers gap
+Phase 4: Appeal (Optional)
 If either party believes arbitration was unfair:
-- Can appeal within 24 hours
-- Costs 100 TESTUSD (refunded if appeal wins)
-- New panel of 5 arbitrators
-- Final decision (no further appeals)
 
----
+Can appeal within 24 hours
 
-## Oracle Incentives
+Costs 100 TESTUSD (refunded if appeal wins)
 
-### Why Run an Oracle?
+New panel of 5 arbitrators
 
-**Revenue Streams:**
+Final decision (no further appeals)
 
-1. **Transaction Fees:** 0.01% of each confirmed delivery
-   - Example: $10,000 auction → $1 to oracle
-   - 1,000 auctions/month → $1,000/month per oracle
+Oracle Incentives
+Why Run an Oracle?
+Revenue Streams:
 
-2. **Staking Rewards:** Annual yield on staked TESTUSD
-   - 5% APY on 10,000 TESTUSD stake
-   - $500/year passive income
+Transaction Fees: 0.01% of each confirmed delivery
 
-3. **Slashing Rewards:** 50% of slashed malicious oracles
-   - If you catch a dishonest oracle → Earn their stake
+Example: $10,000 auction → $1 to oracle
 
-**Total Potential:** $1,000-$2,000/month per oracle (at scale)
+1,000 auctions/month → $1,000/month per oracle
 
-### Oracle Requirements
+Staking Rewards: Annual yield on staked TESTUSD
 
-**Technical:**
-- Server with 99.5% uptime
-- API access to USPS/FedEx/UPS
-- Coreum node or RPC access
-- Monitoring and alerting
+5% APY on 10,000 TESTUSD stake
 
-**Economic:**
-- 10,000 TESTUSD stake (locked)
-- Slashable if dishonest
+$500/year passive income
 
-**Operational:**
-- Respond to queries within 60 seconds
-- Update delivery status every 6 hours
-- Maintain audit logs
+Slashing Rewards: 50% of slashed malicious oracles
 
----
+If you catch a dishonest oracle → Earn their stake
 
-## Oracle Selection Criteria
+Total Potential: $1,000-$2,000/month per oracle (at scale)
 
-### How We Choose Oracles
+Oracle Requirements
+Technical:
 
-**Application Process:**
-1. Submit application with technical details
-2. Demonstrate uptime (30-day trial)
-3. Stake 10,000 TESTUSD
-4. Community vote (DAO-style, future)
+Server with 99.5% uptime
 
-**Criteria:**
-- ✅ Technical competence (proven uptime)
-- ✅ Geographic diversity (no more than 2 oracles in same region)
-- ✅ Reputation (existing community members preferred)
-- ✅ Independence (no conflicts of interest)
+API access to USPS/FedEx/UPS
 
-**Disqualifying Factors:**
-- ❌ Previous slashing history
-- ❌ Related to PhoenixPME team
-- ❌ Running other oracles in same data center
+TX node or RPC access
 
----
+Monitoring and alerting
 
-## Edge Cases
+Economic:
 
-### What If Tracking Number Is Fake?
+10,000 TESTUSD stake (locked)
 
-**Detection:**
-- Oracle queries carrier API
-- Invalid tracking # returns error
-- Oracle reports "Invalid Tracking"
+Slashable if dishonest
 
-**Outcome:**
-- Funds held in escrow
-- Seller notified: "Provide valid tracking within 48 hours"
-- If no valid tracking: Buyer refunded, seller flagged
+Operational:
 
-### What If Carrier Loses Package?
+Respond to queries within 60 seconds
 
-**Detection:**
-- Tracking shows "Lost in Transit"
-- After 30 days, carrier confirms loss
+Update delivery status every 6 hours
 
-**Outcome:**
-- **Seller's responsibility** to insure package
-- Buyer refunded (from escrow)
-- Seller must file claim with carrier
-- Seller flagged if happens repeatedly (>3 times)
+Maintain audit logs
 
-### What If Package Is Damaged?
+Oracle Selection Criteria
+How We Choose Oracles
+Application Process:
 
-**Detection:**
-- Buyer reports damage immediately
-- Photos required within 24 hours of delivery
+Submit application with technical details
 
-**Outcome:**
-- Arbitration panel reviews photos
-- If damaged in transit: Seller refunded, buyer compensated from seller's carrier insurance
-- If damage appears intentional/pre-existing: Seller wins
+Demonstrate uptime (30-day trial)
 
-### What If Buyer Refuses Delivery?
+Stake 10,000 TESTUSD
 
-**Detection:**
-- Carrier tracking: "Delivery Attempted - Refused"
+Community vote (DAO-style, future)
 
-**Outcome:**
-- Treated as buyer cancellation
-- Buyer pays return shipping + 1.1% fee
-- Seller receives item back
+Criteria:
 
----
+✅ Technical competence (proven uptime)
 
-## Privacy Considerations
+✅ Geographic diversity (no more than 2 oracles in same region)
 
-### Data We Collect
+✅ Reputation (existing community members preferred)
 
-- Tracking numbers
-- Delivery addresses (encrypted)
-- Delivery photos (if available)
-- Oracle votes
+✅ Independence (no conflicts of interest)
 
-### Data We DON'T Collect
+Disqualifying Factors:
 
-- Buyer/seller real names (unless KYC required)
-- Contents of packages (seller-provided description only)
-- Carrier GPS coordinates (not stored)
+❌ Previous slashing history
 
-### Data Retention
+❌ Related to PhoenixPME team
 
-- Tracking info: 90 days after delivery
-- Dispute evidence: 1 year
-- Oracle votes: Permanent (on-chain)
+❌ Running other oracles in same data center
 
----
+Edge Cases
+What If Tracking Number Is Fake?
+Detection:
 
-## Future Improvements
+Oracle queries carrier API
 
-### Phase 1 (Q2 2026): Multi-Oracle MVP
-- [ ] Deploy 5 independent oracles
-- [ ] Implement 4/5 consensus
-- [ ] Test with small transactions (<$1,000)
+Invalid tracking # returns error
 
-### Phase 2 (Q3 2026): Advanced Verification
-- [ ] Photo verification (computer vision)
-- [ ] Weight validation (carrier scale data)
-- [ ] IoT integration (smart package tracking)
+Oracle reports "Invalid Tracking"
 
-### Phase 3 (Q4 2026): Decentralized Arbitration
-- [ ] DAO governance for oracle selection
-- [ ] Automated dispute resolution (small claims)
-- [ ] Machine learning for fraud detection
+Outcome:
 
----
+Funds held in escrow
 
-## Metrics
+Seller notified: "Provide valid tracking within 48 hours"
 
-### Oracle Performance
+If no valid tracking: Buyer refunded, seller flagged
 
-| Metric | Target | Alert Threshold |
-|--------|--------|-----------------|
-| Uptime | >99.5% | <98% |
-| Response time | <60 seconds | >120 seconds |
-| Consensus rate | >95% | <90% |
-| False positives | <1% | >5% |
+What If Carrier Loses Package?
+Detection:
 
-### Delivery Success
+Tracking shows "Lost in Transit"
 
-| Metric | Target | Notes |
-|--------|--------|-------|
-| Successful deliveries | >95% | Carrier dependent |
-| Disputed deliveries | <5% | Industry standard |
-| Arbitration time | <5 days | From dispute to resolution |
-| Buyer satisfaction | >4.5/5 | Post-delivery survey |
+After 30 days, carrier confirms loss
 
----
+Outcome:
 
-## Comparison to Alternatives
+Seller's responsibility to insure package
 
-### Why Not Use Existing Oracle Networks?
+Buyer refunded (from escrow)
 
-**Chainlink, Band Protocol, etc.**
+Seller must file claim with carrier
 
-**Pros:**
-- Battle-tested
-- Large node operator network
-- Proven track record
+Seller flagged if happens repeatedly (>3 times)
 
-**Cons:**
-- Not designed for physical delivery verification
-- Expensive (0.1-0.5% per query)
-- Generalized (we need specialized logic)
+What If Package Is Damaged?
+Detection:
 
-**Decision:** Build custom oracles for delivery, may use Chainlink for price feeds
+Buyer reports damage immediately
 
----
+Photos required within 24 hours of delivery
 
-## Conclusion
+Outcome:
 
-Our oracle design evolves from **centralized simplicity** (testnet) to **decentralized robustness** (production). The path forward:
+Arbitration panel reviews photos
 
-1. **Testnet:** Single oracle, learn the problem space
-2. **Phase 1:** Multi-oracle consensus, reduce single points of failure
-3. **Phase 2:** Advanced verification, improve accuracy
-4. **Phase 3:** Full decentralization, community governance
+If damaged in transit: Seller refunded, buyer compensated from seller's carrier insurance
 
-**Timeline:** 9-12 months from single oracle to production-ready multi-oracle system.
+If damage appears intentional/pre-existing: Seller wins
 
----
+What If Buyer Refuses Delivery?
+Detection:
 
-## Related Documentation
+Carrier tracking: "Delivery Attempted - Refused"
 
-- [Bridge Security](./BRIDGE_SECURITY.md) - Cross-chain security architecture
-- [Security Patterns](./SECURITY_PATTERNS.md) - Smart contract best practices
-- [Economic Model](../business/ECONOMIC_MODEL.md) - Community Reserve Fund incentives
-- [Dispute Resolution Guide](../operations/DISPUTE_GUIDE.md) - User-facing dispute process
+Outcome:
 
----
+Treated as buyer cancellation
 
-## Changelog
+Buyer pays return shipping + 1.1% fee
 
-- **2026-02-15:** Initial version (single oracle design documented)
-- **TBD:** Multi-oracle implementation update
-- **TBD:** Advanced verification features
+Seller receives item back
 
----
+Privacy Considerations
+Data We Collect
+Tracking numbers
 
-## Feedback
+Delivery addresses (encrypted)
 
+Delivery photos (if available)
+
+Oracle votes
+
+Data We DON'T Collect
+Buyer/seller real names (unless KYC required)
+
+Contents of packages (seller-provided description only)
+
+Carrier GPS coordinates (not stored)
+
+Data Retention
+Tracking info: 90 days after delivery
+
+Dispute evidence: 1 year
+
+Oracle votes: Permanent (on-chain)
+
+Recent Updates (February 2026)
+Smart Contract Completion (Feb 19)
+✅ PhoenixEscrowClient created
+
+✅ 7 contracts with 16 tests passing
+
+✅ Dual collateral mechanism implemented
+
+✅ 1.1% fee structure to Community Reserve Fund
+
+Frontend Integration (Feb 21-24)
+✅ TESTUSD token support added throughout UI
+
+✅ Multi-wallet integration (Keplr, Leap, MetaMask, Phantom)
+
+✅ Admin panel for manual price updates
+
+✅ Price update scripts for TESTUSD
+
+✅ Build system stabilized
+
+TX Testnet Preparation
+⏳ Contract deployment scheduled: March 6, 2026
+
+⏳ Oracle implementation to begin post-launch
+
+⏳ Multi-oracle architecture in design phase
+
+March 6 Launch Plan
+Time (UTC)	Activity
+00:01	TX Testnet 6.0 launches
+00:15	Deploy phoenix-escrow contract
+01:00	Create first test auction
+02:00	Place first test bid
+03:00	Complete first trade
+04:00	Announce to community
+Future Improvements
+Phase 1 (Q2 2026): Multi-Oracle MVP
+Deploy 5 independent oracles
+
+Implement 4/5 consensus
+
+Test with small transactions (<$1,000)
+
+Phase 2 (Q3 2026): Advanced Verification
+Photo verification (computer vision)
+
+Weight validation (carrier scale data)
+
+IoT integration (smart package tracking)
+
+Phase 3 (Q4 2026): Decentralized Arbitration
+DAO governance for oracle selection
+
+Automated dispute resolution (small claims)
+
+Machine learning for fraud detection
+
+Metrics
+Oracle Performance
+Metric	Target	Alert Threshold
+Uptime	>99.5%	<98%
+Response time	<60 seconds	>120 seconds
+Consensus rate	>95%	<90%
+False positives	<1%	>5%
+Delivery Success
+Metric	Target	Notes
+Successful deliveries	>95%	Carrier dependent
+Disputed deliveries	<5%	Industry standard
+Arbitration time	<5 days	From dispute to resolution
+Buyer satisfaction	>4.5/5	Post-delivery survey
+Comparison to Alternatives
+Why Not Use Existing Oracle Networks?
+Chainlink, Band Protocol, etc.
+
+Pros:
+
+Battle-tested
+
+Large node operator network
+
+Proven track record
+
+Cons:
+
+Not designed for physical delivery verification
+
+Expensive (0.1-0.5% per query)
+
+Generalized (we need specialized logic)
+
+Decision: Build custom oracles for delivery, may use Chainlink for price feeds (currently using manual updates)
+
+Conclusion
+Our oracle design evolves from centralized simplicity (testnet) to decentralized robustness (production). The path forward:
+
+March 6, 2026: Launch on TX Testnet 6.0 with manual price updates
+
+Testnet Phase: Single oracle, learn the problem space
+
+Phase 1: Multi-oracle consensus, reduce single points of failure
+
+Phase 2: Advanced verification, improve accuracy
+
+Phase 3: Full decentralization, community governance
+
+Timeline: 9-12 months from testnet launch to production-ready multi-oracle system.
+
+Related Documentation
+Architecture Overview - System architecture
+
+Security Patterns - Smart contract best practices
+
+Economic Model - Community Reserve Fund incentives
+
+Vision Document - Project philosophy
+
+Changelog
+2026-02-24: Updated for TX testnet launch prep, added recent developments
+
+2026-02-15: Initial version (single oracle design documented)
+
+Feedback
 Questions about oracle design? Found a vulnerability?
 
-- Open an issue: https://github.com/greg-gzillion/TX/issues
-- Email: gjf20842@gmail.com
-- Security vulnerabilities: security@phoenixpme.com (private disclosure)
+Open an issue: https://github.com/greg-gzillion/TX/issues
+
+Email: gjf20842@gmail.com
+
+Security vulnerabilities: security@phoenixpme.com (private disclosure)

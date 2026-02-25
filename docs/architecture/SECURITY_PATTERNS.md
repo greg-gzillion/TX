@@ -1,145 +1,3 @@
-# Security Patterns & Best Practices
-
-**Document Status:** Living Document  
-**Last Updated:** February 15, 2026  
-**Owner:** Greg (@greg-gzillion)  
-**Review Cycle:** Monthly
-
-## Executive Summary
-
-This document outlines the security patterns, best practices, and defensive programming techniques used throughout PhoenixPME's smart contracts. Following these patterns reduces the risk of common vulnerabilities like reentrancy, overflow, and access control bypasses.
-
-**Target Audience:** Developers, auditors, security researchers
-
----
-
-## Table of Contents
-
-1. [Reentrancy Protection](#reentrancy-protection)
-2. [Checks-Effects-Interactions](#checks-effects-interactions)
-3. [Access Control](#access-control)
-4. [Input Validation](#input-validation)
-5. [Safe Math](#safe-math)
-6. [Emergency Controls](#emergency-controls)
-7. [Upgrade Patterns](#upgrade-patterns)
-
----
-
-## Reentrancy Protection
-
-### What Is Reentrancy?
-
-A reentrancy attack occurs when an external contract calls back into your contract before the first invocation is complete, potentially:
-- Withdrawing funds multiple times
-- Bypassing state checks
-- Breaking invariants
-
-**Famous Example:** The DAO hack ($60M stolen)
-
-### Our Protection Strategy
-
-#### 1. State Updates Before External Calls
-
-```rust
-// ❌ VULNERABLE - State updated after external call
-pub fn withdraw(deps: DepsMut, info: MessageInfo, amount: Uint128) -> Result<Response> {
-    // External call FIRST (dangerous!)
-    send_tokens(info.sender.clone(), amount)?;
-    
-    // State update AFTER (too late!)
-    USER_BALANCES.update(deps.storage, &info.sender, |bal| {
-        Ok(bal - amount)
-    })?;
-    
-    Ok(Response::new())
-}
-
-// ✅ SAFE - State updated before external call
-pub fn withdraw(deps: DepsMut, info: MessageInfo, amount: Uint128) -> Result<Response> {
-    // State update FIRST
-    USER_BALANCES.update(deps.storage, &info.sender, |bal| {
-        bal.checked_sub(amount).ok_or(ContractError::InsufficientFunds)
-    })?;
-    
-    // External call AFTER (safe - state already updated)
-    let msg = BankMsg::Send {
-        to_address: info.sender.to_string(),
-        amount: vec![Coin { denom: "utestusd".to_string(), amount }],
-    };
-    
-    Ok(Response::new().add_message(msg))
-}
-```
-
-**Why This Works:** Even if the external call reenters, the balance is already reduced, preventing double-withdrawal.
-
-#### 2. Reentrancy Guards (When Needed)
-
-For complex functions with multiple external calls:
-
-```rust
-// Reentrancy guard state
-const LOCKED: Item<bool> = Item::new("locked");
-
-fn nonReentrant<F>(deps: DepsMut, f: F) -> Result<Response>
-where
-    F: FnOnce(DepsMut) -> Result<Response>,
-{
-    // Check if already locked
-    let is_locked = LOCKED.may_load(deps.storage)?.unwrap_or(false);
-    if is_locked {
-        return Err(ContractError::ReentrantCall);
-    }
-    
-    // Lock
-    LOCKED.save(deps.storage, &true)?;
-    
-    // Execute function
-    let result = f(deps);
-    
-    // Unlock
-    LOCKED.save(deps.storage, &false)?;
-    
-    result
-}
-
-// Usage
-pub fn complex_withdraw(deps: DepsMut, info: MessageInfo) -> Result<Response> {
-    nonReentrant(deps, |deps| {
-        // Multiple external calls here
-        // Protected from reentrancy
-        Ok(Response::new())
-    })
-}
-```
-
-#### 3. CosmWasm's Built-in Protection
-
-**Good news:** CosmWasm is safer than Solidity by default:
-- No fallback functions (reentrancy is harder)
-- Messages execute atomically
-- Cross-contract calls don't share state
-
-**Still need protection for:**
-- Callbacks from external contracts
-- Multi-step transactions
-- Complex state transitions
-
----
-
-## Checks-Effects-Interactions
-
-### The Pattern
-
-All functions should follow this order:
-
-1. **Checks:** Validate inputs and permissions
-2. **Effects:** Update state
-3. **Interactions:** Call external contracts
-
-### Example: Auction Settlement
-
-```rust
 pub fn settle_auction(
     deps: DepsMut,
     env: Env,
@@ -176,31 +34,36 @@ pub fn settle_auction(
     auction.settled = true;
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
     
-    // Calculate fees (1.1%)
+    // Calculate fees (1.1%) using safe math
     let fee = auction.high_bid.multiply_ratio(11u128, 1000u128);
-    let seller_amount = auction.high_bid.checked_sub(fee)?;
+    let seller_amount = auction.high_bid.checked_sub(fee)
+        .ok_or(ContractError::Overflow)?;
     
     // Update Community Reserve Fund
-    let mut pool = INSURANCE_POOL.load(deps.storage)?;
-    pool.balance = pool.balance.checked_add(fee)?;
-    INSURANCE_POOL.save(deps.storage, &pool)?;
+    let mut fund = COMMUNITY_RESERVE_FUND.load(deps.storage)?;
+    fund.balance = fund.balance.checked_add(fee)
+        .ok_or(ContractError::Overflow)?;
+    COMMUNITY_RESERVE_FUND.save(deps.storage, &fund)?;
+    
+    // Mint PHNX voting weight (non-transferable)
+    mint_phnx_weight(deps.storage, &high_bidder, fee)?;
     
     // ========== INTERACTIONS ==========
     
-    // Send funds to seller
+    // Send funds to seller (TESTUSD)
     let seller_msg = BankMsg::Send {
         to_address: auction.seller.to_string(),
         amount: vec![Coin {
-            denom: "utestusd".to_string(),
+            denom: TESTUSD_DENOM.to_string(),
             amount: seller_amount,
         }],
     };
     
     // Send fee to Community Reserve Fund
     let fee_msg = BankMsg::Send {
-        to_address: pool.address.to_string(),
+        to_address: fund.address.to_string(),
         amount: vec![Coin {
-            denom: "utestusd".to_string(),
+            denom: TESTUSD_DENOM.to_string(),
             amount: fee,
         }],
     };
@@ -213,26 +76,23 @@ pub fn settle_auction(
         .add_attribute("seller_amount", seller_amount.to_string())
         .add_attribute("fee", fee.to_string()))
 }
-```
+Why This Matters:
 
-**Why This Matters:**
-- All state updates happen before external calls
-- If external call fails, state is still consistent
-- Impossible to exploit race conditions
+All state updates happen before external calls
 
----
+If external call fails, state is still consistent
 
-## Access Control
+Impossible to exploit race conditions
 
-### Role-Based Access Control (RBAC)
-
-```rust
+Access Control
+Role-Based Access Control (RBAC)
 // Define roles
 #[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
 pub enum Role {
     Admin,
     Oracle,
     Pauser,
+    FeeCollector,
 }
 
 // Store roles
@@ -275,11 +135,7 @@ pub fn confirm_delivery(
     // Confirmation logic...
     Ok(Response::new())
 }
-```
-
-### Admin Functions
-
-```rust
+Admin Functions
 // Grant role (admin only)
 pub fn grant_role(
     deps: DepsMut,
@@ -325,13 +181,8 @@ pub fn revoke_role(
         .add_attribute("target", target.to_string())
         .add_attribute("role", format!("{:?}", role)))
 }
-```
-
-### Time-Locked Admin Actions
-
+Time-Locked Admin Actions
 For critical admin functions, add time locks:
-
-```rust
 const PENDING_ADMIN_CHANGE: Item<(Addr, Timestamp)> = Item::new("pending_admin");
 
 pub fn propose_admin_change(
@@ -368,56 +219,59 @@ pub fn execute_admin_change(deps: DepsMut, env: Env) -> Result<Response> {
     
     Ok(Response::new())
 }
-```
-
----
-
-## Input Validation
-
-### Always Validate
-
-```rust
+Input Validation
+Always Validate
 pub fn create_auction(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
-    title: String,
+    item_id: String,
+    description: String,
     starting_price: Uint128,
+    reserve_price: Uint128,
     duration: u64,
 ) -> Result<Response> {
-    // Validate title
-    if title.is_empty() || title.len() > 200 {
-        return Err(ContractError::InvalidTitle);
+    // Validate item_id
+    if item_id.is_empty() || item_id.len() > 100 {
+        return Err(ContractError::InvalidItemId);
     }
     
-    // Validate price
+    // Validate description
+    if description.is_empty() || description.len() > 1000 {
+        return Err(ContractError::InvalidDescription);
+    }
+    
+    // Validate starting price
     if starting_price.is_zero() {
         return Err(ContractError::InvalidPrice);
     }
     
+    // Validate reserve price >= starting price
+    if reserve_price < starting_price {
+        return Err(ContractError::ReserveTooLow);
+    }
+    
     // Maximum price check (prevent overflow in fee calculations)
     let max_price = Uint128::from(1_000_000_000_000u128); // 1 trillion
-    if starting_price > max_price {
+    if starting_price > max_price || reserve_price > max_price {
         return Err(ContractError::PriceTooHigh);
     }
     
     // Validate duration (1 hour to 30 days)
-    if duration < 3600 || duration > 2_592_000 {
+    let min_duration = 3600u64;  // 1 hour
+    let max_duration = 2_592_000u64; // 30 days
+    if duration < min_duration || duration > max_duration {
         return Err(ContractError::InvalidDuration);
     }
     
-    // Validate sender has funds
-    let fee = calculate_listing_fee(&starting_price);
-    // ... check balance
+    // Validate sender has sufficient TESTUSD for collateral
+    let collateral = calculate_collateral(&reserve_price);
+    check_balance(&deps, &info.sender, collateral)?;
     
     // All validations passed, proceed...
     Ok(Response::new())
 }
-```
-
-### Address Validation
-
-```rust
+Address Validation
 // Validate address format
 pub fn validate_address(deps: &DepsMut, addr: &str) -> Result<Addr> {
     deps.api.addr_validate(addr)
@@ -431,15 +285,8 @@ pub fn require_valid_address(addr: &Addr) -> Result<()> {
     }
     Ok(())
 }
-```
-
----
-
-## Safe Math
-
-### Use Checked Arithmetic
-
-```rust
+Safe Math
+Use Checked Arithmetic
 // ❌ DANGEROUS - Can overflow/underflow
 let total = amount1 + amount2;
 let result = price * quantity;
@@ -450,11 +297,7 @@ let total = amount1.checked_add(amount2)
     
 let result = price.checked_mul(quantity)
     .ok_or(ContractError::Overflow)?;
-```
-
-### Uint128 Operations
-
-```rust
+Uint128 Operations
 use cosmwasm_std::Uint128;
 
 // Addition
@@ -471,11 +314,9 @@ let quotient = a.checked_div(b)?;
 
 // Percentage calculation (safe)
 let fee = amount.multiply_ratio(11u128, 1000u128); // 1.1%
-```
 
-### Comparison and Ordering
+Comparison and Ordering
 
-```rust
 // Don't use: a > b (might not work as expected)
 // Use:
 if a.gt(&b) { }
@@ -485,15 +326,43 @@ if a.is_zero() { }
 // Safe comparison
 let max = a.max(b);
 let min = a.min(b);
-```
 
----
+TESTUSD Integration
+Denomination Constants
 
-## Emergency Controls
+// TESTUSD has 6 decimals (like USDC)
+pub const TESTUSD_DENOM: &str = "utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6";
+pub const TESTUSD_DECIMALS: u32 = 6;
+pub const TESTUSD_FACTOR: u128 = 1_000_000;
 
-### Pause Mechanism
+// Conversion helpers
+pub fn testusd_to_utestusd(amount: Uint128) -> Uint128 {
+    amount.checked_mul(Uint128::from(TESTUSD_FACTOR))
+        .expect("overflow in conversion")
+}
 
-```rust
+pub fn utestusd_to_testusd(amount: Uint128) -> Uint128 {
+    amount.checked_div(Uint128::from(TESTUSD_FACTOR))
+        .expect("division by zero in conversion")
+}
+
+Safe Collateral Calculations
+
+// Calculate 10% collateral safely
+pub fn calculate_collateral(amount: &Uint128) -> Result<Uint128> {
+    amount.multiply_ratio(10u128, 100u128) // 10%
+}
+
+// Calculate total needed for bid (bid + 10% collateral)
+pub fn calculate_total_for_bid(bid_amount: &Uint128) -> Result<Uint128> {
+    let collateral = calculate_collateral(bid_amount)?;
+    bid_amount.checked_add(collateral)
+        .ok_or(ContractError::Overflow)
+}
+
+Emergency Controls
+Pause Mechanism
+
 const PAUSED: Item<bool> = Item::new("paused");
 
 // Modifier to check if paused
@@ -532,13 +401,9 @@ pub fn place_bid(deps: DepsMut, info: MessageInfo, auction_id: u64) -> Result<Re
     // Bid logic...
     Ok(Response::new())
 }
-```
-
-### Circuit Breaker
-
+Circuit Breaker
 For rate-limiting critical operations:
 
-```rust
 const WITHDRAWAL_LIMIT: Item<WithdrawalLimit> = Item::new("withdrawal_limit");
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -575,15 +440,10 @@ pub fn withdraw(
     // Proceed with withdrawal...
     Ok(Response::new())
 }
-```
 
----
+Upgrade Patterns
+Migrations
 
-## Upgrade Patterns
-
-### Migrations
-
-```rust
 #[cfg_attr(not(feature = "library"), entry_point)]
 pub fn migrate(deps: DepsMut, _env: Env, _msg: MigrateMsg) -> Result<Response> {
     // Get current version
@@ -622,15 +482,10 @@ fn migrate_0_1_to_0_2(storage: &mut dyn Storage) -> Result<()> {
     // Example: Rename keys, transform data structures, etc.
     Ok(())
 }
-```
 
----
+Testing Security Patterns
+Unit Tests
 
-## Testing Security Patterns
-
-### Unit Tests
-
-```rust
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -639,16 +494,16 @@ mod tests {
     fn test_reentrancy_protection() {
         let mut deps = mock_dependencies();
         
-        // Setup: User has 100 tokens
-        setup_user_balance(&mut deps, "user1", 100);
+        // Setup: User has 100 TESTUSD
+        setup_user_balance(&mut deps, "user1", Uint128::from(100u128));
         
         // First withdrawal: OK
-        let msg = ExecuteMsg::Withdraw { amount: 50 };
+        let msg = ExecuteMsg::Withdraw { amount: Uint128::from(50u128) };
         let res = execute(deps.as_mut(), mock_env(), mock_info("user1", &[]), msg);
         assert!(res.is_ok());
         
         // Try to withdraw again in same block: Should fail
-        let msg = ExecuteMsg::Withdraw { amount: 50 };
+        let msg = ExecuteMsg::Withdraw { amount: Uint128::from(50u128) };
         let res = execute(deps.as_mut(), mock_env(), mock_info("user1", &[]), msg);
         assert_eq!(res, Err(ContractError::InsufficientFunds));
     }
@@ -659,12 +514,16 @@ mod tests {
         let b = Uint128::from(1u128);
         
         // Should return error, not wrap around
-        assert!(a.checked_add(b).is_none());
+        assert!(a.checked_add(b).is_err());
     }
     
     #[test]
     fn test_access_control() {
         let mut deps = mock_dependencies();
+        
+        // Setup admin role
+        let admin = Addr::unchecked("admin");
+        ROLES.save(deps.as_mut().storage, &admin, &vec![Role::Admin]).unwrap();
         
         // Non-admin tries to pause: Should fail
         let msg = ExecuteMsg::Pause {};
@@ -676,73 +535,110 @@ mod tests {
         let res = execute(deps.as_mut(), mock_env(), mock_info("admin", &[]), msg);
         assert!(res.is_ok());
     }
+    
+    #[test]
+    fn test_testusd_conversions() {
+        let testusd = Uint128::from(1000u128);
+        let utestusd = testusd_to_utestusd(testusd);
+        assert_eq!(utestusd, Uint128::from(1_000_000_000u128));
+        
+        let back = utestusd_to_testusd(utestusd);
+        assert_eq!(back, testusd);
+    }
 }
-```
 
----
-
-## Security Checklist
-
+Security Audit Checklist
 Before deploying any contract, verify:
 
-### Reentrancy
-- [ ] All state updates happen before external calls
-- [ ] Reentrancy guards used where needed
-- [ ] No reliance on contract balance
+Reentrancy
+All state updates happen before external calls
 
-### Access Control
-- [ ] All admin functions have role checks
-- [ ] Critical functions have time locks
-- [ ] Role management functions exist
+Reentrancy guards used where needed
 
-### Input Validation
-- [ ] All inputs validated (length, range, format)
-- [ ] Addresses validated
-- [ ] Amounts checked for zero/overflow
+No reliance on contract balance
 
-### Math
-- [ ] All arithmetic uses checked operations
-- [ ] Division by zero handled
-- [ ] Percentage calculations use multiply_ratio
+Access Control
+All admin functions have role checks
 
-### Emergency
-- [ ] Pause mechanism implemented
-- [ ] Circuit breakers for critical operations
-- [ ] Admin can upgrade/migrate contract
+Critical functions have time locks
 
-### Testing
-- [ ] Unit tests for all functions
-- [ ] Integration tests for user flows
-- [ ] Fuzz tests for math operations
-- [ ] Edge cases tested
+Role management functions exist
 
----
+Default roles properly initialized
 
-## Related Documentation
+Input Validation
+All inputs validated (length, range, format)
 
-- [Bridge Security](./BRIDGE_SECURITY.md) - Cross-chain security
-- [Oracle Design](./ORACLE_DESIGN.md) - Oracle security considerations
-- [Testing Guide](../development/TESTING_GUIDE.md) - Comprehensive testing
+Addresses validated
 
----
+Amounts checked for zero/overflow
 
-## References
+Edge cases tested (empty strings, max values)
 
-- [CosmWasm Security Best Practices](https://docs.cosmwasm.com/docs/1.0/smart-contracts/best-practices/)
-- [Solidity Security Patterns](https://consensys.github.io/smart-contract-best-practices/)
-- [DASP Top 10](https://dasp.co/) - Decentralized Application Security Project
+Math
+All arithmetic uses checked operations
 
----
+Division by zero handled
 
-## Changelog
+Percentage calculations use multiply_ratio
 
-- **2026-02-15:** Initial version
+TESTUSD conversions tested
 
----
+Emergency
+Pause mechanism implemented
 
-## Feedback
+Circuit breakers for critical operations
 
+Admin can upgrade/migrate contract
+
+Emergency withdrawal function (if needed)
+
+TESTUSD Specific
+Denomination constants correct
+
+Decimal handling consistent
+
+Collateral calculations accurate
+
+Fee calculations accurate (1.1%)
+
+Testing
+Unit tests for all functions
+
+Integration tests for user flows
+
+Fuzz tests for math operations
+
+Edge cases tested
+
+All 16 tests passing (as of Feb 24)
+
+Related Documentation
+Bridge Security - Cross-chain security
+
+Oracle Design - Oracle security considerations
+
+Testing Guide - Comprehensive testing
+
+Architecture Overview - System architecture
+
+References
+CosmWasm Security Best Practices
+
+Solidity Security Patterns
+
+DASP Top 10 - Decentralized Application Security Project
+
+Changelog
+2026-02-24: Added TESTUSD integration, updated examples, added security checklist
+
+2026-02-15: Initial version
+
+Feedback
 Found a security issue? Please report responsibly:
-- Security vulnerabilities: security@phoenixpme.com (private disclosure)
-- General questions: gjf20842@gmail.com
-- GitHub issues: https://github.com/greg-gzillion/TX/issues
+
+Security vulnerabilities: security@phoenixpme.com (private disclosure)
+
+General questions: gjf20842@gmail.com
+
+GitHub issues: https://github.com/greg-gzillion/TX/issues
