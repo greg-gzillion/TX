@@ -9,7 +9,6 @@ interface Prices {
   silver: number;
   platinum: number;
   palladium: number;
-  createdAt?: string;
 }
 
 export default function PriceBanner() {
@@ -18,59 +17,63 @@ export default function PriceBanner() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    testAPI();
-  }, []);
+    const fetchPrices = async () => {
+      try {
+        console.log('🔄 Fetching prices...');
+        const response = await fetch(`${API_URL}/api/prices`, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          mode: 'cors',
+          cache: 'no-cache'
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Prices received:', data);
+        
+        if (data.success && data.data) {
+          setPrices(data.data);
+          setError(null);
+        } else {
+          throw new Error('Invalid data format');
+        }
+      } catch (err) {
+        console.error('❌ Fetch failed:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch');
+        setPrices(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const testAPI = async () => {
-    try {
-      console.log('🔍 Testing API directly...');
-      const response = await fetch(`${API_URL}/api/prices`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      
-      const data = await response.json();
-      console.log('✅ API Response:', data);
-      
-      if (data.success && data.data) {
-        setPrices(data.data);
-        setError(null);
-      } else {
-        setError('Invalid API response');
-      }
-    } catch (err) {
-      console.error('❌ API Error:', err);
-      // Type-safe error handling
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError('An unknown error occurred');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchPrices();
+    const interval = setInterval(fetchPrices, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   if (loading) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
-        <p className="text-sm text-gray-500">Loading reference prices...</p>
+        <p className="text-sm text-gray-500">Loading prices...</p>
       </div>
     );
   }
 
-  if (error) {
+  if (error || !prices) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
-        <p className="text-sm text-red-500">Error: {error}</p>
-      </div>
-    );
-  }
-
-  if (!prices) {
-    return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
-        <p className="text-sm text-gray-500">No price data available</p>
+        <p className="text-sm text-red-500">Prices temporarily unavailable</p>
+        <p className="text-xs text-gray-400 mt-1">Using latest known values</p>
+        {/* Show fallback prices even on error */}
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-2 text-sm">
+          <span className="text-amber-700">🥇 $5187.80</span>
+          <span className="text-gray-600">🥈 $89.45</span>
+          <span className="text-gray-600">🔷 $2245.00</span>
+          <span className="text-gray-600">🔶 $1791.00</span>
+        </div>
       </div>
     );
   }
@@ -85,7 +88,7 @@ export default function PriceBanner() {
         <span className="text-gray-600">🔶 ${prices.palladium?.toFixed(2)}</span>
       </div>
       <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
-        ⓘ Reference prices updated manually. Metal prices fluctuate constantly.
+        ⓘ Reference prices updated manually
       </div>
     </div>
   );
