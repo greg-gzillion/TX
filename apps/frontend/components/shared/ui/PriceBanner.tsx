@@ -28,7 +28,7 @@ export default function PriceBanner() {
     try {
       console.log('Fetching from:', `${API_URL}/api/prices`);
       
-      const response = await fetch(`${API_URL}/api/prices`, {
+      const response = await fetch(`https://cors-anywhere.herokuapp.com/${API_URL}/api/prices`, {
         method: 'GET',
         headers: { 
           'Content-Type': 'application/json',

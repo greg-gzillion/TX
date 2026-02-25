@@ -5,11 +5,13 @@ const router = Router();
 
 // Get latest prices
 router.get('/', async (req, res) => {
+  // FORCE CORS HEADERS - IGNORE EVERYTHING ELSE
+  res.header('Access-Control-Allow-Origin', 'https://phoenix-frontend-seven.vercel.app');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
   try {
-    // Set CORS headers explicitly for this route
-    res.header('Access-Control-Allow-Origin', 'https://phoenix-frontend-seven.vercel.app');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    
     const prices = await prisma.priceHistory.findFirst({
       orderBy: { createdAt: 'desc' }
     });
@@ -27,7 +29,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Handle OPTIONS requests for CORS preflight
+// Handle OPTIONS requests explicitly
 router.options('/', (req, res) => {
   res.header('Access-Control-Allow-Origin', 'https://phoenix-frontend-seven.vercel.app');
   res.header('Access-Control-Allow-Methods', 'GET, OPTIONS');
