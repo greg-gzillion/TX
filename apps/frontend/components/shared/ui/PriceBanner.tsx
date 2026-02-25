@@ -83,19 +83,14 @@ export default function PriceBanner() {
   }
 
   if (error || !prices) {
-    return (
-      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
-        <p className="text-sm text-red-500">Prices temporarily unavailable</p>
-        <p className="text-xs text-gray-400 mt-1">Using latest known values</p>
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-2 text-sm">
-          <span className="text-amber-700">🥇 $5193.00</span>
-          <span className="text-gray-600">🥈 $90.52</span>
-          <span className="text-gray-600">🔷 $2274.00</span>
-          <span className="text-gray-600">🔶 $1794.00</span>
-        </div>
-      </div>
-    );
-  }
+  console.log('⚠️ PriceBanner error state:', { error, prices });
+  return (
+    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
+      <p className="text-sm text-red-500">Error loading prices</p>
+      <p className="text-xs text-gray-400 mt-1">{error || 'No price data'}</p>
+    </div>
+  );
+}
 
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto">
