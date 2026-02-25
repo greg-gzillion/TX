@@ -82,7 +82,7 @@ The foundation token for PhoenixPME auctions is operational on Coreum testnet (T
 |--------|--------|
 | **Source** | 1.1% of all successful trades |
 | **Control** | Future DAO (PHNX holders) |
-| **Withdrawal** | ❌ **NO INDIVIDUAL** can withdraw (not even founder) |
+| **Withdrawal** | ❌ **NO INDIVIDUAL** can withdraw |
 | **Founder** | 10% voting weight only (permanent) |
 | **Address** | `testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv` |
 
@@ -97,14 +97,11 @@ The foundation token for PhoenixPME auctions is operational on Coreum testnet (T
 3. PHNX, TRUST, DONT TRUST are non-transferable
 4. Founder retains 10% voting weight (permanent)
 
-🦊 Multi-Wallet Support
-UniversalWalletV2 supports:
+Wallet Support
 
 Wallet	Chain	Status
 Keplr	Cosmos	✅ Supported
 Leap	Cosmos	✅ Supported
-MetaMask	EVM	✅ Supported
-Phantom	Solana	✅ Supported
 🚀 Technical Architecture
 Layer	Technology	Port/URL
 Frontend	Next.js 14, TypeScript, Tailwind	3000
@@ -181,15 +178,10 @@ ROADMAP.md
 Current priorities:
 
 ✅ Multi-wallet integration
-
 ✅ TESTUSD token support
-
 ✅ Build system stabilization
-
 🔜 Contract deployment (March 6)
-
 🔜 Testnet testing
-
 ⚖️ Legal & Compliance
 Document	Purpose
 Terms of Service	Platform usage agreement
@@ -197,13 +189,9 @@ Privacy Policy	Data handling
 Risk Disclosure	Important risks
 Contributor Agreement	Contribution terms
 Key Legal Facts:
-
 ✅ Code is original work by Greg (@greg-gzillion)
-
 ✅ Licensed under GNU GPL v3.0
-
 ✅ "PhoenixPME" name in use (not registered trademark)
-
 ✅ No securities - tokens have no cash value
 
 📞 Contact
