@@ -7,7 +7,7 @@ const API_URL = 'https://phoenix-api-756y.onrender.com';
 export default function PriceBanner() {
   const [prices, setPrices] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     testAPI();
@@ -28,7 +28,7 @@ export default function PriceBanner() {
         setPrices(data.data);
         setError(null);
       } else {
-        setError('Invalid API response');
+        setError('Invalid API response' as string);
       }
     } catch (err) {
       console.error('❌ API Error:', err);
