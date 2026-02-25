@@ -21,7 +21,7 @@ export default function HomePage() {
         
         {/* Hero Section - Centered with Phoenix */}
         <div className="text-center mb-12">
-          {/* Animated Phoenix Icon */}
+          {/* Phoenix Icon */}
           <div className="flex justify-center mb-6">
             <PhoenixIcon />
           </div>
@@ -41,13 +41,6 @@ export default function HomePage() {
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Direct peer-to-peer. No middlemen. No hidden fees.
           </p>
-          
-          {/* Eagle accents */}
-          <div className="flex justify-center gap-2 mt-4">
-            <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.1s' }}>🦅</span>
-            <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.3s' }}>🦅</span>
-            <span className="phoenix-flame text-2xl" style={{ animationDelay: '0.5s' }}>🦅</span>
-          </div>
         </div>
 
         {/* Search Bar - Centered */}
@@ -150,8 +143,8 @@ export default function HomePage() {
               </ul>
             </div>
 
-          </div> {/* Closes grid */}
-        </div> {/* Closes comparison container */}
+          </div>
+        </div>
 
         {/* Tagline - Centered */}
         <div className="max-w-2xl mx-auto text-center mb-12 border-t border-b border-gray-200 py-6">
@@ -186,7 +179,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Price Banner - Centered */}
+        {/* Price Banner - Centered - MOVED UP */}
         <div className="max-w-3xl mx-auto mb-12">
           <PriceBanner />
         </div>
@@ -196,7 +189,6 @@ export default function HomePage() {
           <h2 className="text-xl font-semibold mb-4 text-center">Connect Your Wallet</h2>
           <UniversalWalletV2 onConnect={(wallet) => {
             console.log('Connected wallet:', wallet);
-            // Store wallet in context/state when implemented
           }} />
         </div>
 
