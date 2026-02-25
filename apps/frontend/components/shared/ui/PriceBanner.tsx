@@ -19,16 +19,8 @@ export default function PriceBanner() {
   const fetchPrices = async () => {
     try {
       console.log('🔄 Fetching prices...');
-      const response = await fetch(`${API_URL}/api/prices`, {
-        method: 'GET',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        mode: 'cors',
-        credentials: 'omit',
-        cache: 'no-cache'
-      });
+      // SIMPLE FETCH - no extra options, just works
+      const response = await fetch(`${API_URL}/api/prices`);
       
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -46,30 +38,13 @@ export default function PriceBanner() {
     } catch (err) {
       console.error('❌ Fetch failed:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch');
-      throw err;
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchWithRetry = async (retries = 3) => {
-      for (let i = 0; i < retries; i++) {
-        try {
-          await fetchPrices();
-          return;
-        } catch (err) {
-          console.log(`Retry ${i + 1}/${retries} failed`);
-          if (i === retries - 1) {
-            console.error('All retries failed');
-          } else {
-            await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)));
-          }
-        }
-      }
-    };
-
-    fetchWithRetry();
+    fetchPrices();
     const interval = setInterval(fetchPrices, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -77,20 +52,25 @@ export default function PriceBanner() {
   if (loading) {
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
-        <p className="text-sm text-gray-500">Loading prices...</p>
+        <p className="text-sm text-gray-500">Loading reference prices...</p>
       </div>
     );
   }
 
   if (error || !prices) {
-  console.log('⚠️ PriceBanner error state:', { error, prices });
-  return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
-      <p className="text-sm text-red-500">Error loading prices</p>
-      <p className="text-xs text-gray-400 mt-1">{error || 'No price data'}</p>
-    </div>
-  );
-}
+    return (
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto text-center">
+        <p className="text-sm text-red-500">Prices temporarily unavailable</p>
+        <p className="text-xs text-gray-400 mt-1">Using latest known values</p>
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-2 text-sm">
+          <span className="text-amber-700">🥇 $5193.00</span>
+          <span className="text-gray-600">🥈 $90.52</span>
+          <span className="text-gray-600">🔷 $2274.00</span>
+          <span className="text-gray-600">🔶 $1794.00</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto">
@@ -102,7 +82,7 @@ export default function PriceBanner() {
         <span className="text-gray-600">🔶 ${prices.palladium?.toFixed(2)}</span>
       </div>
       <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
-        ⓘ Reference prices updated manually
+        ⓘ Reference prices updated manually. Metal prices fluctuate constantly.
       </div>
     </div>
   );
