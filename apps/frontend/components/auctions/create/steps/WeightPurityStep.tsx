@@ -10,7 +10,7 @@ interface WeightPurityStepProps {
   setWeightUnit: (value: 'troy_oz' | 'grams' | 'ounces') => void;
   purity: number;
   setPurity: (value: number) => void;
-  metalType: string;
+  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other';  // ✅ Fix this line
 }
 
 export default function WeightPurityStep({

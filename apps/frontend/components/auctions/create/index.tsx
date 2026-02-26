@@ -1,5 +1,6 @@
 'use client';
 
+import { useAuctionForm } from './hooks/useAuctionForm';
 import HonestyBanner from './displays/HonestyBanner';
 import PriceBanner from './displays/PriceBanner';
 import BasicInfoStep from './steps/BasicInfoStep';
