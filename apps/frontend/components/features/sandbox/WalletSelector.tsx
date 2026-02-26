@@ -10,7 +10,9 @@ declare global {
   }
 }
 
+// Update Wallet interface to include id
 interface Wallet {
+  id: string;           // ✅ Added id field
   name: string;
   address: string;
   balance: string;
@@ -30,10 +32,12 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
   // Check if already connected
   useEffect(() => {
     const savedAddress = localStorage.getItem('walletAddress');
+    const savedWalletId = localStorage.getItem('walletId');
     if (savedAddress) {
       setAddress(savedAddress);
       fetchBalance(savedAddress);
       onSelect({
+        id: savedWalletId || `wallet-${Date.now()}`,  // ✅ Use saved id or create new
         name: 'Connected Wallet',
         address: savedAddress,
         balance: balance || '5,000,000'
@@ -62,12 +66,15 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
       const offlineSigner = window.keplr.getOfflineSigner(CHAIN_ID);
       const accounts = await offlineSigner.getAccounts();
       
+      const walletId = `keplr-${Date.now()}`;  // ✅ Generate unique id
       setAddress(accounts[0].address);
       localStorage.setItem('walletAddress', accounts[0].address);
+      localStorage.setItem('walletId', walletId);
       await fetchBalance(accounts[0].address);
       
       onSelect({
-        name: 'Connected Wallet',
+        id: walletId,  // ✅ Include id
+        name: 'Keplr Wallet',
         address: accounts[0].address,
         balance: '5,000,000'
       });
@@ -91,12 +98,15 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
       const offlineSigner = window.leap.getOfflineSigner(CHAIN_ID);
       const accounts = await offlineSigner.getAccounts();
       
+      const walletId = `leap-${Date.now()}`;  // ✅ Generate unique id
       setAddress(accounts[0].address);
       localStorage.setItem('walletAddress', accounts[0].address);
+      localStorage.setItem('walletId', walletId);
       await fetchBalance(accounts[0].address);
       
       onSelect({
-        name: 'Connected Wallet',
+        id: walletId,  // ✅ Include id
+        name: 'Leap Wallet',
         address: accounts[0].address,
         balance: '5,000,000'
       });
@@ -112,13 +122,14 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
     setAddress('');
     setBalance('');
     localStorage.removeItem('walletAddress');
+    localStorage.removeItem('walletId');
     onSelect(null);
   };
 
   if (!address) {
     return (
       <div className="bg-white p-6 rounded-xl border shadow-sm">
-        {/* Add sandbox banner */}
+        {/* Sandbox banner */}
         <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-4">
           <p className="text-purple-800 text-sm flex items-center">
             <span className="text-xl mr-2">🧪</span>
@@ -149,13 +160,16 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
             Connect Leap
           </Button>
         </div>
+        <p className="text-xs text-gray-400 mt-4">
+          Test wallets with fake TESTUSD
+        </p>
       </div>
     );
   }
 
   return (
     <div className="bg-white p-6 rounded-xl border shadow-sm">
-      {/* Add sandbox banner */}
+      {/* Sandbox banner */}
       <div className="bg-purple-100 border border-purple-300 rounded-lg p-3 mb-4">
         <p className="text-purple-800 text-sm flex items-center">
           <span className="text-xl mr-2">🧪</span>
@@ -172,13 +186,17 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
       </div>
       <div className="space-y-2">
         <div className="text-sm font-mono bg-gray-50 p-2 rounded break-all">
-          {address}  {/* ✅ Shows full address */}
+          {address}
         </div>
         {balance && (
           <div className="text-sm text-gray-600">
             Balance: {balance} TESTUSD
           </div>
         )}
+        {/* ✅ Show wallet ID for debugging (optional) */}
+        <div className="text-xs text-gray-400">
+          Wallet ID: {localStorage.getItem('walletId') || 'pending'}
+        </div>
       </div>
     </div>
   );
