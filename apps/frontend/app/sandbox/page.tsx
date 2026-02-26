@@ -8,8 +8,9 @@ import { PriceFeed } from '@/components/features/sandbox/PriceFeed';
 import { ContractTester } from '@/components/features/sandbox/ContractTester';
 import UniversalWalletV2 from '@/components/UniversalWalletV2';
 
-// Define the Wallet type
+// Define the Wallet type - MATCH TestWallet interface
 interface Wallet {
+  id: string;           
   name: string;
   address: string;
   balance: string;
