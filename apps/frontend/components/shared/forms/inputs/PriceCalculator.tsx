@@ -7,6 +7,7 @@ interface PriceCalculatorProps {
   weight: number;
   weightUnit: 'troy_oz' | 'grams' | 'ounces';
   purity: number;
+  spotPrice: number;  // ✅ ADD THIS
   onPriceUpdate: (price: number) => void;
 }
 
@@ -15,21 +16,12 @@ export default function PriceCalculator({
   weight,
   weightUnit,
   purity,
+  spotPrice,  // ✅ ADD THIS
   onPriceUpdate,
 }: PriceCalculatorProps) {
-  const [spotPrice, setSpotPrice] = useState<number>(0);
   const [premiumPercent, setPremiumPercent] = useState<number>(5);
   const [isCollectible, setIsCollectible] = useState<boolean>(false);
   const [collectiblePremium, setCollectiblePremium] = useState<number>(0);
-
-  // Suggested spot prices (reference only)
-  const SUGGESTED_SPOT: Record<string, number> = {
-    'Gold': 4966,
-    'Silver': 77.69,
-    'Platinum': 2099,
-    'Palladium': 1682,
-    'Other': 0
-  };
 
   // Convert to troy oz
   const convertToTroyOz = (): number => {
@@ -44,7 +36,7 @@ export default function PriceCalculator({
   // Calculate all prices
   const calculatePrices = () => {
     const troyOz = convertToTroyOz();
-    const pureMetalValue = troyOz * spotPrice;
+    const pureMetalValue = troyOz * spotPrice;  // ✅ Use passed spotPrice
     const actualMetalValue = pureMetalValue * purity;
     const premiumValue = actualMetalValue * (premiumPercent / 100);
     const collectibleValue = isCollectible ? 
@@ -76,31 +68,20 @@ export default function PriceCalculator({
     <div className="space-y-6 p-4 border rounded-lg bg-white">
       <h3 className="text-lg font-semibold text-gray-900">Pricing Calculator</h3>
       
-      {/* Spot Price Input */}
-      <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Spot Price (per troy ounce)
-          <span className="ml-2 text-sm text-gray-500">
-            Current market: ${SUGGESTED_SPOT[metalType]?.toLocaleString()}
+      {/* Spot Price Display */}
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-medium text-blue-900">
+            Spot Price (per troy ounce)
           </span>
-        </label>
-        <div className="flex items-center space-x-3">
-          <div className="flex-1">
-            <input
-              type="number"
-              value={spotPrice || ''}
-              onChange={(e) => setSpotPrice(parseFloat(e.target.value) || 0)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Enter current spot price"
-            />
+          <div className="text-right">
+            <span className="text-xl font-bold text-blue-700">
+              ${spotPrice.toFixed(2)}
+            </span>
+            <span className="text-xs text-blue-500 block">
+              Current market for {metalType}
+            </span>
           </div>
-          <button
-            type="button"
-            onClick={() => setSpotPrice(SUGGESTED_SPOT[metalType] || 0)}
-            className="px-4 py-2 text-sm bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200"
-          >
-            Use Suggested
-          </button>
         </div>
       </div>
 
@@ -211,7 +192,7 @@ export default function PriceCalculator({
           </div>
         </div>
         <div className="mt-3 text-xs text-gray-500">
-          <div>Based on: {troyOz.toFixed(4)} troy oz × ${spotPrice}/oz × {purity} purity</div>
+          <div>Based on: {troyOz.toFixed(4)} troy oz × ${spotPrice.toFixed(2)}/oz × {purity} purity</div>
         </div>
       </div>
 
