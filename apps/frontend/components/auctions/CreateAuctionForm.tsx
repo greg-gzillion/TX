@@ -35,6 +35,7 @@ export default function CreateAuctionForm() {
     platinum: 2254.00,
     palladium: 1754.00
   });
+  const [lastUpdated, setLastUpdated] = useState('');
   
   // Basic Info
   const [metalType, setMetalType] = useState<'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other'>('Gold');
@@ -55,7 +56,8 @@ export default function CreateAuctionForm() {
   
   // Details
   const [serialNumber, setSerialNumber] = useState<string>('');
-  const [images, setImages] = useState<any[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [videoUrl, setVideoUrl] = useState<string>('');
   
   // Pricing
@@ -76,6 +78,7 @@ export default function CreateAuctionForm() {
             platinum: data.data.platinum,
             palladium: data.data.palladium
           });
+          setLastUpdated(new Date(data.data.createdAt).toLocaleString());
         }
       } catch (error) {
         console.error('Failed to fetch prices:', error);
@@ -90,12 +93,21 @@ export default function CreateAuctionForm() {
     setIsSandbox(urlParams.get('sandbox') === 'true');
   }, []);
 
+  // Handle image selection
+  const handleImageChange = (files: File[]) => {
+    setImages(files);
+    
+    // Create preview URLs
+    const previews = files.map(file => URL.createObjectURL(file));
+    setImagePreviews(previews);
+  };
+
   // Upload images to Pinata
   const uploadImagesToPinata = async (files: File[]): Promise<string[]> => {
     const pinataJwt = process.env.NEXT_PUBLIC_PINATA_JWT;
     if (!pinataJwt) {
-      console.warn('Pinata JWT not configured, using local URLs');
-      return files.map(f => URL.createObjectURL(f));
+      console.warn('Pinata JWT not configured');
+      return [];
     }
 
     const uploadPromises = files.map(async (file) => {
@@ -115,15 +127,27 @@ export default function CreateAuctionForm() {
         return `https://gateway.pinata.cloud/ipfs/${data.IpfsHash}`;
       } catch (error) {
         console.error('Error uploading to Pinata:', error);
-        return URL.createObjectURL(file); // Fallback to local URL
+        return null;
       }
     });
 
-    return Promise.all(uploadPromises);
+    const results = await Promise.all(uploadPromises);
+    return results.filter(url => url !== null) as string[];
   };
 
   const handleCertificationChange = (cert: CertificationType) => {
     setCertification(cert);
+  };
+
+  // Get current spot price based on metal type
+  const getCurrentSpotPrice = () => {
+    switch(metalType) {
+      case 'Gold': return spotPrices.gold;
+      case 'Silver': return spotPrices.silver;
+      case 'Platinum': return spotPrices.platinum;
+      case 'Palladium': return spotPrices.palladium;
+      default: return 0;
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -141,6 +165,7 @@ export default function CreateAuctionForm() {
       let imageUrls: string[] = [];
       if (images.length > 0) {
         imageUrls = await uploadImagesToPinata(images);
+        console.log(`📸 Uploaded ${imageUrls.length} images to Pinata`);
       }
 
       // Generate item ID
@@ -166,6 +191,7 @@ export default function CreateAuctionForm() {
           ...spotPrices,
           timestamp: new Date().toISOString()
         },
+        estimatedValue,
         created: new Date().toISOString(),
       };
 
@@ -195,7 +221,7 @@ export default function CreateAuctionForm() {
         });
         localStorage.setItem('mockAuctions', JSON.stringify(mockAuctions));
         
-        alert(`🧪 SANDBOX: Test auction created!\n\nItem: ${metalType} ${formType}\nPrice: ${startingPrice} TESTUSD\nImages: ${imageUrls.length} uploaded`);
+        alert(`🧪 SANDBOX: Test auction created!\n\nItem: ${metalType} ${formType}\nPrice: ${startingPrice} TESTUSD\nImages: ${imageUrls.length} uploaded to IPFS`);
         
         router.push('/sandbox?tab=auctions');
         return;
@@ -225,17 +251,6 @@ export default function CreateAuctionForm() {
     }
   };
 
-  // Get current spot price based on metal type
-  const getCurrentSpotPrice = () => {
-    switch(metalType) {
-      case 'Gold': return spotPrices.gold;
-      case 'Silver': return spotPrices.silver;
-      case 'Platinum': return spotPrices.platinum;
-      case 'Palladium': return spotPrices.palladium;
-      default: return 0;
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       {/* Sandbox Banner */}
@@ -259,44 +274,133 @@ export default function CreateAuctionForm() {
               ? "🧪 Test listing - no real value" 
               : "List your gold, silver, platinum, or palladium for sale"}
           </p>
-          {/* Show current spot prices */}
-          <div className="mt-4 p-3 bg-blue-50 rounded-lg text-sm">
-            <span className="font-medium">Current Market Prices:</span>
-            <div className="grid grid-cols-4 gap-2 mt-2">
-              <div>🥇 Gold: ${spotPrices.gold.toFixed(2)}</div>
-              <div>🥈 Silver: ${spotPrices.silver.toFixed(2)}</div>
-              <div>🔷 Platinum: ${spotPrices.platinum.toFixed(2)}</div>
-              <div>🔶 Palladium: ${spotPrices.palladium.toFixed(2)}</div>
+          
+          {/* Price Banner */}
+          <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex justify-between items-center">
+              <span className="font-medium text-blue-900">Current Market Prices:</span>
+              {lastUpdated && (
+                <span className="text-xs text-blue-600">Updated: {lastUpdated}</span>
+              )}
             </div>
-            <p className="text-xs text-gray-500 mt-2">Prices from database • Updated on page load</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
+              <div className="bg-white p-2 rounded shadow-sm">
+                <span className="text-xs text-amber-600 block">GOLD</span>
+                <span className="text-lg font-bold">${spotPrices.gold.toFixed(2)}</span>
+              </div>
+              <div className="bg-white p-2 rounded shadow-sm">
+                <span className="text-xs text-gray-600 block">SILVER</span>
+                <span className="text-lg font-bold">${spotPrices.silver.toFixed(2)}</span>
+              </div>
+              <div className="bg-white p-2 rounded shadow-sm">
+                <span className="text-xs text-slate-600 block">PLATINUM</span>
+                <span className="text-lg font-bold">${spotPrices.platinum.toFixed(2)}</span>
+              </div>
+              <div className="bg-white p-2 rounded shadow-sm">
+                <span className="text-xs text-zinc-600 block">PALLADIUM</span>
+                <span className="text-lg font-bold">${spotPrices.palladium.toFixed(2)}</span>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              ⚡ Prices loaded from database. Refresh page to update.
+            </p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Step 1-5: Same as before */}
-          {/* ... */}
-
-          {/* Video Option - Either remove or make optional */}
+          {/* Step 1: Basic Info */}
           <section className="bg-white p-6 rounded-xl border shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Video (Optional)</h2>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                YouTube/Vimeo URL
-              </label>
-              <input
-                type="url"
-                value={videoUrl}
-                onChange={(e) => setVideoUrl(e.target.value)}
-                placeholder="https://youtube.com/watch?v=..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              />
-              <p className="text-xs text-gray-500 mt-2">
-                Add a video demonstration (max 20 seconds recommended)
-              </p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">1. Basic Information</h2>
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-4">Metal Type</label>
+                <MetalSelector value={metalType} onChange={setMetalType} />
+              </div>
+              <div>
+                <FormTypeSelector value={formType} onChange={setFormType} />
+              </div>
             </div>
           </section>
 
-          {/* Step 5: Pricing with real spot prices */}
+          {/* Step 2: Weight & Purity */}
+          <section className="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">2. Weight & Purity</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <WeightInput
+                  value={weight}
+                  unit={weightUnit}
+                  onChange={(newValue, newUnit) => {
+                    setWeight(newValue);
+                    setWeightUnit(newUnit);
+                  }}
+                />
+              </div>
+              <div>
+                <PuritySelector 
+                  metalType={metalType} 
+                  value={purity} 
+                  onChange={setPurity} 
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Step 3: Certification */}
+          <section className="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">3. Certification & Grading</h2>
+            <CertificationInput
+              value={certification}
+              onChange={handleCertificationChange}
+            />
+          </section>
+
+          {/* Step 4: Details & Photos */}
+          <section className="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">4. Details & Photos</h2>
+            <div className="space-y-6">
+              <div>
+                <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
+              </div>
+              
+              {/* Image Uploader - FIXED */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Item Photos
+                </label>
+                <ImageUploader 
+                  images={images}
+                  previews={imagePreviews}
+                  onChange={handleImageChange}
+                  maxFiles={5}
+                  maxSizeMB={2}
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Max 5 images, 2MB each. First image is the primary thumbnail.
+                  {process.env.NEXT_PUBLIC_PINATA_JWT ? ' 📤 Uploading to IPFS via Pinata' : ' ⚠️ Pinata not configured'}
+                </p>
+              </div>
+
+              {/* Video Option */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Video URL (Optional)
+                </label>
+                <input
+                  type="url"
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="https://youtube.com/watch?v=..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                />
+                <p className="text-xs text-gray-500 mt-2">
+                  Add a YouTube or Vimeo link for a video demonstration
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Step 5: Pricing - FIXED with real spot price */}
           <section className="bg-white p-6 rounded-xl border shadow-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Set Your Price</h2>
             <PriceCalculator
@@ -304,67 +408,82 @@ export default function CreateAuctionForm() {
               weight={weight}
               weightUnit={weightUnit}
               purity={purity}
-              spotPrice={getCurrentSpotPrice()} // Pass real spot price
+              spotPrice={getCurrentSpotPrice()} // ✅ PASSING REAL SPOT PRICE
               onPriceUpdate={setEstimatedValue}
             />
           </section>
 
-          {/* Step 6: Auction Settings with correct currency */}
-          <section className="bg-white p-6 rounded-xl border shadow-sm">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Starting Price ({isSandbox ? 'TESTUSD' : 'CORE'})
-                </label>
-                <input
-                  type="number"
-                  value={startingPrice}
-                  onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
-                  min={isSandbox ? "1" : "10"}
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 CORE"}
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Buy Now Price ({isSandbox ? 'TESTUSD' : 'CORE'}) (Optional)
-                </label>
-                <input
-                  type="number"
-                  value={buyNowPrice || ''}
-                  onChange={(e) => setBuyNowPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
-                  min={startingPrice + (isSandbox ? 1 : 10)}
-                  step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder="Optional instant buy"
-                />
-              </div>
-            </div>
-          </section>
+          {/* Step 6: Auction Settings */}
+<section className="bg-white p-6 rounded-xl border shadow-sm">
+  <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
+  <div className="grid md:grid-cols-2 gap-6">
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        Starting Price ({isSandbox ? 'TESTUSD' : 'CORE'})  {/* ✅ FIXED */}
+      </label>
+      <input
+        type="number"
+        value={startingPrice}
+        onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
+        min={isSandbox ? "1" : "10"}
+        step="0.01"
+        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+        placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 CORE"}
+        required
+      />
+    </div>
+    <div>
+      <label className="block text-sm font-medium text-gray-700 mb-2">
+        Buy Now Price ({isSandbox ? 'TESTUSD' : 'CORE'}) (Optional)  {/* ✅ FIXED */}
+      </label>
+      <input
+        type="number"
+        value={buyNowPrice || ''}
+        onChange={(e) => setBuyNowPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
+        min={startingPrice + (isSandbox ? 1 : 10)}
+        step="0.01"
+        className="w-full px-3 py-2 border border-gray-300 rounded-md"
+        placeholder="Optional instant buy"
+      />
+    </div>
+  </div>
+</section>
 
-          {/* Submit button */}
-          <div className="bg-white p-6 rounded-xl border shadow-sm">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-semibold">Ready to List</h3>
-                <p className="text-sm text-gray-600">
-                  {isSandbox ? 'Test listing - no real funds' : 'Your item will be listed for auction'}
-                </p>
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {isSubmitting ? 'Creating...' : isSandbox ? 'Create Test Auction' : 'Create Auction'}
-              </button>
-            </div>
-          </div>
+          {/* Estimated Value Display */}
+{estimatedValue > 0 && (
+  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+    <div className="flex justify-between items-center">
+      <span className="font-medium text-green-800">Estimated Value:</span>
+      <span className="text-xl font-bold text-green-700">
+        ${estimatedValue.toFixed(2)} {isSandbox ? 'TESTUSD' : 'CORE'}  {/* ✅ FIXED */}
+      </span>
+    </div>
+    <p className="text-xs text-green-600 mt-2">
+      Based on calculator with current spot price
+    </p>
+  </div>
+)}
+
+          {/* Submit Button */}
+<div className="bg-white p-6 rounded-xl border shadow-sm">
+  <div className="flex justify-between items-center">
+    <div>
+      <h3 className="text-lg font-semibold">Ready to List</h3>
+      <p className="text-sm text-gray-600">
+        {isSandbox ? 'Test listing - no real funds' : 'Your item will be listed for auction'}
+      </p>
+    </div>
+    <button
+      type="submit"
+      disabled={isSubmitting}
+      className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
+        isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+      }`}
+    >
+      {isSubmitting ? 'Creating...' : isSandbox ? 'Create Test Auction' : 'Create Auction'}
+    </button>
+  </div>
+</div>
         </form>
       </div>
     </div>
