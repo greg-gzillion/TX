@@ -56,8 +56,7 @@ export default function CreateAuctionForm() {
   
   // Details
   const [serialNumber, setSerialNumber] = useState<string>('');
-  const [images, setImages] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [images, setImages] = useState<any[]>([]);  // ImageUploader uses this format
   const [videoUrl, setVideoUrl] = useState<string>('');
   
   // Pricing
@@ -93,24 +92,25 @@ export default function CreateAuctionForm() {
     setIsSandbox(urlParams.get('sandbox') === 'true');
   }, []);
 
-  // Handle image selection
-  const handleImageChange = (files: File[]) => {
-    setImages(files);
-    
-    // Create preview URLs
-    const previews = files.map(file => URL.createObjectURL(file));
-    setImagePreviews(previews);
+  // Handle image change from ImageUploader
+  const handleImageChange = (newImages: any[]) => {
+    setImages(newImages);
   };
 
   // Upload images to Pinata
-  const uploadImagesToPinata = async (files: File[]): Promise<string[]> => {
+  const uploadImagesToPinata = async (imageArray: any[]): Promise<string[]> => {
     const pinataJwt = process.env.NEXT_PUBLIC_PINATA_JWT;
     if (!pinataJwt) {
       console.warn('Pinata JWT not configured');
       return [];
     }
 
-    const uploadPromises = files.map(async (file) => {
+    const uploadPromises = imageArray.map(async (img) => {
+      // Convert base64 to blob
+      const response = await fetch(img.src);
+      const blob = await response.blob();
+      const file = new File([blob], img.name, { type: img.type });
+
       const formData = new FormData();
       formData.append('file', file);
 
@@ -363,17 +363,14 @@ export default function CreateAuctionForm() {
                 <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
               </div>
               
-              {/* Image Uploader - FIXED */}
+              {/* Image Uploader - FIXED: removed previews prop */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Item Photos
                 </label>
                 <ImageUploader 
                   images={images}
-                  previews={imagePreviews}
                   onChange={handleImageChange}
-                  maxFiles={5}
-                  maxSizeMB={2}
                 />
                 <p className="text-xs text-gray-500 mt-2">
                   Max 5 images, 2MB each. First image is the primary thumbnail.
@@ -400,7 +397,7 @@ export default function CreateAuctionForm() {
             </div>
           </section>
 
-          {/* Step 5: Pricing - FIXED with real spot price */}
+          {/* Step 5: Pricing - with real spot price */}
           <section className="bg-white p-6 rounded-xl border shadow-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Set Your Price</h2>
             <PriceCalculator
@@ -408,82 +405,82 @@ export default function CreateAuctionForm() {
               weight={weight}
               weightUnit={weightUnit}
               purity={purity}
-              spotPrice={getCurrentSpotPrice()} // ✅ PASSING REAL SPOT PRICE
+              spotPrice={getCurrentSpotPrice()}
               onPriceUpdate={setEstimatedValue}
             />
           </section>
 
           {/* Step 6: Auction Settings */}
-<section className="bg-white p-6 rounded-xl border shadow-sm">
-  <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
-  <div className="grid md:grid-cols-2 gap-6">
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Starting Price ({isSandbox ? 'TESTUSD' : 'CORE'})  {/* ✅ FIXED */}
-      </label>
-      <input
-        type="number"
-        value={startingPrice}
-        onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
-        min={isSandbox ? "1" : "10"}
-        step="0.01"
-        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 CORE"}
-        required
-      />
-    </div>
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-2">
-        Buy Now Price ({isSandbox ? 'TESTUSD' : 'CORE'}) (Optional)  {/* ✅ FIXED */}
-      </label>
-      <input
-        type="number"
-        value={buyNowPrice || ''}
-        onChange={(e) => setBuyNowPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
-        min={startingPrice + (isSandbox ? 1 : 10)}
-        step="0.01"
-        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-        placeholder="Optional instant buy"
-      />
-    </div>
-  </div>
-</section>
+          <section className="bg-white p-6 rounded-xl border shadow-sm">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Starting Price ({isSandbox ? 'TESTUSD' : 'CORE'})
+                </label>
+                <input
+                  type="number"
+                  value={startingPrice}
+                  onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
+                  min={isSandbox ? "1" : "10"}
+                  step="0.01"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 CORE"}
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Buy Now Price ({isSandbox ? 'TESTUSD' : 'CORE'}) (Optional)
+                </label>
+                <input
+                  type="number"
+                  value={buyNowPrice || ''}
+                  onChange={(e) => setBuyNowPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
+                  min={startingPrice + (isSandbox ? 1 : 10)}
+                  step="0.01"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  placeholder="Optional instant buy"
+                />
+              </div>
+            </div>
+          </section>
 
           {/* Estimated Value Display */}
-{estimatedValue > 0 && (
-  <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-    <div className="flex justify-between items-center">
-      <span className="font-medium text-green-800">Estimated Value:</span>
-      <span className="text-xl font-bold text-green-700">
-        ${estimatedValue.toFixed(2)} {isSandbox ? 'TESTUSD' : 'CORE'}  {/* ✅ FIXED */}
-      </span>
-    </div>
-    <p className="text-xs text-green-600 mt-2">
-      Based on calculator with current spot price
-    </p>
-  </div>
-)}
+          {estimatedValue > 0 && (
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-green-800">Estimated Value:</span>
+                <span className="text-xl font-bold text-green-700">
+                  ${estimatedValue.toFixed(2)} {isSandbox ? 'TESTUSD' : 'CORE'}
+                </span>
+              </div>
+              <p className="text-xs text-green-600 mt-2">
+                Based on calculator with current spot price
+              </p>
+            </div>
+          )}
 
           {/* Submit Button */}
-<div className="bg-white p-6 rounded-xl border shadow-sm">
-  <div className="flex justify-between items-center">
-    <div>
-      <h3 className="text-lg font-semibold">Ready to List</h3>
-      <p className="text-sm text-gray-600">
-        {isSandbox ? 'Test listing - no real funds' : 'Your item will be listed for auction'}
-      </p>
-    </div>
-    <button
-      type="submit"
-      disabled={isSubmitting}
-      className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
-        isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-      }`}
-    >
-      {isSubmitting ? 'Creating...' : isSandbox ? 'Create Test Auction' : 'Create Auction'}
-    </button>
-  </div>
-</div>
+          <div className="bg-white p-6 rounded-xl border shadow-sm">
+            <div className="flex justify-between items-center">
+              <div>
+                <h3 className="text-lg font-semibold">Ready to List</h3>
+                <p className="text-sm text-gray-600">
+                  {isSandbox ? 'Test listing - no real funds' : 'Your item will be listed for auction'}
+                </p>
+              </div>
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
+                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
+              >
+                {isSubmitting ? 'Creating...' : isSandbox ? 'Create Test Auction' : 'Create Auction'}
+              </button>
+            </div>
+          </div>
         </form>
       </div>
     </div>
