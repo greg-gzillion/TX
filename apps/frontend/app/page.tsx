@@ -2,201 +2,186 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import NavBar from '@/components/layout/NavBar';
-import { Button } from '@/components/shared/ui/Button';
 import { Search } from 'lucide-react';
-import PriceBanner from '@/components/shared/ui/PriceBanner';
-import PhoenixIcon from '@/components/phoenix/PhoenixIcon';
-import Tools from '@/components/phoenix/Tools';
+
+declare global {
+  interface Window {
+    keplr?: any;
+    leap?: any;
+  }
+}
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [keplrAddress, setKeplrAddress] = useState('');
+  const [leapAddress, setLeapAddress] = useState('');
+
+  const connectKeplr = async () => {
+    try {
+      if (!window.keplr) {
+        window.open('https://www.keplr.app/download', '_blank');
+        return;
+      }
+      
+      await window.keplr.enable('coreum-testnet-1');
+      const offlineSigner = window.keplr.getOfflineSigner('coreum-testnet-1');
+      const accounts = await offlineSigner.getAccounts();
+      setKeplrAddress(accounts[0].address);
+    } catch (error) {
+      console.error('Keplr connection error:', error);
+    }
+  };
+
+  const connectLeap = async () => {
+    try {
+      if (!window.leap) {
+        window.open('https://www.leapwallet.io/download', '_blank');
+        return;
+      }
+      
+      await window.leap.enable('coreum-testnet-1');
+      const offlineSigner = window.leap.getOfflineSigner('coreum-testnet-1');
+      const accounts = await offlineSigner.getAccounts();
+      setLeapAddress(accounts[0].address);
+    } catch (error) {
+      console.error('Leap connection error:', error);
+    }
+  };
+
+  const disconnectKeplr = () => {
+    setKeplrAddress('');
+  };
+
+  const disconnectLeap = () => {
+    setLeapAddress('');
+  };
 
   return (
-    <div className="min-h-screen bg-white">
-      <NavBar />
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Header with wallet buttons */}
+      <div className="border-b p-3 flex justify-between items-center max-w-5xl mx-auto w-full">
+        <div className="flex items-center gap-4">
+          <span className="font-bold text-xl">PhoenixPME</span>
+          <Link href="/auctions" className="text-gray-600 hover:text-gray-900">Browse</Link>
+          <Link href="/create" className="text-gray-600 hover:text-gray-900">Create</Link>
+        </div>
+        <div className="flex gap-2">
+          {keplrAddress ? (
+            <div className="flex items-center gap-2">
+              <span className="text-sm bg-gray-100 px-3 py-1 rounded">
+                {keplrAddress.slice(0,6)}...{keplrAddress.slice(-4)}
+              </span>
+              <button 
+                onClick={disconnectKeplr}
+                className="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={connectKeplr}
+              className="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-amber-600"
+            >
+              Keplr
+            </button>
+          )}
+          
+          {leapAddress ? (
+            <div className="flex items-center gap-2">
+              <span className="text-sm bg-gray-100 px-3 py-1 rounded">
+                {leapAddress.slice(0,6)}...{leapAddress.slice(-4)}
+              </span>
+              <button 
+                onClick={disconnectLeap}
+                className="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
+              >
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button 
+              onClick={connectLeap}
+              className="bg-amber-500 text-white px-3 py-1 rounded text-sm hover:bg-amber-600"
+            >
+              Leap
+            </button>
+          )}
+        </div>
+      </div>
       
-      <main className="w-full max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      {/* Main content - everything except icon */}
+      <main className="flex-1 max-w-5xl mx-auto px-4 py-8 w-full">
         
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="flex justify-center mb-6">
-            <PhoenixIcon />
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold mb-3">
-            <span className="phoenix-gradient-text">Phoenix</span>
-            <span className="text-gray-900">PME</span>
-          </h1>
-          <p className="text-xl text-amber-600 font-semibold mb-3">
-            Precious Metal Exchange
-          </p>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Direct peer-to-peer. No middlemen. No hidden fees.
-          </p>
-        </div>
-
-        {/* Search Bar */}
-        <div className="max-w-2xl mx-auto mb-12">
+        {/* Search bar */}
+        <div className="max-w-2xl mx-auto mb-4">
           <div className="flex gap-2">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for gold, silver, platinum..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-              />
-            </div>
-            <Button variant="gold" className="px-6 whitespace-nowrap">
-              Search
-            </Button>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-4 mt-4 text-sm text-gray-600">
-            <Link href="/auctions?metal=gold" className="hover:text-amber-600">Gold</Link>
-            <Link href="/auctions?metal=silver" className="hover:text-amber-600">Silver</Link>
-            <Link href="/auctions?metal=platinum" className="hover:text-amber-600">Platinum</Link>
-            <Link href="/auctions?metal=palladium" className="hover:text-amber-600">Palladium</Link>
-            <Link href="/auctions?form=coin" className="hover:text-amber-600">Coins</Link>
-            <Link href="/auctions?form=bar" className="hover:text-amber-600">Bars</Link>
+            <input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search gold, silver, platinum..."
+              className="flex-1 px-4 py-2 border rounded-lg"
+            />
+            <button className="bg-amber-500 text-white px-6 rounded-lg">Search</button>
           </div>
         </div>
-
-        {/* Disclaimer - Single line version */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
-            <p className="text-yellow-700 text-sm">
-              🧪 Experimental Testnet Software. No real funds. Open source code.
-            </p>
+        
+        {/* Categories */}
+        <div className="flex justify-center gap-4 mb-4 text-sm">
+          <Link href="/auctions?metal=gold" className="text-gray-700 hover:text-amber-600">Gold</Link>
+          <Link href="/auctions?metal=silver" className="text-gray-700 hover:text-amber-600">Silver</Link>
+          <Link href="/auctions?metal=platinum" className="text-gray-700 hover:text-amber-600">Platinum</Link>
+          <Link href="/auctions?metal=palladium" className="text-gray-700 hover:text-amber-600">Palladium</Link>
+          <Link href="/auctions?form=coin" className="text-gray-700 hover:text-amber-600">Coins</Link>
+          <Link href="/auctions?form=bar" className="text-gray-700 hover:text-amber-600">Bars</Link>
+        </div>
+        
+        {/* Disclaimer */}
+        <div className="max-w-2xl mx-auto mb-4">
+          <div className="bg-yellow-50 border border-yellow-200 rounded p-2 text-center text-xs text-yellow-700">
+            🧪 Testnet • No real funds
           </div>
         </div>
-
-        {/* Comparison Cards */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl">🏛️</span>
-                <h3 className="text-xl font-bold">Traditional Platforms</h3>
-              </div>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-400 font-bold">•</span>
-                  <span>10-15% fees — gone forever</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-400 font-bold">•</span>
-                  <span>Fees are higher to cover costs and pay shareholders</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-400 font-bold">•</span>
-                  <span>Users have no ability to direct decisions</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-gray-400 font-bold">•</span>
-                  <span>Centralized entities have final authority</span>
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-amber-50 rounded-lg p-6 border border-amber-200">
-              <div className="flex items-center gap-2 mb-4">
-                <span className="text-2xl">⚙️</span>
-                <h3 className="text-xl font-bold text-amber-900">PhoenixPME</h3>
-              </div>
-              <ul className="space-y-2 text-sm">
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">✓</span>
-                  <span>10% collateral — <span className="font-semibold">returned</span> upon successful completion</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">✓</span>
-                  <span>1.1% fees to <span className="font-semibold">Community Reserve Fund</span> — predominately user controlled</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">✓</span>
-                  <span>Users accumulate <span className="font-semibold">voting weight</span> to direct CRF utilization</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-green-600 font-bold">✓</span>
-                  <span>48-hour buyer verification period</span>
-                </li>
-              </ul>
-            </div>
-          </div>
+        
+        {/* Price banner */}
+        <div className="max-w-3xl mx-auto mb-6 bg-gray-50 p-3 rounded text-center">
+          <span className="font-medium">Reference: </span>
+          🥇 $5186.70 • 🥈 $89.10 • 🔷 $2298.00 • 🔶 $1798.00
+          <div className="text-xs text-gray-500 mt-1">Prices updated manually</div>
         </div>
-
-        {/* Tagline */}
-        <div className="max-w-2xl mx-auto text-center mb-12 border-t border-b border-gray-200 py-6">
-          <p className="text-xl">
-            <span className="line-through text-gray-400 mr-2">10% fees?</span>
-            <span className="font-semibold text-amber-600">10% collateral — returned.</span>
-          </p>
-        </div>
-
-        {/* PHNX & Reputation */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <div className="bg-white border border-gray-200 rounded-lg p-8">
-            <h3 className="text-xl font-bold mb-6 text-center">How Participation is Recorded</h3>
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="text-center">
-                <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-3xl">🪙</span>
-                </div>
-                <p className="font-semibold mb-1">PHNX Governance</p>
-                <p className="text-sm text-gray-600">0.9 to buyer • 0.1 developer</p>
-                <p className="text-xs text-gray-400 mt-2">No cash value</p>
-              </div>
-              <div className="text-center">
-                <div className="bg-amber-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <span className="text-3xl">⭐</span>
-                </div>
-                <p className="font-semibold mb-1">TRUST / DONT TRUST</p>
-                <p className="text-sm text-gray-600">Permanent on-chain reputation</p>
-                <p className="text-xs text-gray-400 mt-2">Amendable only under extenuating circumstances</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Price Banner */}
-        <div className="max-w-3xl mx-auto mb-12">
-          <PriceBanner />
-        </div>
-
-        {/* Featured Auctions */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="flex justify-between items-center mb-4">
+        
+        {/* Featured auctions */}
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-center mb-3">
             <h2 className="text-xl font-bold">Featured Auctions</h2>
-            <Link href="/auctions" className="text-amber-600 text-sm hover:underline">
-              View all →
-            </Link>
+            <Link href="/auctions" className="text-amber-600">View all →</Link>
           </div>
           
-          <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-            <p className="text-gray-500 mb-2">🚀 First auctions go live March 6, 2026</p>
-            <p className="text-2xl mb-2">🥇 Gold • 🥈 Silver • 🔷 Platinum • 🔶 Palladium</p>
-            <p className="text-sm text-gray-400">Be the first to create an auction</p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="border rounded-lg p-3">
+                <div className="h-16 bg-gray-100 rounded mb-2 flex items-center justify-center text-3xl">🥇</div>
+                <p className="font-medium">Gold American Eagle</p>
+                <p className="text-xs text-gray-600">1 oz • .9999</p>
+                <p className="text-amber-700 font-bold mt-1">$2,845</p>
+              </div>
+            ))}
           </div>
         </div>
-
-        {/* Tools */}
-        <Tools />
-
-        {/* CTA */}
-        <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 p-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-3">🚀 Be Part of the First Wave</h2>
-          <p className="text-gray-700 mb-6 max-w-xl mx-auto">Join the first community of peer-to-peer precious metals traders.</p>
-          <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <Button variant="gold" size="lg" href="/auctions/create" className="text-base">Create Auction (March 6)</Button>
-            <Button variant="outline" size="lg" href="/auctions" className="text-base">View Demo Auctions</Button>
-          </div>
-          <p className="text-xs text-gray-500 mt-4">🔥 March 6, 2026 — TX testnet launch. Be ready.</p>
-        </div>
-
+        
+        {/* Date */}
+        <p className="text-center text-gray-500 text-xs mt-6">March 6, 2026 — TX Testnet Launch</p>
+        
       </main>
+      
+      {/* BIRD ICON - AT THE BOTTOM OF THE PAGE */}
+      <div className="w-full py-8 flex justify-center border-t">
+        <img 
+          src="/phoenix-logo.png" 
+          alt="Phoenix" 
+          className="w-12 h-12 rounded-full border-2 border-amber-400"
+        />
+      </div>
     </div>
   );
 }
-
