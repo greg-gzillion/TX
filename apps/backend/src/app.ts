@@ -10,6 +10,9 @@ import healthRoutes from './routes/health.routes';
 import sandboxRoutes from './routes/sandbox.routes';
 import priceRoutes from './routes/price.routes';
 import adminRoutes from './routes/admin.routes';
+import uploadRoutes from './routes/upload.routes';
+
+app.use('/api/upload', uploadRoutes);
 
 // Import middleware
 import { requestLogger } from './middleware/requestLogger';
