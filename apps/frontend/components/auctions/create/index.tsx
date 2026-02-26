@@ -1,17 +1,16 @@
 'use client';
 
-import { useAuctionForm } from './hooks/useAuctionForm';
-import { HonestyBanner } from './displays/HonestyBanner';
-import { PriceBanner } from './displays/PriceBanner';
-import { BasicInfoStep } from './steps/BasicInfoStep';
-import { WeightPurityStep } from './steps/WeightPurityStep';
-import { CertificationStep } from './steps/CertificationStep';
-import { DetailsPhotosStep } from './steps/DetailsPhotosStep';
-import { PricingStep } from './steps/PricingStep';
-import { AuctionSettingsStep } from './steps/AuctionSettingsStep';
-import { EstimatedValueDisplay } from './displays/EstimatedValueDisplay';
-import { FeeDisplay } from './displays/FeeDisplay';
-import { SubmitButton } from './displays/SubmitButton';
+import HonestyBanner from './displays/HonestyBanner';
+import PriceBanner from './displays/PriceBanner';
+import BasicInfoStep from './steps/BasicInfoStep';
+import WeightPurityStep from './steps/WeightPurityStep';
+import CertificationStep from './steps/CertificationStep';
+import DetailsPhotosStep from './steps/DetailsPhotosStep';
+import PricingStep from './steps/PricingStep';
+import AuctionSettingsStep from './steps/AuctionSettingsStep';
+import EstimatedValueDisplay from './displays/EstimatedValueDisplay';
+import FeeDisplay from './displays/FeeDisplay';
+import SubmitButton from './displays/SubmitButton';
 
 export default function CreateAuctionForm() {
   const {
