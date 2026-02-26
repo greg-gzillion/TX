@@ -225,11 +225,11 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleCreateAuction} variant="primary" size="md">
-                    Create Mock Auction
-                  </Button>
-                  <Button onClick={() => setShowCreateForm(false)} variant="secondary" size="md">
-                    Cancel
-                  </Button>
+  Create Mock Auction
+</Button>
+<Button onClick={() => setShowCreateForm(false)} variant="outline" size="md">
+  Cancel
+</Button>
                 </div>
               </div>
             </div>
