@@ -23,6 +23,15 @@ type CertificationType = {
   certNumber?: string;
 };
 
+type CoinDetailsType = {
+  country: string;
+  mint: string;
+  year: string;
+  mintage: string;
+  isNumismatic: boolean;
+  grade: string;
+};
+
 export default function CreateAuctionForm() {
   const router = useRouter();
   const { address, isConnected } = useWallet();
@@ -56,8 +65,18 @@ export default function CreateAuctionForm() {
   
   // Details
   const [serialNumber, setSerialNumber] = useState<string>('');
-  const [images, setImages] = useState<any[]>([]);  // ImageUploader uses this format
+  const [images, setImages] = useState<any[]>([]);
   const [videoUrl, setVideoUrl] = useState<string>('');
+  
+  // Coin-specific fields
+  const [coinDetails, setCoinDetails] = useState<CoinDetailsType>({
+    country: '',
+    mint: '',
+    year: '',
+    mintage: '',
+    isNumismatic: false,
+    grade: ''
+  });
   
   // Pricing
   const [estimatedValue, setEstimatedValue] = useState<number>(0);
@@ -88,8 +107,18 @@ export default function CreateAuctionForm() {
 
   // Check if we're in sandbox mode
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    setIsSandbox(urlParams.get('sandbox') === 'true');
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const sandboxParam = params.get('sandbox');
+      
+      if (sandboxParam === 'true') {
+        console.log('🔴 Setting sandbox mode to TRUE');
+        setIsSandbox(true);
+      } else {
+        console.log('🔴 Setting sandbox mode to FALSE');
+        setIsSandbox(false);
+      }
+    }
   }, []);
 
   // Handle image change from ImageUploader
@@ -106,7 +135,6 @@ export default function CreateAuctionForm() {
     }
 
     const uploadPromises = imageArray.map(async (img) => {
-      // Convert base64 to blob
       const response = await fetch(img.src);
       const blob = await response.blob();
       const file = new File([blob], img.name, { type: img.type });
@@ -161,17 +189,14 @@ export default function CreateAuctionForm() {
     setIsSubmitting(true);
 
     try {
-      // Upload images to Pinata first (if any)
       let imageUrls: string[] = [];
       if (images.length > 0) {
         imageUrls = await uploadImagesToPinata(images);
         console.log(`📸 Uploaded ${imageUrls.length} images to Pinata`);
       }
 
-      // Generate item ID
       const itemId = `${metalType.toLowerCase()}-${Date.now()}`;
       
-      // Create metadata with IPFS image URLs
       const metadata = {
         version: "1.0.0",
         schema: "phoenix-pme-auction-v1",
@@ -186,6 +211,7 @@ export default function CreateAuctionForm() {
           serialNumber: serialNumber || null,
           images: imageUrls,
           videoUrl: videoUrl || null,
+          ...(formType === 'coin' && { coinDetails }),
         },
         spotPrices: {
           ...spotPrices,
@@ -196,7 +222,6 @@ export default function CreateAuctionForm() {
       };
 
       if (isSandbox) {
-        // SANDBOX MODE - Store in localStorage
         console.log("🧪 SANDBOX: Creating mock auction", {
           itemId,
           metadata,
@@ -206,7 +231,6 @@ export default function CreateAuctionForm() {
           images: imageUrls.length > 0 ? `${imageUrls.length} uploaded to Pinata` : 'none'
         });
         
-        // Store in localStorage for sandbox
         const mockAuctions = JSON.parse(localStorage.getItem('mockAuctions') || '[]');
         mockAuctions.push({
           id: Date.now(),
@@ -227,16 +251,16 @@ export default function CreateAuctionForm() {
         return;
       }
 
-      // REAL MODE - Call contract with Pinata URLs in metadata
-      const startingPriceUcore = (startingPrice * 1_000_000).toString();
-      const reservePriceUcore = ((buyNowPrice || startingPrice) * 1_000_000).toString();
+      // REAL MODE - RLUSD on TX blockchain
+      const startingPriceMicro = (startingPrice * 1_000_000).toString();
+      const reservePriceMicro = ((buyNowPrice || startingPrice) * 1_000_000).toString();
 
       const result = await createAuction(
         itemId,
         JSON.stringify(metadata),
-        startingPriceUcore,
-        reservePriceUcore,
-        24 // duration hours
+        startingPriceMicro,
+        reservePriceMicro,
+        24
       );
 
       console.log("✅ Auction created:", result);
@@ -262,6 +286,9 @@ export default function CreateAuctionForm() {
               <span className="font-semibold">SANDBOX MODE:</span>
               <span className="ml-2">Creating a TEST auction - no real funds will be used</span>
             </p>
+            <p className="text-xs text-purple-600 mt-2 border-t border-purple-200 pt-2">
+              All prices shown in TESTUSD
+            </p>
           </div>
         </div>
       )}
@@ -272,8 +299,25 @@ export default function CreateAuctionForm() {
           <p className="text-gray-600 mt-2">
             {isSandbox 
               ? "🧪 Test listing - no real value" 
-              : "List your gold, silver, platinum, or palladium for sale"}
+              : "Design your listing for the TX blockchain"}
           </p>
+          
+          {/* Honesty Banner */}
+          <div className="mt-4 bg-blue-50 border border-blue-300 rounded-lg p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-2xl">⏳</span>
+              <span className="font-semibold text-blue-800">Testnet Coming Soon</span>
+            </div>
+            <p className="text-sm text-blue-700">
+              The TX testnet is not yet available. The protocol will begin testing when the testnet launches.
+              For now, you can preview the listing form and design your auction.
+            </p>
+            <div className="mt-3 flex gap-2">
+              <span className="text-xs bg-blue-200 text-blue-800 px-2 py-1 rounded">
+                🧪 Sandbox mode: {isSandbox ? 'Active' : 'Use ?sandbox=true to test'}
+              </span>
+            </div>
+          </div>
           
           {/* Price Banner */}
           <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
@@ -314,12 +358,168 @@ export default function CreateAuctionForm() {
             <div className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-4">Metal Type</label>
-                <MetalSelector value={metalType} onChange={setMetalType} />
+                <MetalSelector 
+                  value={metalType} 
+                  onChange={setMetalType} 
+                />
               </div>
               <div>
-                <FormTypeSelector value={formType} onChange={setFormType} />
+                <FormTypeSelector 
+                  value={formType} 
+                  onChange={setFormType} 
+                />
               </div>
             </div>
+
+            {/* Coin-specific fields */}
+            {formType === 'coin' && (
+              <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <h3 className="font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                  <span className="text-xl">🪙</span>
+                  Coin Details
+                </h3>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Country of Origin */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Country of Origin
+                    </label>
+                    <select
+                      value={coinDetails.country}
+                      onChange={(e) => setCoinDetails({...coinDetails, country: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select country...</option>
+                      <option value="USA">United States</option>
+                      <option value="Canada">Canada</option>
+                      <option value="UK">United Kingdom</option>
+                      <option value="Mexico">Mexico</option>
+                      <option value="China">China</option>
+                      <option value="Australia">Australia</option>
+                      <option value="Austria">Austria</option>
+                      <option value="South Africa">South Africa</option>
+                      <option value="Switzerland">Switzerland</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  {/* Mint */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Mint
+                    </label>
+                    <select
+                      value={coinDetails.mint}
+                      onChange={(e) => setCoinDetails({...coinDetails, mint: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select mint...</option>
+                      <option value="US Mint">US Mint</option>
+                      <option value="Philadelphia">Philadelphia</option>
+                      <option value="Denver">Denver</option>
+                      <option value="San Francisco">San Francisco</option>
+                      <option value="West Point">West Point</option>
+                      <option value="Royal Canadian Mint">Royal Canadian Mint</option>
+                      <option value="Royal Mint">Royal Mint (UK)</option>
+                      <option value="Perth Mint">Perth Mint</option>
+                      <option value="Mexico Mint">Mexico Mint</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                  {/* Year */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Year
+                    </label>
+                    <input
+                      type="text"
+                      value={coinDetails.year}
+                      onChange={(e) => setCoinDetails({...coinDetails, year: e.target.value})}
+                      placeholder="e.g., 2024, 1986"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+
+                  {/* Mintage */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Mintage <span className="text-xs text-gray-500">(optional)</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={coinDetails.mintage}
+                      onChange={(e) => setCoinDetails({...coinDetails, mintage: e.target.value})}
+                      placeholder="e.g., 1,000,000"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                </div>
+
+                {/* Numismatic checkbox */}
+                <div className="mt-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={coinDetails.isNumismatic}
+                      onChange={(e) => setCoinDetails({...coinDetails, isNumismatic: e.target.checked})}
+                      className="rounded border-gray-300"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      This is a numismatic / collectible coin
+                    </span>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1 ml-6">
+                    Numismatic coins have value beyond their metal content (rarity, condition, historical significance)
+                  </p>
+                </div>
+
+                {/* Grade (if numismatic) */}
+                {coinDetails.isNumismatic && (
+                  <div className="mt-3">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Grade / Condition
+                    </label>
+                    <select
+                      value={coinDetails.grade}
+                      onChange={(e) => setCoinDetails({...coinDetails, grade: e.target.value})}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select grade...</option>
+                      <option value="MS70">MS70 (Perfect)</option>
+                      <option value="MS69">MS69 (Near Perfect)</option>
+                      <option value="MS68">MS68</option>
+                      <option value="MS67">MS67</option>
+                      <option value="MS66">MS66</option>
+                      <option value="MS65">MS65</option>
+                      <option value="MS64">MS64</option>
+                      <option value="MS63">MS63</option>
+                      <option value="MS62">MS62</option>
+                      <option value="MS61">MS61</option>
+                      <option value="MS60">MS60</option>
+                      <option value="AU">AU (About Uncirculated)</option>
+                      <option value="XF">XF (Extremely Fine)</option>
+                      <option value="VF">VF (Very Fine)</option>
+                      <option value="F">F (Fine)</option>
+                      <option value="VG">VG (Very Good)</option>
+                      <option value="G">G (Good)</option>
+                    </select>
+                  </div>
+                )}
+
+                {/* Helper text */}
+                <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                  <p>💡 Examples of numismatic coins:</p>
+                  <ul className="list-disc ml-4 mt-1">
+                    <li>1909-S VDB Lincoln Cent (rare date)</li>
+                    <li>1933 Saint-Gaudens Double Eagle (ultra rare)</li>
+                    <li>1995-W American Silver Eagle (proof)</li>
+                    <li>High-grade MS70 modern coins</li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </section>
 
           {/* Step 2: Weight & Purity */}
@@ -363,7 +563,7 @@ export default function CreateAuctionForm() {
                 <SerialNumberInput value={serialNumber} onChange={setSerialNumber} />
               </div>
               
-              {/* Image Uploader - FIXED: removed previews prop */}
+              {/* Image Uploader */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Item Photos
@@ -397,7 +597,7 @@ export default function CreateAuctionForm() {
             </div>
           </section>
 
-          {/* Step 5: Pricing - with real spot price */}
+          {/* Step 5: Pricing */}
           <section className="bg-white p-6 rounded-xl border shadow-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">5. Set Your Price</h2>
             <PriceCalculator
@@ -413,10 +613,23 @@ export default function CreateAuctionForm() {
           {/* Step 6: Auction Settings */}
           <section className="bg-white p-6 rounded-xl border shadow-sm">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
+            
+            {/* Status Banner */}
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-700 flex items-center gap-2">
+                <span className="text-lg">ℹ️</span>
+                <span>
+                  <strong>TX testnet not yet available.</strong> 
+                  Use <code className="bg-blue-100 px-1">?sandbox=true</code> for sandbox testing.
+                </span>
+              </p>
+            </div>
+            
             <div className="grid md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Starting Price ({isSandbox ? 'TESTUSD' : 'CORE'})
+                  Starting Price ({isSandbox ? 'TESTUSD' : 'RLUSD'})
+                  {!isSandbox && <span className="ml-2 text-xs text-blue-500">(Testnet TBD)</span>}
                 </label>
                 <input
                   type="number"
@@ -424,14 +637,23 @@ export default function CreateAuctionForm() {
                   onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
                   min={isSandbox ? "1" : "10"}
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                  placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 CORE"}
-                  required
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    !isSandbox ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                  }`}
+                  placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 RLUSD (Coming Soon)"}
+                  disabled={!isSandbox}
+                  required={isSandbox}
                 />
+                {!isSandbox && (
+                  <p className="text-xs text-blue-500 mt-1">
+                    ⏳ RLUSD auctions will be enabled when testnet launches
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Buy Now Price ({isSandbox ? 'TESTUSD' : 'CORE'}) (Optional)
+                  Buy Now Price ({isSandbox ? 'TESTUSD' : 'RLUSD'}) (Optional)
+                  {!isSandbox && <span className="ml-2 text-xs text-blue-500">(Testnet TBD)</span>}
                 </label>
                 <input
                   type="number"
@@ -439,8 +661,11 @@ export default function CreateAuctionForm() {
                   onChange={(e) => setBuyNowPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
                   min={startingPrice + (isSandbox ? 1 : 10)}
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className={`w-full px-3 py-2 border rounded-md ${
+                    !isSandbox ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                  }`}
                   placeholder="Optional instant buy"
+                  disabled={!isSandbox}
                 />
               </div>
             </div>
@@ -452,12 +677,45 @@ export default function CreateAuctionForm() {
               <div className="flex justify-between items-center">
                 <span className="font-medium text-green-800">Estimated Value:</span>
                 <span className="text-xl font-bold text-green-700">
-                  ${estimatedValue.toFixed(2)} {isSandbox ? 'TESTUSD' : 'CORE'}
+                  ${estimatedValue.toFixed(2)} {isSandbox ? 'TESTUSD' : 'RLUSD'}
                 </span>
               </div>
               <p className="text-xs text-green-600 mt-2">
                 Based on calculator with current spot price
               </p>
+            </div>
+          )}
+
+          {/* Estimated Fees Display */}
+          {estimatedValue > 0 && !isSandbox && (
+            <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <h4 className="font-semibold text-gray-900 mb-3">💰 Estimated Fees</h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Your asking price:</span>
+                  <span className="font-medium">${estimatedValue.toFixed(2)} RLUSD</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Platform fee (1.1%):</span>
+                  <span className="font-medium text-amber-600">-${(estimatedValue * 0.011).toFixed(2)} RLUSD</span>
+                </div>
+                <div className="border-t pt-2 mt-2">
+                  <div className="flex justify-between font-bold">
+                    <span>You receive:</span>
+                    <span className="text-green-600">${(estimatedValue * 0.989).toFixed(2)} RLUSD</span>
+                  </div>
+                </div>
+                <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-700">
+                  <span className="font-medium">🔒 Collateral:</span> 10% (${(estimatedValue * 0.1).toFixed(2)} RLUSD) locked, returned after successful sale
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Sandbox mode fee note */}
+          {estimatedValue > 0 && isSandbox && (
+            <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200 text-xs text-purple-700">
+              🧪 Sandbox mode - no real fees apply
             </div>
           )}
 
@@ -467,18 +725,26 @@ export default function CreateAuctionForm() {
               <div>
                 <h3 className="text-lg font-semibold">Ready to List</h3>
                 <p className="text-sm text-gray-600">
-                  {isSandbox ? 'Test listing - no real funds' : 'Your item will be listed for auction'}
+                  {isSandbox 
+                    ? 'Test listing - no real funds' 
+                    : 'Testnet coming soon. Use sandbox mode for testing.'}
                 </p>
               </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
-                  isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                {isSubmitting ? 'Creating...' : isSandbox ? 'Create Test Auction' : 'Create Auction'}
-              </button>
+              {!isSandbox ? (
+                <div className="px-8 py-3 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+                  Testnet Pending
+                </div>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
+                    isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+                  }`}
+                >
+                  {isSubmitting ? 'Creating...' : 'Create Test Auction'}
+                </button>
+              )}
             </div>
           </div>
         </form>
