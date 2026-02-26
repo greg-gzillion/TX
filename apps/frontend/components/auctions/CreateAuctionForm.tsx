@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePhoenixEscrow } from '@/lib/contract/phoenix-escrow';
 import { useWallet } from '@/hooks/useWallet';
@@ -25,6 +25,7 @@ export default function CreateAuctionForm() {
   const { address, isConnected } = useWallet();
   const { createAuction } = usePhoenixEscrow();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSandbox, setIsSandbox] = useState(false);
   
   // Basic Info
   const [metalType, setMetalType] = useState<'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other'>('Gold');
@@ -52,6 +53,12 @@ export default function CreateAuctionForm() {
   const [startingPrice, setStartingPrice] = useState<number>(0);
   const [buyNowPrice, setBuyNowPrice] = useState<number | undefined>(undefined);
 
+  // Check if we're in sandbox mode
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    setIsSandbox(urlParams.get('sandbox') === 'true');
+  }, []);
+
   const handleCertificationChange = (cert: CertificationType) => {
     setCertification(cert);
   };
@@ -74,6 +81,7 @@ export default function CreateAuctionForm() {
       const metadata = {
         version: "1.0.0",
         schema: "phoenix-pme-auction-v1",
+        environment: isSandbox ? "sandbox" : "testnet",
         item: {
           metalType,
           formType,
@@ -86,11 +94,40 @@ export default function CreateAuctionForm() {
         created: new Date().toISOString(),
       };
 
-      // Calculate prices in ucore (1 CORE = 1,000,000 ucore)
+      if (isSandbox) {
+        // SANDBOX MODE - Just log and redirect
+        console.log("🧪 SANDBOX: Creating mock auction", {
+          itemId,
+          metadata,
+          startingPrice: `${startingPrice} TESTUSD`,
+          buyNowPrice: buyNowPrice ? `${buyNowPrice} TESTUSD` : 'none',
+          estimatedValue: `${estimatedValue} TESTUSD`
+        });
+        
+        alert(`🧪 SANDBOX: Mock auction created!\n\nItem: ${metalType} ${formType}\nPrice: ${startingPrice} TESTUSD\n\n(This is a test - no real transaction)`);
+        
+        // Store in localStorage for sandbox
+        const mockAuctions = JSON.parse(localStorage.getItem('mockAuctions') || '[]');
+        mockAuctions.push({
+          id: Date.now(),
+          itemId,
+          metadata,
+          startingPrice,
+          buyNowPrice,
+          seller: address,
+          createdAt: new Date().toISOString(),
+          isSandbox: true
+        });
+        localStorage.setItem('mockAuctions', JSON.stringify(mockAuctions));
+        
+        router.push('/sandbox?tab=auctions');
+        return;
+      }
+
+      // REAL MODE - Call contract
       const startingPriceUcore = (startingPrice * 1_000_000).toString();
       const reservePriceUcore = ((buyNowPrice || startingPrice) * 1_000_000).toString();
 
-      // Call contract
       const result = await createAuction(
         itemId,
         JSON.stringify(metadata),
@@ -99,12 +136,12 @@ export default function CreateAuctionForm() {
         24 // duration hours
       );
 
-      console.log("Auction created:", result);
-      alert(`✅ Auction created! TX: ${result.transactionHash}`);
+      console.log("✅ Auction created:", result);
+      alert(`🎉 Auction created!\n\nTX: ${result.transactionHash}`);
       router.push('/auctions');
       
     } catch (error: any) {
-      console.error("Error:", error);
+      console.error("❌ Error:", error);
       alert(`❌ Error: ${error.message}`);
     } finally {
       setIsSubmitting(false);
@@ -113,10 +150,27 @@ export default function CreateAuctionForm() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      {/* Sandbox Banner */}
+      {isSandbox && (
+        <div className="max-w-4xl mx-auto mb-4">
+          <div className="bg-purple-100 border-2 border-purple-300 rounded-lg p-4">
+            <p className="text-purple-800 flex items-center">
+              <span className="text-2xl mr-3">🧪</span>
+              <span className="font-semibold">SANDBOX MODE:</span>
+              <span className="ml-2">Creating a TEST auction - no real funds will be used</span>
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-4xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Create Precious Metals Auction</h1>
-          <p className="text-gray-600 mt-2">List your gold, silver, platinum, or palladium for sale</p>
+          <p className="text-gray-600 mt-2">
+            {isSandbox 
+              ? "🧪 Test listing - no real value" 
+              : "List your gold, silver, platinum, or palladium for sale"}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -193,7 +247,9 @@ export default function CreateAuctionForm() {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">6. Auction Settings</h2>
             <div className="grid md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Starting Price (CORE)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Starting Price ({isSandbox ? 'TESTUSD' : 'CORE'})
+                </label>
                 <input
                   type="number"
                   value={startingPrice}
@@ -201,7 +257,7 @@ export default function CreateAuctionForm() {
                   min="10"
                   step="0.01"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
-                  placeholder="Minimum 10 CORE"
+                  placeholder={isSandbox ? "Minimum 10 TESTUSD" : "Minimum 10 CORE"}
                   required
                   disabled={isSubmitting}
                 />
@@ -227,7 +283,11 @@ export default function CreateAuctionForm() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
               <div>
                 <h3 className="text-lg font-semibold text-gray-900">Ready to List</h3>
-                <p className="text-gray-600">Your item will be listed for auction</p>
+                <p className="text-gray-600">
+                  {isSandbox 
+                    ? "This is a TEST listing - no real funds"
+                    : "Your item will be listed for auction"}
+                </p>
               </div>
               <button
                 type="submit"
@@ -236,7 +296,7 @@ export default function CreateAuctionForm() {
                   isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
-                {isSubmitting ? 'Creating...' : 'Create Auction Listing'}
+                {isSubmitting ? 'Creating...' : isSandbox ? 'Create Test Listing' : 'Create Auction Listing'}
               </button>
             </div>
           </div>
