@@ -63,18 +63,12 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Disclaimer */}
+        {/* Disclaimer - Single line version */}
         <div className="max-w-3xl mx-auto mb-12">
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="flex items-start gap-3">
-              <span className="text-2xl">🧪</span>
-              <div>
-                <p className="text-yellow-800 font-semibold text-sm">TESTNET CONCEPT — NOT YET ACTIVE</p>
-                <p className="text-yellow-700 text-xs mt-1">
-                  Experimental testnet software. No real funds. Open source code.
-                </p>
-              </div>
-            </div>
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center">
+            <p className="text-yellow-700 text-sm">
+              🧪 Experimental Testnet Software. No real funds. Open source code.
+            </p>
           </div>
         </div>
 
@@ -190,104 +184,6 @@ export default function HomePage() {
         {/* Tools */}
         <Tools />
 
-        {/* Protocol Explanation */}
-        <div className="max-w-4xl mx-auto mb-12">
-          <div className="bg-white border-2 border-amber-200 rounded-xl p-8">
-            <div className="text-center mb-8">
-              <div className="inline-block bg-amber-100 rounded-full px-4 py-1 text-sm font-semibold text-amber-800 mb-3">
-                HOW THE PROTOCOL WORKS
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-3">Built on Trust, Enforced by Code</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                The PhoenixPME protocol is an experimental concept built on the TX blockchain ecosystem, 
-                leveraging Coreum's infrastructure and Sologenic's asset tokenization expertise.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 mb-8">
-              {/* Left Column */}
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">1</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">10% Collateral (Both Parties)</h3>
-                    <p className="text-gray-600 text-sm">Sellers and buyers each post 10% collateral. Both have skin in the game.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">2</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">Funds Held in Escrow</h3>
-                    <p className="text-gray-600 text-sm">All funds locked in smart contract escrow. No one can touch them.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">3</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">48-Hour Buyer Verification</h3>
-                    <p className="text-gray-600 text-sm">Buyer has 48 hours to inspect after delivery.</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column */}
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">4</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">Collateral Returned + PHNX</h3>
-                    <p className="text-gray-600 text-sm">10% collateral returned + 0.9 PHNX to buyer, 0.1 PHNX to developer</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">5</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">TRUST / DONT TRUST</h3>
-                    <p className="text-gray-600 text-sm">Permanent reputation tokens issued based on outcome.</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="bg-amber-100 rounded-full w-10 h-10 flex items-center justify-center flex-shrink-0">
-                    <span className="text-amber-700 font-bold">6</span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-lg mb-1">Permanent Record</h3>
-                    <p className="text-gray-600 text-sm">On-chain history follows you forever. Never erased.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-6 mt-4">
-              <div className="flex items-start gap-4">
-                <div className="bg-amber-200 rounded-lg p-2">
-                  <span className="text-2xl">🔷</span>
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-2">Built on the TX Blockchain Ecosystem</h3>
-                  <p className="text-gray-700 text-sm">An experimental concept built on the TX blockchain — the merger of Coreum and Sologenic.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 text-center">
-              <p className="text-xs text-gray-400 border-t border-gray-200 pt-4">
-                ⚠️ Experimental concept. No guarantees. PHNX, TRUST, and DONT TRUST have no cash value and are non-transferable.
-              </p>
-            </div>
-          </div>
-        </div>
-
         {/* CTA */}
         <div className="max-w-3xl mx-auto text-center bg-gradient-to-br from-amber-50 to-yellow-50 rounded-xl border border-amber-200 p-8">
           <h2 className="text-2xl font-bold text-gray-900 mb-3">🚀 Be Part of the First Wave</h2>
@@ -303,3 +199,4 @@ export default function HomePage() {
     </div>
   );
 }
+
