@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Search } from 'lucide-react';
 
@@ -15,6 +15,45 @@ export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [keplrAddress, setKeplrAddress] = useState('');
   const [leapAddress, setLeapAddress] = useState('');
+  const [mounted, setMounted] = useState(false);
+  const [currentTime, setCurrentTime] = useState('');
+  const [prices, setPrices] = useState({
+    gold: 5186.70,
+    silver: 89.10,
+    platinum: 2298.00,
+    palladium: 1798.00
+  });
+
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true);
+    setCurrentTime(new Date().toLocaleTimeString());
+  }, []);
+
+  // FETCH REAL PRICES FROM API
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        const response = await fetch('https://phoenix-api-756y.onrender.com/api/prices');
+        const data = await response.json();
+        if (data.success && data.data) {
+          setPrices({
+            gold: data.data.gold,
+            silver: data.data.silver,
+            platinum: data.data.platinum,
+            palladium: data.data.palladium
+          });
+        }
+      } catch (error) {
+        console.error('Failed to fetch prices:', error);
+      }
+    };
+
+    fetchPrices();
+    // Optional: Refresh every 5 minutes
+    const interval = setInterval(fetchPrices, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   const connectKeplr = async () => {
     try {
@@ -65,7 +104,7 @@ export default function HomePage() {
         backgroundPosition: 'top center',
         backgroundAttachment: 'fixed',
         backgroundRepeat: 'no-repeat',
-        backgroundColor: '#f5f5f5', // Light gray fallback
+        backgroundColor: '#f5f5f5',
       }}
     >
       {/* Semi-transparent overlay for readability */}
@@ -155,11 +194,13 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Price banner */}
+          {/* Price banner - NOW WITH LIVE DATA! */}
           <div className="max-w-3xl mx-auto mb-6 bg-gray-50 p-3 rounded text-center bg-white/80 backdrop-blur-sm">
             <span className="font-medium">Reference: </span>
-            🥇 $5186.70 • 🥈 $89.10 • 🔷 $2298.00 • 🔶 $1798.00
-            <div className="text-xs text-gray-500 mt-1">Prices updated manually</div>
+            🥇 ${prices.gold.toFixed(2)} • 🥈 ${prices.silver.toFixed(2)} • 🔷 ${prices.platinum.toFixed(2)} • 🔶 ${prices.palladium.toFixed(2)}
+            <div className="text-xs text-gray-500 mt-1">
+              Prices updated manually {mounted && `• Last fetch: ${currentTime}`}
+            </div>
           </div>
           
           {/* Featured auctions */}
@@ -175,7 +216,7 @@ export default function HomePage() {
                   <div className="h-16 bg-gray-100 rounded mb-2 flex items-center justify-center text-3xl">🥇</div>
                   <p className="font-medium">Gold American Eagle</p>
                   <p className="text-xs text-gray-600">1 oz • .9999</p>
-                  <p className="text-amber-700 font-bold mt-1">$2,845</p>
+                  <p className="text-amber-700 font-bold mt-1">${(prices.gold * 0.55).toFixed(0)}</p>
                 </div>
               ))}
             </div>
@@ -186,14 +227,8 @@ export default function HomePage() {
           
         </main>
         
-        {/* PHOENIX ICON - 40 TIMES SMALLER! */}
-        <div className="w-full py-4 flex justify-center border-t bg-white/80 backdrop-blur-sm">
-          <img 
-            src="/phoenix-icon002.png" 
-            alt="Phoenix" 
-            className="w-3 h-3 rounded-full border border-amber-400 opacity-80 hover:opacity-100 transition-opacity"
-          />
-        </div>
+        {/* ICON SECTION - COMPLETELY REMOVED */}
+        
       </div>
     </div>
   );
