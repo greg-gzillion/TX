@@ -15,57 +15,19 @@ interface CertificationInputProps {
     condition?: string;
   };
   onChange: (value: any) => void;
-  context?: string;
+  context?: string; // 'coin' | 'round' | 'bar' | 'jewelry' | 'other'
 }
 
 export default function CertificationInput({ value, onChange, context }: CertificationInputProps) {
   const [isCustom, setIsCustom] = useState(false);
 
-  // Different options based on item type
-  const gradingServices = {
-    coin: [
-      { value: 'PCGS', label: 'PCGS' },
-      { value: 'NGC', label: 'NGC' },
-      { value: 'ANACS', label: 'ANACS' },
-      { value: 'ICG', label: 'ICG' },
-      { value: 'Other', label: 'Other' },
-    ],
-    round: [
-      { value: 'API', label: 'API' },
-      { value: 'ICG', label: 'ICG' },
-      { value: 'Other', label: 'Other' },
-    ],
-  };
-
-  const gradeOptions = [
-    { value: 'MS70', label: 'MS70 (Perfect)' },
-    { value: 'MS69', label: 'MS69 (Near Perfect)' },
-    { value: 'MS68', label: 'MS68' },
-    { value: 'MS67', label: 'MS67' },
-    { value: 'MS66', label: 'MS66' },
-    { value: 'MS65', label: 'MS65' },
-    { value: 'MS64', label: 'MS64' },
-    { value: 'MS63', label: 'MS63' },
-    { value: 'MS62', label: 'MS62' },
-    { value: 'MS61', label: 'MS61' },
-    { value: 'MS60', label: 'MS60' },
-    { value: 'AU', label: 'AU (About Uncirculated)' },
-    { value: 'XF', label: 'XF (Extremely Fine)' },
-    { value: 'VF', label: 'VF (Very Fine)' },
-    { value: 'F', label: 'F (Fine)' },
-    { value: 'VG', label: 'VG (Very Good)' },
-    { value: 'G', label: 'G (Good)' },
-    { value: 'Poor', label: 'Poor / Damaged' },
-  ];
-
-  // Determine if this is a coin or round (where grading applies)
-  const isGradable = context === 'coin' || context === 'round';
-  const isBar = context === 'bar';
-  const isJewelry = context === 'jewelry';
-  const isOther = context === 'other';
+  // If no context or context is 'other' (scrap), show nothing
+  if (!context || context === 'other') {
+    return null;
+  }
 
   // For bars, show assay options
-  if (isBar) {
+  if (context === 'bar') {
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2">
@@ -127,7 +89,7 @@ export default function CertificationInput({ value, onChange, context }: Certifi
   }
 
   // For jewelry, show hallmark options
-  if (isJewelry) {
+  if (context === 'jewelry') {
     return (
       <div className="space-y-4">
         <div className="flex items-center gap-2">
@@ -184,104 +146,120 @@ export default function CertificationInput({ value, onChange, context }: Certifi
     );
   }
 
-  // For other items, show simple condition
-  if (isOther) {
+  // For coins and rounds - show grading options
+  if (context === 'coin' || context === 'round') {
+    const gradingServices = {
+      coin: [
+        { value: 'PCGS', label: 'PCGS' },
+        { value: 'NGC', label: 'NGC' },
+        { value: 'ANACS', label: 'ANACS' },
+        { value: 'ICG', label: 'ICG' },
+        { value: 'Other', label: 'Other' },
+      ],
+      round: [
+        { value: 'API', label: 'API' },
+        { value: 'ICG', label: 'ICG' },
+        { value: 'Other', label: 'Other' },
+      ],
+    };
+
+    const gradeOptions = [
+      { value: 'MS70', label: 'MS70 (Perfect)' },
+      { value: 'MS69', label: 'MS69 (Near Perfect)' },
+      { value: 'MS68', label: 'MS68' },
+      { value: 'MS67', label: 'MS67' },
+      { value: 'MS66', label: 'MS66' },
+      { value: 'MS65', label: 'MS65' },
+      { value: 'MS64', label: 'MS64' },
+      { value: 'MS63', label: 'MS63' },
+      { value: 'MS62', label: 'MS62' },
+      { value: 'MS61', label: 'MS61' },
+      { value: 'MS60', label: 'MS60' },
+      { value: 'AU', label: 'AU (About Uncirculated)' },
+      { value: 'XF', label: 'XF (Extremely Fine)' },
+      { value: 'VF', label: 'VF (Very Fine)' },
+      { value: 'F', label: 'F (Fine)' },
+      { value: 'VG', label: 'VG (Very Good)' },
+      { value: 'G', label: 'G (Good)' },
+      { value: 'Poor', label: 'Poor / Damaged' },
+    ];
+
     return (
       <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Condition Description
-          </label>
-          <textarea
-            value={value?.condition || ''}
-            onChange={(e) => onChange({ ...value, condition: e.target.value })}
-            placeholder="Describe the item's condition"
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="isGraded"
+            checked={value?.isGraded || false}
+            onChange={(e) => onChange({ ...value, isGraded: e.target.checked })}
+            className="rounded border-gray-300"
           />
+          <label htmlFor="isGraded" className="text-sm font-medium text-gray-700">
+            This {context === 'round' ? 'round' : 'coin'} is professionally graded
+          </label>
         </div>
+
+        {value?.isGraded && (
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Grading Service
+              </label>
+              <select
+                value={value?.service || ''}
+                onChange={(e) => onChange({ ...value, service: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="">Select...</option>
+                {gradingServices[context].map(s => (
+                  <option key={s.value} value={s.value}>{s.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Grade</label>
+              <select
+                value={value?.grade || ''}
+                onChange={(e) => onChange({ ...value, grade: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              >
+                <option value="">Select grade...</option>
+                {gradeOptions.map(g => (
+                  <option key={g.value} value={g.value}>{g.label}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Certification Number
+              </label>
+              <input
+                type="text"
+                value={value?.certNumber || ''}
+                onChange={(e) => onChange({ ...value, certNumber: e.target.value })}
+                placeholder="e.g., 12345678"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+            </div>
+          </div>
+        )}
+
+        {!value?.isGraded && (
+          <div className="mt-2 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm text-gray-600">
+              🪙 This {context === 'round' ? 'round' : 'coin'} will be listed as raw/un-graded.
+            </p>
+            <p className="text-xs text-gray-500 mt-1">
+              Describe the condition in your listing description.
+            </p>
+          </div>
+        )}
       </div>
     );
   }
 
-  // For coins and rounds - show grading options
-  return (
-    <div className="space-y-4">
-      {/* Grading toggle */}
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="isGraded"
-          checked={value?.isGraded || false}
-          onChange={(e) => onChange({ ...value, isGraded: e.target.checked })}
-          className="rounded border-gray-300"
-        />
-        <label htmlFor="isGraded" className="text-sm font-medium text-gray-700">
-          This {context === 'round' ? 'round' : 'coin'} is professionally graded
-        </label>
-      </div>
-
-      {value?.isGraded && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4">
-          {/* Grading service - only for coins/rounds */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Grading Service
-            </label>
-            <select
-              value={value?.service || ''}
-              onChange={(e) => onChange({ ...value, service: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            >
-              <option value="">Select...</option>
-              {gradingServices[context === 'round' ? 'round' : 'coin']?.map(s => (
-                <option key={s.value} value={s.value}>{s.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Grade - for coins/rounds */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Grade</label>
-            <select
-              value={value?.grade || ''}
-              onChange={(e) => onChange({ ...value, grade: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            >
-              <option value="">Select grade...</option>
-              {gradeOptions.map(g => (
-                <option key={g.value} value={g.value}>{g.label}</option>
-              ))}
-            </select>
-          </div>
-
-          {/* Certification Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Certification Number
-            </label>
-            <input
-              type="text"
-              value={value?.certNumber || ''}
-              onChange={(e) => onChange({ ...value, certNumber: e.target.value })}
-              placeholder="e.g., 12345678"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
-          </div>
-        </div>
-      )}
-
-      {/* Raw/Uncertified option */}
-      {!value?.isGraded && (
-        <div className="mt-2 p-3 bg-gray-100 rounded-md">
-          <p className="text-sm text-gray-600">
-            🪙 This {context === 'round' ? 'round' : 'coin'} will be listed as raw/un-graded.
-          </p>
-          <p className="text-xs text-gray-500 mt-1">
-            Describe the condition in your listing description.
-          </p>
-        </div>
-      )}
-    </div>
-  );
+  // Default - show nothing
+  return null;
 }
