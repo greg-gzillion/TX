@@ -12,58 +12,47 @@ interface PriceBannerProps {
 
 export default function PriceBanner({ spotPrices, lastUpdated }: PriceBannerProps) {
   const metals = [
-    { name: 'GOLD', price: spotPrices.gold, icon: '🥇', color: 'amber', bg: 'amber-50', text: 'amber-700' },
-    { name: 'SILVER', price: spotPrices.silver, icon: '🥈', color: 'gray', bg: 'gray-50', text: 'gray-700' },
-    { name: 'PLATINUM', price: spotPrices.platinum, icon: '🔷', color: 'slate', bg: 'slate-50', text: 'slate-700' },
-    { name: 'PALLADIUM', price: spotPrices.palladium, icon: '🔶', color: 'zinc', bg: 'zinc-50', text: 'zinc-700' },
+    { name: 'GOLD', price: spotPrices.gold, icon: '🥇', color: 'amber' },
+    { name: 'SILVER', price: spotPrices.silver, icon: '🥈', color: 'gray' },
+    { name: 'PLATINUM', price: spotPrices.platinum, icon: '🔷', color: 'slate' },
+    { name: 'PALLADIUM', price: spotPrices.palladium, icon: '🔶', color: 'zinc' },
   ];
 
   return (
-    <div className="mt-6 mb-8">
-      {/* Header with TESTUSD badge and timestamp */}
-      <div className="flex justify-between items-center mb-3">
+    <div className="mt-4 mb-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
+      {/* Header bar */}
+      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
+          <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-xs font-medium">
             🧪 TESTUSD
           </span>
           <span className="text-xs text-gray-500">
-            Test tokens only - no real value
+            Test tokens only
           </span>
         </div>
         {lastUpdated && (
           <span className="text-xs text-gray-400">
-            Updated: {lastUpdated}
+            {lastUpdated}
           </span>
         )}
       </div>
 
-      {/* Price cards grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* Price row - horizontal compact */}
+      <div className="p-3 grid grid-cols-4 gap-2">
         {metals.map((metal) => (
-          <div
-            key={metal.name}
-            className={`bg-${metal.bg} rounded-xl p-4 border border-${metal.color}-200 shadow-sm hover:shadow-md transition-shadow`}
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-xl">{metal.icon}</span>
-              <span className={`text-xs font-medium text-${metal.text} uppercase tracking-wider`}>
-                {metal.name}
-              </span>
-            </div>
-            <div className={`text-2xl font-bold text-${metal.text}`}>
+          <div key={metal.name} className="text-center">
+            <div className="text-xs text-gray-500 mb-1">{metal.name}</div>
+            <div className={`text-base font-bold text-${metal.color}-600`}>
               ${metal.price.toFixed(2)}
-            </div>
-            <div className="text-xs text-gray-400 mt-1">
-              per troy oz
             </div>
           </div>
         ))}
       </div>
 
-      {/* Refresh note */}
-      <p className="text-xs text-gray-400 text-center mt-4">
-        ⚡ Prices loaded from database. Refresh page to update.
-      </p>
+      {/* Footer note */}
+      <div className="bg-gray-50 px-4 py-1 border-t border-gray-200 text-right">
+        <span className="text-xs text-gray-400">⚡ from database</span>
+      </div>
     </div>
   );
 }

@@ -15,7 +15,7 @@ import FeeDisplay from './create/displays/FeeDisplay';
 import SubmitButton from './create/displays/SubmitButton';
 
 export default function CreateAuctionForm() {
-  const { address, isConnected, walletType } = useWallet();
+  const { address, isConnected } = useWallet();
   const {
     formState,
     setters,
@@ -27,8 +27,6 @@ export default function CreateAuctionForm() {
     handleSubmit
   } = useAuctionForm();
 
-  console.log('CreateAuctionForm - wallet:', { address, isConnected, walletType });
-
   if (!isConnected) {
     return (
       <div className="min-h-screen bg-gray-50 p-4 md:p-8">
@@ -38,10 +36,6 @@ export default function CreateAuctionForm() {
             <p className="text-yellow-700 mb-6">
               Please connect your wallet using the button in the top right corner.
             </p>
-            <div className="text-sm text-gray-500">
-              Current wallet state: {isConnected ? 'Connected' : 'Disconnected'}
-              {address && ` (${address.slice(0,6)}...)`}
-            </div>
           </div>
         </div>
       </div>
@@ -51,12 +45,9 @@ export default function CreateAuctionForm() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Simple wallet indicator */}
+        {/* Wallet indicator */}
         <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded-lg text-sm text-green-700 flex justify-between items-center">
-          <span>
-            ✅ Connected: {address?.slice(0,8)}...{address?.slice(-4)} 
-            {walletType && ` (${walletType})`}
-          </span>
+          <span>✅ Connected: {address?.slice(0,8)}...{address?.slice(-4)}</span>
         </div>
 
         <div className="mb-8">
@@ -96,6 +87,7 @@ export default function CreateAuctionForm() {
           <CertificationStep
             certification={formState.certification}
             onChange={setters.setCertification}
+            formType={formState.formType}
           />
 
           <DetailsPhotosStep
