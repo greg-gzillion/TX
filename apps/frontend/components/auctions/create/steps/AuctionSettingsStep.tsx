@@ -1,7 +1,6 @@
 'use client';
 
 interface AuctionSettingsStepProps {
-  isSandbox: boolean;
   startingPrice: number;
   setStartingPrice: (value: number) => void;
   buyNowPrice: number | undefined;
@@ -9,7 +8,6 @@ interface AuctionSettingsStepProps {
 }
 
 export default function AuctionSettingsStep({
-  isSandbox,
   startingPrice,
   setStartingPrice,
   buyNowPrice,
@@ -21,10 +19,9 @@ export default function AuctionSettingsStep({
       
       <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
         <p className="text-sm text-blue-700 flex items-center gap-2">
-          <span className="text-lg">ℹ️</span>
+          <span className="text-lg">🧪</span>
           <span>
-            <strong>TX testnet not yet available.</strong> 
-            Use <code className="bg-blue-100 px-1">?sandbox=true</code> for sandbox testing.
+            <strong>Development Mode:</strong> All prices in TESTUSD (test tokens only).
           </span>
         </p>
       </div>
@@ -32,47 +29,38 @@ export default function AuctionSettingsStep({
       <div className="grid md:grid-cols-2 gap-6">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Starting Price ({isSandbox ? 'TESTUSD' : 'RLUSD'})
-            {!isSandbox && <span className="ml-2 text-xs text-blue-500">(Testnet TBD)</span>}
+            Starting Price (TESTUSD)
           </label>
           <input
             type="number"
             value={startingPrice}
             onChange={(e) => setStartingPrice(parseFloat(e.target.value) || 0)}
-            min={isSandbox ? "1" : "10"}
+            min="1"
             step="0.01"
-            className={`w-full px-3 py-2 border rounded-md ${
-              !isSandbox ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-            }`}
-            placeholder={isSandbox ? "Min 1 TESTUSD" : "Min 10 RLUSD (Coming Soon)"}
-            disabled={!isSandbox}
-            required={isSandbox}
+            className="w-full px-3 py-2 border rounded-md bg-white"
+            placeholder="Min 1 TESTUSD"
+            required
           />
-          {!isSandbox && (
-            <p className="text-xs text-blue-500 mt-1">
-              ⏳ RLUSD auctions will be enabled when testnet launches
-            </p>
-          )}
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Buy Now Price ({isSandbox ? 'TESTUSD' : 'RLUSD'}) (Optional)
-            {!isSandbox && <span className="ml-2 text-xs text-blue-500">(Testnet TBD)</span>}
+            Buy Now Price (TESTUSD) (Optional)
           </label>
           <input
             type="number"
             value={buyNowPrice || ''}
             onChange={(e) => setBuyNowPrice(e.target.value ? parseFloat(e.target.value) : undefined)}
-            min={startingPrice + (isSandbox ? 1 : 10)}
+            min={startingPrice + 1}
             step="0.01"
-            className={`w-full px-3 py-2 border rounded-md ${
-              !isSandbox ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-            }`}
+            className="w-full px-3 py-2 border rounded-md bg-white"
             placeholder="Optional instant buy"
-            disabled={!isSandbox}
           />
         </div>
       </div>
+      
+      <p className="text-xs text-gray-500 mt-4">
+        ⚡ TESTUSD are test tokens with no real value. For testing only.
+      </p>
     </section>
   );
 }

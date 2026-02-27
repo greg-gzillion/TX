@@ -17,7 +17,6 @@ export default function CreateAuctionForm() {
   const {
     formState,
     setters,
-    isSandbox,
     isSubmitting,
     spotPrices,
     lastUpdated,
@@ -29,29 +28,13 @@ export default function CreateAuctionForm() {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
-        {/* Sandbox Banner */}
-        {isSandbox && (
-          <div className="max-w-4xl mx-auto mb-4">
-            <div className="bg-purple-100 border-2 border-purple-300 rounded-lg p-4">
-              <p className="text-purple-800 flex items-center">
-                <span className="text-2xl mr-3">🧪</span>
-                <span className="font-semibold">SANDBOX MODE:</span>
-                <span className="ml-2">Creating a TEST auction - no real funds will be used</span>
-              </p>
-              <p className="text-xs text-purple-600 mt-2 border-t border-purple-200 pt-2">
-                All prices shown in TESTUSD
-              </p>
-            </div>
-          </div>
-        )}
-
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Create Precious Metals Auction</h1>
           <p className="text-gray-600 mt-2">
-            {isSandbox ? "🧪 Test listing - no real value" : "Design your listing for the TX blockchain"}
+            Test listing - all prices in TESTUSD
           </p>
           
-          <HonestyBanner isSandbox={isSandbox} />
+          <HonestyBanner />
           <PriceBanner spotPrices={spotPrices} lastUpdated={lastUpdated} />
         </div>
 
@@ -63,6 +46,12 @@ export default function CreateAuctionForm() {
             setFormType={setters.setFormType}
             coinDetails={formState.coinDetails}
             setCoinDetails={setters.setCoinDetails}
+            roundDetails={formState.roundDetails}
+            setRoundDetails={setters.setRoundDetails}
+            barDetails={formState.barDetails}
+            setBarDetails={setters.setBarDetails}
+            jewelryDetails={formState.jewelryDetails}
+            setJewelryDetails={setters.setJewelryDetails}
           />
 
           <WeightPurityStep
@@ -99,7 +88,6 @@ export default function CreateAuctionForm() {
           />
 
           <AuctionSettingsStep
-            isSandbox={isSandbox}
             startingPrice={formState.startingPrice}
             setStartingPrice={setters.setStartingPrice}
             buyNowPrice={formState.buyNowPrice}
@@ -108,16 +96,13 @@ export default function CreateAuctionForm() {
 
           <EstimatedValueDisplay
             estimatedValue={estimatedValue}
-            isSandbox={isSandbox}
           />
 
           <FeeDisplay
             estimatedValue={estimatedValue}
-            isSandbox={isSandbox}
           />
 
           <SubmitButton
-            isSandbox={isSandbox}
             isSubmitting={isSubmitting}
           />
         </form>

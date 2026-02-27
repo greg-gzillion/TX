@@ -2,10 +2,9 @@
 
 interface EstimatedValueDisplayProps {
   estimatedValue: number;
-  isSandbox: boolean;
 }
 
-export default function EstimatedValueDisplay({ estimatedValue, isSandbox }: EstimatedValueDisplayProps) {
+export default function EstimatedValueDisplay({ estimatedValue }: EstimatedValueDisplayProps) {
   if (estimatedValue <= 0) return null;
 
   return (
@@ -13,7 +12,7 @@ export default function EstimatedValueDisplay({ estimatedValue, isSandbox }: Est
       <div className="flex justify-between items-center">
         <span className="font-medium text-green-800">Estimated Value:</span>
         <span className="text-xl font-bold text-green-700">
-          ${estimatedValue.toFixed(2)} {isSandbox ? 'TESTUSD' : 'RLUSD'}
+          ${estimatedValue.toFixed(2)} TESTUSD
         </span>
       </div>
       <p className="text-xs text-green-600 mt-2">

@@ -3,6 +3,9 @@
 import MetalSelector from '@/components/shared/forms/inputs/MetalSelector';
 import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector';
 import CoinDetailsForm from '../forms/CoinDetailsForm';
+import RoundsDetailsForm from '../forms/RoundsDetailsForm';
+import BarsDetailsForm from '../forms/BarsDetailsForm';
+import JewelryDetailsForm from '../forms/JewelryDetailsForm';
 
 interface BasicInfoStepProps {
   metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other';
@@ -11,6 +14,12 @@ interface BasicInfoStepProps {
   setFormType: (value: any) => void;
   coinDetails: any;
   setCoinDetails: (value: any) => void;
+  roundDetails: any;
+  setRoundDetails: (value: any) => void;
+  barDetails: any;
+  setBarDetails: (value: any) => void;
+  jewelryDetails: any;
+  setJewelryDetails: (value: any) => void;
 }
 
 export default function BasicInfoStep({
@@ -19,7 +28,13 @@ export default function BasicInfoStep({
   formType,
   setFormType,
   coinDetails,
-  setCoinDetails
+  setCoinDetails,
+  roundDetails,
+  setRoundDetails,
+  barDetails,
+  setBarDetails,
+  jewelryDetails,
+  setJewelryDetails
 }: BasicInfoStepProps) {
   return (
     <section className="bg-white p-6 rounded-xl border shadow-sm">
@@ -37,6 +52,27 @@ export default function BasicInfoStep({
           <CoinDetailsForm 
             coinDetails={coinDetails}
             onChange={setCoinDetails}
+          />
+        )}
+        
+        {formType === 'round' && (
+          <RoundsDetailsForm 
+            roundDetails={roundDetails}
+            onChange={setRoundDetails}
+          />
+        )}
+        
+        {formType === 'bar' && (
+          <BarsDetailsForm 
+            barDetails={barDetails}
+            onChange={setBarDetails}
+          />
+        )}
+        
+        {formType === 'jewelry' && (
+          <JewelryDetailsForm 
+            jewelryDetails={jewelryDetails}
+            onChange={setJewelryDetails}
           />
         )}
       </div>

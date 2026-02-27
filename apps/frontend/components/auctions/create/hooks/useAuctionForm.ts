@@ -24,12 +24,42 @@ export type CoinDetailsType = {
   grade: string;
 };
 
+export type RoundDetailsType = {
+  manufacturer: string;
+  series: string;
+  year: string;
+  finish: string;
+  isLimited: boolean;
+  mintage: string;
+  features: string[];
+};
+
+export type BarDetailsType = {
+  manufacturer: string;
+  serialNumber: string;
+  assay: boolean;
+  assayNumber: string;
+  dimensions: string;
+  shape: string;
+  features: string[];
+};
+
+export type JewelryDetailsType = {
+  type: string;
+  gender: string;
+  style: string;
+  gemstones: string[];
+  gemstoneDetails: string;
+  hallmarks: string;
+  condition: string;
+  includesBox: boolean;
+};
+
 export function useAuctionForm() {
   const router = useRouter();
   const { address, isConnected } = useWallet();
   const { createAuction } = usePhoenixEscrow();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSandbox, setIsSandbox] = useState(false);
   const [spotPrices, setSpotPrices] = useState({
     gold: 5183.70,
     silver: 87.38,
@@ -60,7 +90,7 @@ export function useAuctionForm() {
   const [images, setImages] = useState<any[]>([]);
   const [videoUrl, setVideoUrl] = useState<string>('');
   
-  // Coin-specific
+  // Form-specific details
   const [coinDetails, setCoinDetails] = useState<CoinDetailsType>({
     country: '',
     mint: '',
@@ -68,6 +98,37 @@ export function useAuctionForm() {
     mintage: '',
     isNumismatic: false,
     grade: ''
+  });
+
+  const [roundDetails, setRoundDetails] = useState<RoundDetailsType>({
+    manufacturer: '',
+    series: '',
+    year: '',
+    finish: '',
+    isLimited: false,
+    mintage: '',
+    features: []
+  });
+
+  const [barDetails, setBarDetails] = useState<BarDetailsType>({
+    manufacturer: '',
+    serialNumber: '',
+    assay: false,
+    assayNumber: '',
+    dimensions: '',
+    shape: '',
+    features: []
+  });
+
+  const [jewelryDetails, setJewelryDetails] = useState<JewelryDetailsType>({
+    type: '',
+    gender: '',
+    style: '',
+    gemstones: [],
+    gemstoneDetails: '',
+    hallmarks: '',
+    condition: '',
+    includesBox: false
   });
   
   // Pricing
@@ -95,15 +156,6 @@ export function useAuctionForm() {
       }
     };
     fetchPrices();
-  }, []);
-
-  // Check if we're in sandbox mode
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const sandboxParam = params.get('sandbox');
-      setIsSandbox(sandboxParam === 'true');
-    }
   }, []);
 
   // Upload images to Pinata
@@ -166,60 +218,51 @@ export function useAuctionForm() {
 
       const itemId = `${metalType.toLowerCase()}-${Date.now()}`;
       
+      // Build item details based on form type
+      const itemDetails: any = {
+        metalType,
+        formType,
+        weight,
+        weightUnit,
+        purity: purity.toString(),
+        certification: certification.isGraded ? certification : null,
+        serialNumber: serialNumber || null,
+        images: imageUrls,
+        videoUrl: videoUrl || null,
+      };
+
+      // Add form-specific details
+      if (formType === 'coin') itemDetails.coinDetails = coinDetails;
+      if (formType === 'round') itemDetails.roundDetails = roundDetails;
+      if (formType === 'bar') itemDetails.barDetails = barDetails;
+      if (formType === 'jewelry') itemDetails.jewelryDetails = jewelryDetails;
+
       const metadata = {
         version: "1.0.0",
         schema: "phoenix-pme-auction-v1",
-        environment: isSandbox ? "sandbox" : "testnet",
-        item: {
-          metalType,
-          formType,
-          weight,
-          weightUnit,
-          purity: purity.toString(),
-          certification: certification.isGraded ? certification : null,
-          serialNumber: serialNumber || null,
-          images: imageUrls,
-          videoUrl: videoUrl || null,
-          ...(formType === 'coin' && { coinDetails }),
-        },
+        environment: "development",
+        item: itemDetails,
         spotPrices: { ...spotPrices, timestamp: new Date().toISOString() },
         estimatedValue,
         created: new Date().toISOString(),
       };
 
-      if (isSandbox) {
-        const mockAuctions = JSON.parse(localStorage.getItem('mockAuctions') || '[]');
-        mockAuctions.push({
-          id: Date.now(),
-          itemId,
-          metadata,
-          startingPrice,
-          buyNowPrice,
-          seller: address,
-          createdAt: new Date().toISOString(),
-          isSandbox: true,
-          imageUrls
-        });
-        localStorage.setItem('mockAuctions', JSON.stringify(mockAuctions));
-        
-        alert(`🧪 SANDBOX: Test auction created!`);
-        router.push('/sandbox?tab=auctions');
-        return;
-      }
-
-      const startingPriceMicro = (startingPrice * 1_000_000).toString();
-      const reservePriceMicro = ((buyNowPrice || startingPrice) * 1_000_000).toString();
-
-      const result = await createAuction(
+      // Store in localStorage for testing (TESTUSD mode)
+      const mockAuctions = JSON.parse(localStorage.getItem('mockAuctions') || '[]');
+      mockAuctions.push({
+        id: Date.now(),
         itemId,
-        JSON.stringify(metadata),
-        startingPriceMicro,
-        reservePriceMicro,
-        24
-      );
-
-      alert(`🎉 Auction created!`);
-      router.push('/auctions');
+        metadata,
+        startingPrice,
+        buyNowPrice,
+        seller: address,
+        createdAt: new Date().toISOString(),
+        imageUrls
+      });
+      localStorage.setItem('mockAuctions', JSON.stringify(mockAuctions));
+      
+      alert(`✅ Test auction created!\n\nItem: ${metalType} ${formType}\nPrice: ${startingPrice} TESTUSD`);
+      router.push('/sandbox?tab=auctions');
       
     } catch (error: any) {
       console.error("❌ Error:", error);
@@ -233,14 +276,15 @@ export function useAuctionForm() {
     formState: {
       metalType, formType, weight, weightUnit, purity,
       certification, serialNumber, images, videoUrl,
-      coinDetails, startingPrice, buyNowPrice
+      coinDetails, roundDetails, barDetails, jewelryDetails,
+      startingPrice, buyNowPrice
     },
     setters: {
       setMetalType, setFormType, setWeight, setWeightUnit, setPurity,
       setCertification, setSerialNumber, setImages, setVideoUrl,
-      setCoinDetails, setStartingPrice, setBuyNowPrice, setEstimatedValue
+      setCoinDetails, setRoundDetails, setBarDetails, setJewelryDetails,
+      setStartingPrice, setBuyNowPrice, setEstimatedValue
     },
-    isSandbox,
     isSubmitting,
     spotPrices,
     lastUpdated,
