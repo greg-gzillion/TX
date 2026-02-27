@@ -35,18 +35,6 @@ export default function CertificationInput({ value, onChange, context }: Certifi
       { value: 'ICG', label: 'ICG' },
       { value: 'Other', label: 'Other' },
     ],
-    bar: [
-      { value: 'Assay Card', label: 'Assay Card' },
-      { value: 'Serial Number', label: 'Serial Number' },
-      { value: 'Original Packaging', label: 'Original Packaging' },
-      { value: 'Other', label: 'Other' },
-    ],
-    jewelry: [
-      { value: 'Hallmark', label: 'Hallmark' },
-      { value: "Maker's Mark", label: "Maker's Mark" },
-      { value: 'Appraisal', label: 'Appraisal' },
-      { value: 'Other', label: 'Other' },
-    ],
   };
 
   const gradeOptions = [
@@ -70,42 +58,34 @@ export default function CertificationInput({ value, onChange, context }: Certifi
     { value: 'Poor', label: 'Poor / Damaged' },
   ];
 
-  const currentServices = context ? gradingServices[context as keyof typeof gradingServices] : gradingServices.coin;
+  // Determine if this is a coin or round (where grading applies)
+  const isGradable = context === 'coin' || context === 'round';
+  const isBar = context === 'bar';
+  const isJewelry = context === 'jewelry';
+  const isOther = context === 'other';
 
-  return (
-    <div className="space-y-4">
-      {/* Main toggle - adapts to context */}
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="hasCertification"
-          checked={value?.isGraded || value?.hasAssay || value?.hasHallmarks || false}
-          onChange={(e) => {
-            if (context === 'bar') {
-              onChange({ ...value, hasAssay: e.target.checked });
-            } else if (context === 'jewelry') {
-              onChange({ ...value, hasHallmarks: e.target.checked });
-            } else {
-              onChange({ ...value, isGraded: e.target.checked });
-            }
-          }}
-          className="rounded border-gray-300"
-        />
-        <label htmlFor="hasCertification" className="text-sm font-medium text-gray-700">
-          {context === 'bar' ? 'This bar has assay / certification' :
-           context === 'jewelry' ? 'This item has hallmarks / maker marks' :
-           context === 'round' ? 'This round is certified' :
-           'This coin is professionally graded'}
-        </label>
-      </div>
+  // For bars, show assay options
+  if (isBar) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="hasAssay"
+            checked={value?.hasAssay || false}
+            onChange={(e) => onChange({ ...value, hasAssay: e.target.checked })}
+            className="rounded border-gray-300"
+          />
+          <label htmlFor="hasAssay" className="text-sm font-medium text-gray-700">
+            This bar has assay / certification
+          </label>
+        </div>
 
-      {(value?.isGraded || value?.hasAssay || value?.hasHallmarks) && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4">
-          {/* Service selection - context-aware */}
-          {context !== 'jewelry' && (
+        {value?.hasAssay && (
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                {context === 'bar' ? 'Certification Type' : 'Grading Service'}
+                Certification Type
               </label>
               <select
                 value={value?.service || ''}
@@ -113,58 +93,71 @@ export default function CertificationInput({ value, onChange, context }: Certifi
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               >
                 <option value="">Select...</option>
-                {currentServices?.map(s => (
-                  <option key={s.value} value={s.value}>{s.label}</option>
-                ))}
+                <option value="Assay Card">Assay Card</option>
+                <option value="Serial Number">Serial Number</option>
+                <option value="Original Packaging">Original Packaging</option>
+                <option value="Other">Other</option>
               </select>
             </div>
-          )}
 
-          {/* Grade - only for coins/rounds */}
-          {(context === 'coin' || context === 'round') && value?.isGraded && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Grade</label>
-              <select
-                value={value?.grade || ''}
-                onChange={(e) => onChange({ ...value, grade: e.target.value })}
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Serial / Assay Number
+              </label>
+              <input
+                type="text"
+                value={value?.assayNumber || ''}
+                onChange={(e) => onChange({ ...value, assayNumber: e.target.value })}
+                placeholder="e.g., 123456"
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
-                <option value="">Select grade...</option>
-                {gradeOptions.map(g => (
-                  <option key={g.value} value={g.value}>{g.label}</option>
-                ))}
-              </select>
+              />
             </div>
-          )}
-
-          {/* Certification / Serial Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              {context === 'bar' ? 'Serial / Assay Number' :
-               context === 'jewelry' ? 'Hallmark / Maker Mark' :
-               'Certification Number'}
-            </label>
-            <input
-              type="text"
-              value={value?.certNumber || value?.assayNumber || value?.hallmarks || ''}
-              onChange={(e) => {
-                if (context === 'bar') {
-                  onChange({ ...value, assayNumber: e.target.value });
-                } else if (context === 'jewelry') {
-                  onChange({ ...value, hallmarks: e.target.value });
-                } else {
-                  onChange({ ...value, certNumber: e.target.value });
-                }
-              }}
-              placeholder={context === 'bar' ? "e.g., 123456" :
-                          context === 'jewelry' ? "e.g., 14k, 925, Tiffany" :
-                          "e.g., 12345678"}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md"
-            />
           </div>
+        )}
 
-          {/* Condition description - for jewelry/other */}
-          {(context === 'jewelry' || context === 'other') && (
+        {!value?.hasAssay && (
+          <div className="mt-2 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm text-gray-600">
+              📦 This bar will be listed as uncertified.
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // For jewelry, show hallmark options
+  if (isJewelry) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="hasHallmarks"
+            checked={value?.hasHallmarks || false}
+            onChange={(e) => onChange({ ...value, hasHallmarks: e.target.checked })}
+            className="rounded border-gray-300"
+          />
+          <label htmlFor="hasHallmarks" className="text-sm font-medium text-gray-700">
+            This item has hallmarks / maker marks
+          </label>
+        </div>
+
+        {value?.hasHallmarks && (
+          <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Hallmark / Maker Mark
+              </label>
+              <input
+                type="text"
+                value={value?.hallmarks || ''}
+                onChange={(e) => onChange({ ...value, hallmarks: e.target.value })}
+                placeholder="e.g., 14k, 925, Tiffany"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Condition Description
@@ -177,24 +170,116 @@ export default function CertificationInput({ value, onChange, context }: Certifi
                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
               />
             </div>
-          )}
+          </div>
+        )}
+
+        {!value?.hasHallmarks && (
+          <div className="mt-2 p-3 bg-gray-100 rounded-md">
+            <p className="text-sm text-gray-600">
+              💎 This item will be listed without hallmarks.
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // For other items, show simple condition
+  if (isOther) {
+    return (
+      <div className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Condition Description
+          </label>
+          <textarea
+            value={value?.condition || ''}
+            onChange={(e) => onChange({ ...value, condition: e.target.value })}
+            placeholder="Describe the item's condition"
+            rows={3}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md"
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // For coins and rounds - show grading options
+  return (
+    <div className="space-y-4">
+      {/* Grading toggle */}
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="isGraded"
+          checked={value?.isGraded || false}
+          onChange={(e) => onChange({ ...value, isGraded: e.target.checked })}
+          className="rounded border-gray-300"
+        />
+        <label htmlFor="isGraded" className="text-sm font-medium text-gray-700">
+          This {context === 'round' ? 'round' : 'coin'} is professionally graded
+        </label>
+      </div>
+
+      {value?.isGraded && (
+        <div className="mt-4 p-4 bg-gray-50 rounded-lg space-y-4">
+          {/* Grading service - only for coins/rounds */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Grading Service
+            </label>
+            <select
+              value={value?.service || ''}
+              onChange={(e) => onChange({ ...value, service: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select...</option>
+              {gradingServices[context === 'round' ? 'round' : 'coin']?.map(s => (
+                <option key={s.value} value={s.value}>{s.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Grade - for coins/rounds */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Grade</label>
+            <select
+              value={value?.grade || ''}
+              onChange={(e) => onChange({ ...value, grade: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            >
+              <option value="">Select grade...</option>
+              {gradeOptions.map(g => (
+                <option key={g.value} value={g.value}>{g.label}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Certification Number */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Certification Number
+            </label>
+            <input
+              type="text"
+              value={value?.certNumber || ''}
+              onChange={(e) => onChange({ ...value, certNumber: e.target.value })}
+              placeholder="e.g., 12345678"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md"
+            />
+          </div>
         </div>
       )}
 
-      {/* Raw/Uncertified option - different for each type */}
-      {!value?.isGraded && !value?.hasAssay && !value?.hasHallmarks && (
+      {/* Raw/Uncertified option */}
+      {!value?.isGraded && (
         <div className="mt-2 p-3 bg-gray-100 rounded-md">
           <p className="text-sm text-gray-600">
-            {context === 'bar' ? '📦 This bar will be listed as uncertified.' :
-             context === 'jewelry' ? '💎 This item will be listed without hallmarks.' :
-             context === 'round' ? '⭕ This round will be listed as raw/unslabbed.' :
-             '🪙 This coin will be listed as raw/un-graded.'}
+            🪙 This {context === 'round' ? 'round' : 'coin'} will be listed as raw/un-graded.
           </p>
-          {(context === 'coin' || context === 'round') && (
-            <p className="text-xs text-gray-500 mt-1">
-              Describe the condition in your listing description.
-            </p>
-          )}
+          <p className="text-xs text-gray-500 mt-1">
+            Describe the condition in your listing description.
+          </p>
         </div>
       )}
     </div>
