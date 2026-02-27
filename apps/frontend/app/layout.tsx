@@ -1,6 +1,18 @@
 import { WalletProvider } from '@/hooks/useWallet';
 import Link from 'next/link';
 import UniversalWalletButton from '@/components/shared/UniversalWalletButton';
+import { GoogleAnalytics } from '@next/third-parties/google';
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <GoogleAnalytics gaId="G-FXD292BQT8" />
+      </body>
+    </html>
+  );
+}
 
 export const metadata = {
   title: 'Phoenix Precious Metals Exchange',
