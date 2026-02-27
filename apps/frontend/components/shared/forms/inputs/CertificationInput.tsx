@@ -72,11 +72,6 @@ export default function CertificationInput({ value, onChange, context }: Certifi
 
   const currentServices = context ? gradingServices[context as keyof typeof gradingServices] : gradingServices.coin;
 
-  // For scrap - don't show certification at all
-  if (context === 'other' && value?.isScrap) {
-    return null;
-  }
-
   return (
     <div className="space-y-4">
       {/* Main toggle - adapts to context */}
