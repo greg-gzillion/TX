@@ -6,51 +6,55 @@ interface WeightInputProps {
   value: number;
   unit: 'troy_oz' | 'grams' | 'ounces';
   onChange: (value: number, unit: 'troy_oz' | 'grams' | 'ounces') => void;
-  metalType?: string; // Add metalType prop
+  metalType?: string;
 }
 
 export default function WeightInput({ value, unit, onChange, metalType }: WeightInputProps) {
   const [selectedCommon, setSelectedCommon] = useState<string | null>(null);
 
-  // Reset weight based on metal type when metalType changes
-  useEffect(() => {
-    if (!metalType) return;
-    
-    console.log('🔄 WeightInput: metalType changed to', metalType);
-    
-    // Set default weights based on metal type
-    if (metalType === 'Gold') {
-      onChange(1, 'troy_oz'); // 1 troy oz gold default
-    } else if (metalType === 'Silver') {
-      onChange(10, 'troy_oz'); // 10 troy oz silver default
-    } else if (metalType === 'Platinum') {
-      onChange(1, 'troy_oz'); // 1 troy oz platinum default
-    } else if (metalType === 'Palladium') {
-      onChange(1, 'troy_oz'); // 1 troy oz palladium default
-    }
-    
-    setSelectedCommon(null);
-  }, [metalType]); // Only run when metalType changes
+  // Define which units are appropriate for each metal
+  const getAvailableUnits = () => {
+    const allUnits = [
+      { id: 'troy_oz', label: 'oz t', full: 'Troy Ounces', metals: ['Gold', 'Silver', 'Platinum', 'Palladium'] },
+      { id: 'grams', label: 'g', full: 'Grams', metals: ['Gold', 'Silver', 'Platinum', 'Palladium', 'Copper', 'Other'] },
+      { id: 'ounces', label: 'oz', full: 'Avoirdupois Ounces', metals: ['Copper', 'Other'] },
+    ];
 
-  const units = [
-    { id: 'troy_oz', label: 'oz t', full: 'Troy Ounces' },
-    { id: 'grams', label: 'g', full: 'Grams' },
-    { id: 'ounces', label: 'oz', full: 'Avoirdupois Ounces' },
-  ];
+    return allUnits.map(u => ({
+      ...u,
+      available: !metalType || u.metals.includes(metalType)
+    }));
+  };
+
+  const units = getAvailableUnits();
 
   const commonWeights = [
-    { oz: 1, g: 31.1, label: '1 oz' },
-    { oz: 5, g: 155.5, label: '5 oz' },
-    { oz: 10, g: 311.0, label: '10 oz' },
-    { oz: 100, g: 3110.3, label: '100 oz' },
+    { oz: 1, g: 31.1, label: "1 oz" },
+    { oz: 5, g: 155.5, label: "5 oz" },
+    { oz: 10, g: 311.0, label: "10 oz" },
+    { oz: 100, g: 3110.3, label: "100 oz" },
   ];
 
   const commonGramWeights = [
-    { g: 1, oz: 0.032, label: '1 g' },
-    { g: 10, oz: 0.32, label: '10 g' },
-    { g: 100, oz: 3.21, label: '100 g' },
-    { g: 1000, oz: 32.15, label: '1000 g' },
+    { g: 1, oz: 0.032, label: "1 g" },
+    { g: 10, oz: 0.32, label: "10 g" },
+    { g: 100, oz: 3.21, label: "100 g" },
+    { g: 1000, oz: 32.15, label: "1000 g" },
   ];
+
+  // Auto-switch to an available unit if current unit becomes unavailable
+  useEffect(() => {
+    if (metalType) {
+      const currentUnitAvailable = units.find(u => u.id === unit)?.available;
+      if (!currentUnitAvailable) {
+        // Switch to first available unit
+        const firstAvailable = units.find(u => u.available);
+        if (firstAvailable) {
+          handleUnitChange(firstAvailable.id as any);
+        }
+      }
+    }
+  }, [metalType, unit]);
 
   const handleUnitChange = (newUnit: 'troy_oz' | 'grams' | 'ounces') => {
     let newValue = value;
@@ -96,12 +100,10 @@ export default function WeightInput({ value, unit, onChange, metalType }: Weight
     }
   };
 
-  // Check if a weight matches the current value (within tolerance)
   const isWeightSelected = (targetValue: number, targetUnit: 'troy_oz' | 'grams') => {
     if (unit === targetUnit && Math.abs(value - targetValue) < 0.1) {
       return true;
     }
-    // Convert and check if close enough
     if (targetUnit === 'troy_oz' && unit === 'grams') {
       return Math.abs(value - targetValue * 31.1035) < 1;
     }
@@ -114,7 +116,9 @@ export default function WeightInput({ value, unit, onChange, metalType }: Weight
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Weight</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Weight {metalType && <span className="text-xs text-gray-500">({metalType})</span>}
+        </label>
         <div className="flex gap-2">
           <input
             type="number"
@@ -132,19 +136,35 @@ export default function WeightInput({ value, unit, onChange, metalType }: Weight
               <button
                 key={u.id}
                 type="button"
-                onClick={() => handleUnitChange(u.id as any)}
+                onClick={() => u.available && handleUnitChange(u.id as any)}
+                disabled={!u.available}
                 className={`px-3 py-2 rounded-md border flex items-center gap-1 ${
-                  unit === u.id
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-300 hover:bg-gray-50'
+                  !u.available
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                    : unit === u.id
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-300 hover:bg-gray-50'
                 }`}
+                title={!u.available ? `${u.full} not typically used for ${metalType}` : ''}
               >
-                <span className="text-lg">{unit === u.id ? '●' : '○'}</span>
+                <span className="text-lg">
+                  {u.available ? (unit === u.id ? '●' : '○') : '○'}
+                </span>
                 {u.label}
               </button>
             ))}
           </div>
         </div>
+        {metalType === 'Silver' && (
+          <p className="text-xs text-amber-600 mt-1">
+            💡 Troy ounces (oz t) are standard for silver. Avoirdupois ounces (oz) are grayed out.
+          </p>
+        )}
+        {metalType === 'Copper' && (
+          <p className="text-xs text-amber-600 mt-1">
+            💡 Avoirdupois ounces (oz) and grams are common for copper. Troy ounces (oz t) are grayed out.
+          </p>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
