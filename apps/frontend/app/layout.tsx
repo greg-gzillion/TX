@@ -1,5 +1,6 @@
-import { WalletProvider } from '../lib/wallet-context';
+import { WalletProvider } from '@/hooks/useWallet';
 import Link from 'next/link';
+import UniversalWalletButton from '@/components/shared/UniversalWalletButton';
 
 export const metadata = {
   title: 'Phoenix Precious Metals Exchange',
@@ -15,12 +16,15 @@ export default function RootLayout({
     <html lang="en">
       <body style={{ margin: 0, padding: 0, backgroundColor: '#f9fafb' }}>
         <WalletProvider>
-          <nav className="border-b">
-            <div className="max-w-7xl mx-auto px-4 py-3 flex gap-6">
-              <Link href="/" className="font-bold">PhoenixPME</Link>
-              <Link href="/sandbox" className="text-blue-600">🧪 Sandbox</Link>
-              <Link href="/auctions">Auctions</Link>
-              <Link href="/create">Create</Link>
+          <nav className="border-b bg-white shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+              <div className="flex gap-6">
+                <Link href="/" className="font-bold text-xl text-amber-600">PhoenixPME</Link>
+                <Link href="/sandbox" className="text-purple-600 hover:text-purple-800">🧪 Sandbox</Link>
+                <Link href="/auctions" className="text-gray-600 hover:text-gray-900">Auctions</Link>
+                <Link href="/auctions/create" className="text-gray-600 hover:text-gray-900">Create</Link>
+              </div>
+              <UniversalWalletButton />
             </div>
           </nav>
           {children}
@@ -28,4 +32,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}// force fresh deploy Tue Feb 24 06:37:19 PM MST 2026
+}

@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 interface WeightInputProps {
   value: number;
   unit: 'troy_oz' | 'grams' | 'ounces';
@@ -7,6 +9,8 @@ interface WeightInputProps {
 }
 
 export default function WeightInput({ value, unit, onChange }: WeightInputProps) {
+  const [selectedCommon, setSelectedCommon] = useState<string | null>(null);
+
   const units = [
     { id: 'troy_oz', label: 'oz t', full: 'Troy Ounces' },
     { id: 'grams', label: 'g', full: 'Grams' },
@@ -14,17 +18,17 @@ export default function WeightInput({ value, unit, onChange }: WeightInputProps)
   ];
 
   const commonWeights = [
-    { oz: 1, g: 31.1 },
-    { oz: 5, g: 155.5 },
-    { oz: 10, g: 311.0 },
-    { oz: 100, g: 3110.3 },
+    { oz: 1, g: 31.1, label: '1 oz' },
+    { oz: 5, g: 155.5, label: '5 oz' },
+    { oz: 10, g: 311.0, label: '10 oz' },
+    { oz: 100, g: 3110.3, label: '100 oz' },
   ];
 
   const commonGramWeights = [
-    { g: 1, oz: 0.032 },
-    { g: 10, oz: 0.32 },
-    { g: 100, oz: 3.21 },
-    { g: 1000, oz: 32.15 },
+    { g: 1, oz: 0.032, label: '1 g' },
+    { g: 10, oz: 0.32, label: '10 g' },
+    { g: 100, oz: 3.21, label: '100 g' },
+    { g: 1000, oz: 32.15, label: '1000 g' },
   ];
 
   const handleUnitChange = (newUnit: 'troy_oz' | 'grams' | 'ounces') => {
@@ -46,18 +50,44 @@ export default function WeightInput({ value, unit, onChange }: WeightInputProps)
     }
     
     onChange(parseFloat(newValue.toFixed(4)), newUnit);
+    setSelectedCommon(null);
   };
 
-  const selectCommonWeight = (oz: number, g: number) => {
-    if (unit === 'troy_oz') onChange(oz, unit);
-    else if (unit === 'grams') onChange(g, unit);
-    else onChange(oz, 'troy_oz'); // default to troy oz for ounces unit
+  const selectCommonWeight = (oz: number, g: number, label: string) => {
+    setSelectedCommon(label);
+    if (unit === 'troy_oz') {
+      onChange(oz, unit);
+    } else if (unit === 'grams') {
+      onChange(g, unit);
+    } else {
+      onChange(oz, 'troy_oz');
+    }
   };
 
-  const selectCommonGram = (g: number, oz: number) => {
-    if (unit === 'grams') onChange(g, unit);
-    else if (unit === 'troy_oz') onChange(oz, unit);
-    else onChange(oz, 'troy_oz');
+  const selectCommonGram = (g: number, oz: number, label: string) => {
+    setSelectedCommon(label);
+    if (unit === 'grams') {
+      onChange(g, unit);
+    } else if (unit === 'troy_oz') {
+      onChange(oz, unit);
+    } else {
+      onChange(oz, 'troy_oz');
+    }
+  };
+
+  // Check if a weight matches the current value (within tolerance)
+  const isWeightSelected = (targetValue: number, targetUnit: 'troy_oz' | 'grams') => {
+    if (unit === targetUnit && Math.abs(value - targetValue) < 0.1) {
+      return true;
+    }
+    // Convert and check if close enough
+    if (targetUnit === 'troy_oz' && unit === 'grams') {
+      return Math.abs(value - targetValue * 31.1035) < 1;
+    }
+    if (targetUnit === 'grams' && unit === 'troy_oz') {
+      return Math.abs(value - targetValue / 31.1035) < 0.01;
+    }
+    return false;
   };
 
   return (
@@ -68,7 +98,10 @@ export default function WeightInput({ value, unit, onChange }: WeightInputProps)
           <input
             type="number"
             value={value}
-            onChange={(e) => onChange(parseFloat(e.target.value) || 0, unit)}
+            onChange={(e) => {
+              onChange(parseFloat(e.target.value) || 0, unit);
+              setSelectedCommon(null);
+            }}
             step="0.0001"
             min="0"
             className="w-32 px-3 py-2 border border-gray-300 rounded-md"
@@ -79,13 +112,13 @@ export default function WeightInput({ value, unit, onChange }: WeightInputProps)
                 key={u.id}
                 type="button"
                 onClick={() => handleUnitChange(u.id as any)}
-                className={`px-3 py-2 rounded-md border ${
+                className={`px-3 py-2 rounded-md border flex items-center gap-1 ${
                   unit === u.id
                     ? 'border-blue-500 bg-blue-50 text-blue-700'
                     : 'border-gray-300 hover:bg-gray-50'
                 }`}
               >
-                <span className="mr-1">{unit === u.id ? '●' : '○'}</span>
+                <span className="text-lg">{unit === u.id ? '●' : '○'}</span>
                 {u.label}
               </button>
             ))}
@@ -109,32 +142,48 @@ export default function WeightInput({ value, unit, onChange }: WeightInputProps)
       <div>
         <p className="text-xs text-gray-500 mb-2">Common Weights</p>
         <div className="flex flex-wrap gap-2">
-          {commonWeights.map((w) => (
-            <button
-              key={w.oz}
-              type="button"
-              onClick={() => selectCommonWeight(w.oz, w.g)}
-              className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm"
-            >
-              {w.oz} oz
-            </button>
-          ))}
+          {commonWeights.map((w) => {
+            const isSelected = selectedCommon === w.label || isWeightSelected(w.oz, 'troy_oz');
+            return (
+              <button
+                key={w.label}
+                type="button"
+                onClick={() => selectCommonWeight(w.oz, w.g, w.label)}
+                className={`px-3 py-1 rounded text-sm flex items-center gap-1 ${
+                  isSelected
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                }`}
+              >
+                <span className="text-xs">{isSelected ? '●' : '○'}</span>
+                {w.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       <div>
         <p className="text-xs text-gray-500 mb-2">Common Grams</p>
         <div className="flex flex-wrap gap-2">
-          {commonGramWeights.map((w) => (
-            <button
-              key={w.g}
-              type="button"
-              onClick={() => selectCommonGram(w.g, w.oz)}
-              className="px-3 py-1 bg-gray-100 hover:bg-gray-200 rounded text-sm"
-            >
-              {w.g} g
-            </button>
-          ))}
+          {commonGramWeights.map((w) => {
+            const isSelected = selectedCommon === w.label || isWeightSelected(w.g, 'grams');
+            return (
+              <button
+                key={w.label}
+                type="button"
+                onClick={() => selectCommonGram(w.g, w.oz, w.label)}
+                className={`px-3 py-1 rounded text-sm flex items-center gap-1 ${
+                  isSelected
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                }`}
+              >
+                <span className="text-xs">{isSelected ? '●' : '○'}</span>
+                {w.label}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

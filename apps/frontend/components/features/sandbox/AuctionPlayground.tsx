@@ -13,46 +13,68 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
     palladium: 1754.00
   });
   const [lastUpdated, setLastUpdated] = useState<string>('');
-  const [pricesLoaded, setPricesLoaded] = useState(false);
-  
-  // Use reference prices for mock auctions
-  const [mockAuctions, setMockAuctions] = useState([
-    { 
-      id: 1, 
-      title: '1oz Gold Bar', 
-      price: 5183.70,
-      seller: 'Test Seller 1',
-      sellerWallet: 'test_wallet_1',
-      bids: 12 
-    },
-    { 
-      id: 2, 
-      title: '10oz Silver Bar', 
-      price: 873.80,
-      seller: 'Test Seller 2',
-      sellerWallet: 'test_wallet_2',
-      bids: 8 
-    },
-    { 
-      id: 3, 
-      title: '1oz Platinum Bar', 
-      price: 2254.00,
-      seller: 'Test Seller 3',
-      sellerWallet: 'test_wallet_3',
-      bids: 5 
-    },
-    { 
-      id: 4, 
-      title: '1oz Palladium Bar', 
-      price: 1754.00,
-      seller: 'Test Seller 4',
-      sellerWallet: 'test_wallet_4',
-      bids: 3 
-    },
-  ]);
+  const [mockAuctions, setMockAuctions] = useState<any[]>([]);
   
   const [newAuction, setNewAuction] = useState({ title: '', price: '' });
   const [showCreateForm, setShowCreateForm] = useState(false);
+
+  // Load auctions from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('mockAuctions');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        setMockAuctions(parsed);
+      } catch (e) {
+        console.error('Failed to load saved auctions');
+      }
+    } else {
+      // Initialize with default mock auctions if none exist
+      const defaultAuctions = [
+        { 
+          id: 1, 
+          title: '1oz Gold Bar', 
+          price: referencePrices.gold,
+          seller: 'Test Seller 1',
+          sellerWallet: 'test_wallet_1',
+          bids: 12 
+        },
+        { 
+          id: 2, 
+          title: '10oz Silver Bar', 
+          price: referencePrices.silver * 10,
+          seller: 'Test Seller 2',
+          sellerWallet: 'test_wallet_2',
+          bids: 8 
+        },
+        { 
+          id: 3, 
+          title: '1oz Platinum Bar', 
+          price: referencePrices.platinum,
+          seller: 'Test Seller 3',
+          sellerWallet: 'test_wallet_3',
+          bids: 5 
+        },
+        { 
+          id: 4, 
+          title: '1oz Palladium Bar', 
+          price: referencePrices.palladium,
+          seller: 'Test Seller 4',
+          sellerWallet: 'test_wallet_4',
+          bids: 3 
+        },
+      ];
+      setMockAuctions(defaultAuctions);
+      localStorage.setItem('mockAuctions', JSON.stringify(defaultAuctions));
+    }
+  }, []);
+
+  // Save to localStorage whenever auctions change
+  useEffect(() => {
+    if (mockAuctions.length > 0) {
+      localStorage.setItem('mockAuctions', JSON.stringify(mockAuctions));
+    }
+  }, [mockAuctions]);
 
   // Fetch prices ONCE when component mounts
   useEffect(() => {
@@ -70,43 +92,6 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
           
           setReferencePrices(prices);
           setLastUpdated(new Date(data.data.createdAt).toLocaleString());
-          setPricesLoaded(true);
-          
-          // Update auction prices with fetched data
-          setMockAuctions([
-            { 
-              id: 1, 
-              title: '1oz Gold Bar', 
-              price: prices.gold,
-              seller: 'Test Seller 1',
-              sellerWallet: 'test_wallet_1',
-              bids: 12 
-            },
-            { 
-              id: 2, 
-              title: '10oz Silver Bar', 
-              price: prices.silver * 10,
-              seller: 'Test Seller 2',
-              sellerWallet: 'test_wallet_2',
-              bids: 8 
-            },
-            { 
-              id: 3, 
-              title: '1oz Platinum Bar', 
-              price: prices.platinum,
-              seller: 'Test Seller 3',
-              sellerWallet: 'test_wallet_3',
-              bids: 5 
-            },
-            { 
-              id: 4, 
-              title: '1oz Palladium Bar', 
-              price: prices.palladium,
-              seller: 'Test Seller 4',
-              sellerWallet: 'test_wallet_4',
-              bids: 3 
-            },
-          ]);
         }
       } catch (error) {
         console.error('Failed to fetch prices:', error);
@@ -114,8 +99,7 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
     };
     
     fetchPrices();
-    // NO INTERVAL - only fetch once on mount
-  }, []); // Empty dependency array = run once
+  }, []);
 
   const handleBid = (auctionId: number) => {
     setMockAuctions(prev =>
@@ -139,18 +123,20 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
       return;
     }
 
-    const newId = Math.max(...mockAuctions.map(a => a.id)) + 1;
-    setMockAuctions([
-      ...mockAuctions,
-      {
-        id: newId,
-        title: newAuction.title,
-        price: priceNum,
-        seller: wallet?.name || 'Anonymous',
-        sellerWallet: wallet?.address || 'unknown',
-        bids: 0
-      }
-    ]);
+    const newId = mockAuctions.length > 0 
+      ? Math.max(...mockAuctions.map(a => a.id)) + 1 
+      : 1;
+      
+    const newAuctionItem = {
+      id: newId,
+      title: newAuction.title,
+      price: priceNum,
+      seller: wallet?.name || 'Anonymous',
+      sellerWallet: wallet?.address || 'unknown',
+      bids: 0
+    };
+    
+    setMockAuctions([...mockAuctions, newAuctionItem]);
     setNewAuction({ title: '', price: '' });
     setShowCreateForm(false);
   };
@@ -164,7 +150,7 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
 
   return (
     <div>
-      {/* Price Update Indicator - STATIC */}
+      {/* Price Update Indicator */}
       {lastUpdated && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-2 mb-4 text-xs text-blue-700 flex justify-between items-center flex-wrap gap-2">
           <span>📊 Reference prices from: {lastUpdated}</span>
@@ -225,11 +211,11 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
                 />
                 <div className="flex gap-2">
                   <Button onClick={handleCreateAuction} variant="primary" size="md">
-  Create Mock Auction
-</Button>
-<Button onClick={() => setShowCreateForm(false)} variant="outline" size="md">
-  Cancel
-</Button>
+                    Create Mock Auction
+                  </Button>
+                  <Button onClick={() => setShowCreateForm(false)} variant="outline" size="md">
+                    Cancel
+                  </Button>
                 </div>
               </div>
             </div>
@@ -310,7 +296,7 @@ export function AuctionPlayground({ wallet }: { wallet: any }) {
               <li>Create your own mock auction with the <span className="font-medium">&ldquo;+ Create Mock Auction&rdquo;</span> button</li>
               <li>Different wallets can bid on different auctions</li>
               <li>You cannot bid on your own auctions (realistic behavior)</li>
-              <li>All data is temporary - resets on page refresh</li>
+              <li>All data is saved in your browser - persists between visits!</li>
               <li>Prices are loaded once - refresh to get latest reference prices</li>
             </ol>
           </div>

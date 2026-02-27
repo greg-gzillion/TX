@@ -8,9 +8,8 @@ import { PriceFeed } from '@/components/features/sandbox/PriceFeed';
 import { ContractTester } from '@/components/features/sandbox/ContractTester';
 import UniversalWalletV2 from '@/components/UniversalWalletV2';
 
-// Define the Wallet type - MATCH TestWallet interface
 interface Wallet {
-  id: string;           
+  id: string;
   name: string;
   address: string;
   balance: string;
@@ -24,13 +23,12 @@ export default function SandboxPage() {
   const [mounted, setMounted] = useState(false);
   const [useUniversalWallet, setUseUniversalWallet] = useState(false);
 
-  // Handle hydration issues
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return null; // Prevent hydration mismatch
+    return null;
   }
 
   return (
@@ -68,8 +66,8 @@ export default function SandboxPage() {
           </p>
         </div>
 
-        {/* Price Feed */}
-        <div className="mb-8 transform hover:scale-102 transition-transform">
+        {/* Price Feed with stable key */}
+        <div key="price-feed" className="mb-8 transform hover:scale-102 transition-transform">
           <PriceFeed />
         </div>
 
@@ -129,73 +127,74 @@ export default function SandboxPage() {
           </div>
         </div>
         
-        {/* Main Playground Area */}
-        {selectedWallet ? (
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-            {/* Tab Navigation */}
-            <div className="border-b bg-gray-50">
-              <div className="flex">
-                <button
-                  onClick={() => setActiveTab('auctions')}
-                  className={`px-8 py-4 font-medium text-lg transition-all relative ${
-                    activeTab === 'auctions' 
-                      ? 'text-blue-600 bg-white' 
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="text-2xl">🏛️</span>
-                    Auction Playground
-                  </span>
-                  {activeTab === 'auctions' && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></span>
-                  )}
-                </button>
-                <button
-                  onClick={() => setActiveTab('contracts')}
-                  className={`px-8 py-4 font-medium text-lg transition-all relative ${
-                    activeTab === 'contracts' 
-                      ? 'text-blue-600 bg-white' 
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-                  }`}
-                >
-                  <span className="flex items-center gap-2">
-                    <span className="text-2xl">📜</span>
-                    Contract Tester
-                  </span>
-                  {activeTab === 'contracts' && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></span>
-                  )}
-                </button>
+        {/* Main Playground Area with stable key */}
+        <div key="playground">
+          {selectedWallet ? (
+            <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+              {/* Tab Navigation */}
+              <div className="border-b bg-gray-50">
+                <div className="flex">
+                  <button
+                    onClick={() => setActiveTab('auctions')}
+                    className={`px-8 py-4 font-medium text-lg transition-all relative ${
+                      activeTab === 'auctions' 
+                        ? 'text-blue-600 bg-white' 
+                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">🏛️</span>
+                      Auction Playground
+                    </span>
+                    {activeTab === 'auctions' && (
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></span>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('contracts')}
+                    className={`px-8 py-4 font-medium text-lg transition-all relative ${
+                      activeTab === 'contracts' 
+                        ? 'text-blue-600 bg-white' 
+                        : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="flex items-center gap-2">
+                      <span className="text-2xl">📜</span>
+                      Contract Tester
+                    </span>
+                    {activeTab === 'contracts' && (
+                      <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-600"></span>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Tab Content */}
+              <div className="p-6">
+                {activeTab === 'auctions' && (
+                  <div className="animate-fadeIn">
+                    <AuctionPlayground wallet={selectedWallet} />
+                  </div>
+                )}
+                {activeTab === 'contracts' && (
+                  <div className="animate-fadeIn">
+                    <ContractTester wallet={selectedWallet} />
+                  </div>
+                )}
               </div>
             </div>
-
-            {/* Tab Content */}
-            <div className="p-6">
-              {activeTab === 'auctions' && (
-                <div className="animate-fadeIn">
-                  <AuctionPlayground wallet={selectedWallet} />
-                </div>
-              )}
-              {activeTab === 'contracts' && (
-                <div className="animate-fadeIn">
-                  <ContractTester wallet={selectedWallet} />
-                </div>
-              )}
+          ) : (
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl shadow-lg p-12 text-center border-2 border-dashed border-blue-200">
+              <div className="text-8xl mb-4 animate-bounce">👆</div>
+              <h3 className="text-2xl font-bold text-gray-700 mb-2">
+                Select a Wallet to Begin
+              </h3>
+              <p className="text-gray-500 max-w-md mx-auto">
+                Choose a wallet from the panels above to start testing auctions and smart contracts
+              </p>
             </div>
-          </div>
-        ) : (
-          // Prompt to select wallet
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl shadow-lg p-12 text-center border-2 border-dashed border-blue-200">
-            <div className="text-8xl mb-4 animate-bounce">👆</div>
-            <h3 className="text-2xl font-bold text-gray-700 mb-2">
-              Select a Wallet to Begin
-            </h3>
-            <p className="text-gray-500 max-w-md mx-auto">
-              Choose a wallet from the panels above to start testing auctions and smart contracts
-            </p>
-          </div>
-        )}
+          )}
+        </div>
         
         {/* Footer Disclaimer */}
         <div className="mt-8 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800">
@@ -213,7 +212,6 @@ export default function SandboxPage() {
         </div>
       </div>
 
-      {/* Add custom animations */}
       <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
