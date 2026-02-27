@@ -1,13 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { MetalType } from '@/lib/types/metals';
 import MetalSelector from '@/components/shared/forms/inputs/MetalSelector';
 import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector';
 import CoinDetailsForm from '../forms/coin';
+import RoundsDetailsForm from '../forms/RoundsDetailsForm';
+import BarsDetailsForm from '../forms/BarsDetailsForm';
+import JewelryDetailsForm from '../forms/JewelryDetailsForm';
 
 interface BasicInfoStepProps {
-  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other';
-  setMetalType: (value: any) => void;
+  metalType: MetalType;
+  setMetalType: (value: MetalType) => void;
   formType: 'coin' | 'round' | 'bar' | 'jewelry' | 'other';
   setFormType: (value: any) => void;
   coinDetails: any;
@@ -34,11 +37,6 @@ export default function BasicInfoStep({
   jewelryDetails,
   setJewelryDetails
 }: BasicInfoStepProps) {
-  // Force re-render when formType changes
-  useEffect(() => {
-    console.log('🔄 BasicInfoStep formType changed to:', formType);
-  }, [formType]);
-
   return (
     <section className="bg-white p-6 rounded-xl border shadow-sm">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">1. Basic Information</h2>
@@ -51,13 +49,36 @@ export default function BasicInfoStep({
           <FormTypeSelector value={formType} onChange={setFormType} />
         </div>
         
+        {/* Coin Details - Only for numismatic coins */}
         {formType === 'coin' && (
-          <div key={`coin-form-${Date.now()}`}> {/* Force re-render with unique key */}
-            <CoinDetailsForm 
-              coinDetails={coinDetails}
-              onChange={setCoinDetails}
-            />
-          </div>
+          <CoinDetailsForm 
+            coinDetails={coinDetails}
+            onChange={setCoinDetails}
+          />
+        )}
+        
+        {/* Round Details - For private mint rounds/bullion */}
+        {formType === 'round' && (
+          <RoundsDetailsForm 
+            roundDetails={roundDetails}
+            onChange={setRoundDetails}
+          />
+        )}
+        
+        {/* Bar Details - For bullion bars */}
+        {formType === 'bar' && (
+          <BarsDetailsForm 
+            barDetails={barDetails}
+            onChange={setBarDetails}
+          />
+        )}
+        
+        {/* Jewelry Details - For jewelry items */}
+        {formType === 'jewelry' && (
+          <JewelryDetailsForm 
+            jewelryDetails={jewelryDetails}
+            onChange={setJewelryDetails}
+          />
         )}
       </div>
     </section>

@@ -1,9 +1,10 @@
+import { MetalType } from '@/lib/types/metals';
 'use client';
 
 import PriceCalculator from '@/components/shared/forms/inputs/PriceCalculator';
 
 interface PricingStepProps {
-  metalType: string;
+  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Copper' | 'Other';
   weight: number;
   weightUnit: 'troy_oz' | 'grams' | 'ounces';
   purity: number;

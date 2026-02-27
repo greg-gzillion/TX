@@ -1,3 +1,4 @@
+import { MetalType } from '@/lib/types/metals';
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -69,7 +70,7 @@ export function useAuctionForm() {
   const [lastUpdated, setLastUpdated] = useState('');
   
   // Basic Info
-  const [metalType, setMetalType] = useState<'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other'>('Gold');
+  const [metalType, setMetalType] = useState<MetalType>('Gold');
   const [formType, setFormType] = useState<'coin' | 'round' | 'bar' | 'jewelry' | 'other'>('coin');
   
   // Weight & Purity

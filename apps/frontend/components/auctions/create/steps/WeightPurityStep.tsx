@@ -1,5 +1,6 @@
 'use client';
 
+import { MetalType } from '@/lib/types/metals';
 import WeightInput from '@/components/shared/forms/inputs/WeightInput';
 import PuritySelector from '@/components/shared/forms/inputs/PuritySelector';
 
@@ -10,7 +11,7 @@ interface WeightPurityStepProps {
   setWeightUnit: (value: 'troy_oz' | 'grams' | 'ounces') => void;
   purity: number;
   setPurity: (value: number) => void;
-  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other';  // ✅ Fix this line
+  metalType: MetalType;
 }
 
 export default function WeightPurityStep({
@@ -34,6 +35,7 @@ export default function WeightPurityStep({
               setWeight(newValue);
               setWeightUnit(newUnit);
             }}
+            metalType={metalType}
           />
         </div>
         <div>

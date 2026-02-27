@@ -12,19 +12,21 @@ interface CoinDetailsFormProps {
     grade: string;
   };
   onChange: (details: any) => void;
+  metalType?: string; // Pass the selected metal type from parent
 }
 
-export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFormProps) {
+export default function CoinDetailsForm({ coinDetails, onChange, metalType }: CoinDetailsFormProps) {
   const [customCountry, setCustomCountry] = useState('');
   const [customMint, setCustomMint] = useState('');
   const [showCustomCountry, setShowCustomCountry] = useState(false);
   const [showCustomMint, setShowCustomMint] = useState(false);
-  
-  // Local state for text inputs to prevent re-render issues
   const [localYear, setLocalYear] = useState(coinDetails.year || '');
   const [localMintage, setLocalMintage] = useState(coinDetails.mintage || '');
+  const [yearTimeout, setYearTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [mintageTimeout, setMintageTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [validationWarning, setValidationWarning] = useState<string | null>(null);
 
-  // Sync local state with props when they change from outside
+  // Sync local state with props
   useEffect(() => {
     setLocalYear(coinDetails.year || '');
   }, [coinDetails.year]);
@@ -33,47 +35,7 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
     setLocalMintage(coinDetails.mintage || '');
   }, [coinDetails.mintage]);
 
-  const updateField = (field: string, value: any) => {
-    console.log(`Updating ${field} to:`, value);
-    const newDetails = { ...coinDetails, [field]: value };
-    onChange(newDetails);
-  };
-
-  const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalYear(value); // Update local state immediately
-    
-    // Clear any pending timeout
-    if (yearTimeout) clearTimeout(yearTimeout);
-    
-    // Set new timeout to update parent
-    const timeout = setTimeout(() => {
-      updateField('year', value);
-    }, 500);
-    
-    setYearTimeout(timeout);
-  };
-
-  const handleMintageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocalMintage(value); // Update local state immediately
-    
-    // Clear any pending timeout
-    if (mintageTimeout) clearTimeout(mintageTimeout);
-    
-    // Set new timeout to update parent
-    const timeout = setTimeout(() => {
-      updateField('mintage', value);
-    }, 500);
-    
-    setMintageTimeout(timeout);
-  };
-
-  // Store timeouts for cleanup
-  const [yearTimeout, setYearTimeout] = useState<NodeJS.Timeout | null>(null);
-  const [mintageTimeout, setMintageTimeout] = useState<NodeJS.Timeout | null>(null);
-
-  // Cleanup timeouts on unmount
+  // Cleanup timeouts
   useEffect(() => {
     return () => {
       if (yearTimeout) clearTimeout(yearTimeout);
@@ -81,9 +43,33 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
     };
   }, [yearTimeout, mintageTimeout]);
 
-  const handleCountryChange = (selectedValue: string) => {
-    console.log('Country selected:', selectedValue);
+  const updateField = (field: string, value: any) => {
+    const newDetails = { ...coinDetails, [field]: value };
+    onChange(newDetails);
     
+    // Validate after update
+    if (field === 'mint' || field === 'country') {
+      validateSelection(metalType, coinDetails.country, value);
+    }
+  };
+
+  const handleYearChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalYear(value);
+    if (yearTimeout) clearTimeout(yearTimeout);
+    const timeout = setTimeout(() => updateField('year', value), 500);
+    setYearTimeout(timeout);
+  };
+
+  const handleMintageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocalMintage(value);
+    if (mintageTimeout) clearTimeout(mintageTimeout);
+    const timeout = setTimeout(() => updateField('mintage', value), 500);
+    setMintageTimeout(timeout);
+  };
+
+  const handleCountryChange = (selectedValue: string) => {
     if (selectedValue === 'custom') {
       setShowCustomCountry(true);
     } else if (selectedValue === 'Other') {
@@ -96,6 +82,7 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
       };
       onChange(newDetails);
       setShowCustomCountry(false);
+      setValidationWarning(null);
     } else if (selectedValue) {
       const newDetails = { 
         ...coinDetails, 
@@ -106,12 +93,12 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
       };
       onChange(newDetails);
       setShowCustomCountry(false);
+      setValidationWarning(null);
     }
   };
 
   const handleCustomCountryAdd = () => {
     if (customCountry.trim()) {
-      console.log('Adding custom country:', customCountry.trim());
       const newDetails = { 
         ...coinDetails, 
         country: customCountry.trim(),
@@ -122,17 +109,17 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
       onChange(newDetails);
       setCustomCountry('');
       setShowCustomCountry(false);
+      setValidationWarning(null);
     }
   };
 
   const handleMintChange = (selectedValue: string) => {
-    console.log('Mint selected:', selectedValue);
-    
     if (selectedValue === 'custom') {
       setShowCustomMint(true);
     } else if (selectedValue) {
       updateField('mint', selectedValue);
       setShowCustomMint(false);
+      validateSelection(metalType, coinDetails.country, selectedValue);
     }
   };
 
@@ -141,69 +128,177 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
       updateField('mint', customMint.trim());
       setCustomMint('');
       setShowCustomMint(false);
+      validateSelection(metalType, coinDetails.country, customMint.trim());
     }
   };
 
-  // Mint lists by country
-  const mintLists: Record<string, string[]> = {
-    'USA': [
-      'Philadelphia (P) - 1792-present',
-      'Denver (D) - 1906-present',
-      'San Francisco (S) - 1854-present',
-      'West Point (W) - 1988-present',
-      'Carson City (CC) - 1870-1893',
-      'Charlotte (C) - 1838-1861',
-      'Dahlonega (D) - 1838-1861',
-      'New Orleans (O) - 1838-1909'
-    ],
-    'Canada': [
-      'Royal Canadian Mint - Ottawa (1908-present)',
-      'Royal Canadian Mint - Winnipeg (1976-present)'
-    ],
-    'UK': [
-      'Royal Mint - London (886-1975)',
-      'Royal Mint - Llantrisant (1968-present)'
-    ],
-    'Mexico': [
-      'Casa de Moneda de México (1535-present)'
-    ],
-    'Australia': [
-      'Perth Mint (1899-present)',
-      'Royal Australian Mint - Canberra (1965-present)'
-    ],
-    'Austria': [
-      'Austrian Mint (1489-present)'
-    ],
-    'South Africa': [
-      'South African Mint (1892-present)'
-    ],
-    'Switzerland': [
-      'Swissmint - Bern (1855-present)',
-      'PAMP Suisse (1977-present)'
-    ],
-    'Germany': [
-      'Berlin Mint (1280-present)',
-      'Hamburg Mint (834-present)',
-      'Munich Mint (1158-present)',
-      'Stuttgart Mint (1374-present)',
-      'Karlsruhe Mint (1827-present)',
-      'Dresden Mint (1556-present)',
-      'Frankfurt Mint (1405-present)'
-    ]
+  // VALIDATION FUNCTION - Checks if mint ever produced this metal
+  const validateSelection = (metal?: string, country?: string, mint?: string) => {
+    if (!metal || !country || !mint) return;
+    
+    // Historical database of which mints produced which metals
+    const metalMintHistory: Record<string, Record<string, string[]>> = {
+      'USA': {
+        'Gold': ['Philadelphia', 'Denver', 'San Francisco', 'West Point', 'New Orleans', 'Carson City', 'Charlotte', 'Dahlonega'],
+        'Silver': ['Philadelphia', 'Denver', 'San Francisco', 'West Point', 'New Orleans', 'Carson City'],
+        'Platinum': ['Philadelphia', 'West Point'], // Only P and W made platinum eagles
+        'Palladium': ['West Point'], // Only W makes palladium eagles
+        'Copper': ['Philadelphia', 'Denver', 'San Francisco']
+      },
+      'Russia': {
+        'Gold': ['Saint Petersburg Mint (СПБ)', 'Moscow Mint (ММД)', 'Ekaterinburg Mint (ЕМ)'],
+        'Silver': ['Saint Petersburg Mint (СПБ)', 'Moscow Mint (ММД)', 'Ekaterinburg Mint (ЕМ)', 'Suzun Mint (СУЗУН)'],
+        'Platinum': ['Saint Petersburg Mint (СПБ)'], // Only СПБ made imperial platinum
+        'Palladium': [], // Russia never made palladium coins historically
+        'Copper': ['Saint Petersburg Mint (СПБ)', 'Moscow Mint (ММД)', 'Ekaterinburg Mint (ЕМ)', 'Suzun Mint (СУЗУН)']
+      },
+      'Canada': {
+        'Gold': ['Royal Canadian Mint - Ottawa', 'Royal Canadian Mint - Winnipeg'],
+        'Silver': ['Royal Canadian Mint - Ottawa', 'Royal Canadian Mint - Winnipeg'],
+        'Platinum': ['Royal Canadian Mint - Ottawa'], // Platinum only from Ottawa
+        'Palladium': ['Royal Canadian Mint - Ottawa'], // Palladium only from Ottawa
+        'Copper': ['Royal Canadian Mint - Ottawa', 'Royal Canadian Mint - Winnipeg']
+      },
+      'UK': {
+        'Gold': ['Royal Mint - London', 'Royal Mint - Llantrisant'],
+        'Silver': ['Royal Mint - London', 'Royal Mint - Llantrisant'],
+        'Platinum': ['Royal Mint - Llantrisant'], // Modern platinum from Llantrisant
+        'Palladium': ['Royal Mint - Llantrisant'], // Modern palladium from Llantrisant
+        'Copper': ['Royal Mint - London', 'Royal Mint - Llantrisant']
+      }
+    };
+
+    // Check if this mint ever produced this metal
+    const countryData = metalMintHistory[country];
+    if (countryData) {
+      const validMints = countryData[metal as keyof typeof countryData];
+      if (validMints && !validMints.includes(mint)) {
+        setValidationWarning(`Warning: ${mint} may not have produced ${metal} coins. Please verify this is correct.`);
+      } else {
+        setValidationWarning(null);
+      }
+    }
   };
 
-  const currentMints = coinDetails.country && 
-    coinDetails.country !== 'Other' && 
-    coinDetails.country !== 'custom' 
-    ? mintLists[coinDetails.country] || [] 
-    : [];
+  // Get mints for selected country - FILTERED BY METAL TYPE
+  const getMintsForCountry = () => {
+    if (!coinDetails.country || coinDetails.country === 'Other' || coinDetails.country === 'custom') {
+      return [];
+    }
+
+    // Base mint lists by country
+    const allMints: Record<string, string[]> = {
+      'USA': [
+        'Philadelphia (P) - 1792-present',
+        'Denver (D) - 1906-present',
+        'San Francisco (S) - 1854-present',
+        'West Point (W) - 1988-present',
+        'Carson City (CC) - 1870-1893',
+        'Charlotte (C) - 1838-1861',
+        'Dahlonega (D) - 1838-1861',
+        'New Orleans (O) - 1838-1909',
+        'Manila (M) - 1920-1922, 1925-1941'
+      ],
+      'Russia': [
+        'Saint Petersburg Mint (СПБ) - 1724-present',
+        'Moscow Mint (ММД) - 1942-present',
+        'Ekaterinburg Mint (ЕМ) - 1725-1876',
+        'Suzun Mint (СУЗУН) - 1766-1847',
+        'Warsaw Mint (ВМ) - 1815-1915',
+        'Helsinki Mint (СБ) - 1860-1917',
+        'Tiflis Mint (ТФ) - 1804-1833'
+      ],
+      'Canada': [
+        'Royal Canadian Mint - Ottawa (1908-present)',
+        'Royal Canadian Mint - Winnipeg (1976-present)'
+      ],
+      'UK': [
+        'Royal Mint - London (886-1975)',
+        'Royal Mint - Llantrisant (1968-present)'
+      ],
+      'Mexico': [
+        'Mexico Mint (Casa de Moneda) - 1535-present'
+      ],
+      'Australia': [
+        'Perth Mint (1899-present)',
+        'Royal Australian Mint - Canberra (1965-present)'
+      ],
+      'Austria': [
+        'Austrian Mint (Münze Österreich) - 1489-present'
+      ],
+      'South Africa': [
+        'South African Mint - 1892-present'
+      ],
+      'Switzerland': [
+        'Swissmint - Bern (1855-present)',
+        'PAMP Suisse (1977-present)'
+      ],
+      'Germany': [
+        'Berlin Mint (A) - 1280-present',
+        'Hamburg Mint (J) - 834-present',
+        'Munich Mint (D) - 1158-present',
+        'Stuttgart Mint (F) - 1374-present',
+        'Karlsruhe Mint (G) - 1827-present',
+        'Dresden Mint (E) - 1556-present',
+        'Frankfurt Mint (C) - 1405-present'
+      ],
+      'China': [
+        'China Mint - Beijing',
+        'China Mint - Shanghai',
+        'China Mint - Shenzhen',
+        'China Mint - Shenyang'
+      ]
+    };
+
+    // If no metal type, return all mints
+    if (!metalType) return allMints[coinDetails.country] || [];
+
+    // Metal-specific mint filtering
+    const metalMintMap: Record<string, Record<string, string[]>> = {
+      'USA': {
+        'Platinum': ['Philadelphia (P)', 'West Point (W)'], // Only P and W made platinum
+        'Palladium': ['West Point (W)'], // Only W made palladium
+        'Gold': allMints['USA'], // All US mints made gold
+        'Silver': allMints['USA'], // All US mints made silver
+        'Copper': ['Philadelphia (P)', 'Denver (D)', 'San Francisco (S)'] // Only P,D,S made copper coins
+      },
+      'Russia': {
+        'Platinum': ['Saint Petersburg Mint (СПБ)'], // Only СПБ made imperial platinum
+        'Palladium': [], // Russia never made palladium coins
+        'Gold': allMints['Russia'],
+        'Silver': allMints['Russia'],
+        'Copper': allMints['Russia']
+      }
+    };
+
+    // Get filtered mints for this metal, or return all if no filter exists
+    const countryFilter = metalMintMap[coinDetails.country];
+    if (countryFilter && countryFilter[metalType]) {
+      // Filter the full mint list to only include those that match the metal-specific entries
+      return allMints[coinDetails.country].filter(mint => 
+        countryFilter[metalType].some(validMint => mint.includes(validMint))
+      );
+    }
+
+    return allMints[coinDetails.country] || [];
+  };
+
+  const currentMints = getMintsForCountry();
 
   return (
     <div className="mt-4 p-4 bg-amber-50 rounded-lg border border-amber-200">
       <h3 className="font-semibold text-amber-800 mb-3 flex items-center gap-2">
         <span className="text-xl">🪙</span>
         Coin Details
+        {metalType && <span className="text-sm font-normal text-gray-600 ml-2">({metalType})</span>}
       </h3>
+      
+      {/* Validation Warning */}
+      {validationWarning && (
+        <div className="mb-4 p-3 bg-yellow-50 border border-yellow-300 rounded-lg text-sm text-yellow-800">
+          ⚠️ {validationWarning}
+        </div>
+      )}
       
       <div className="grid md:grid-cols-2 gap-4">
         {/* Country of Origin */}
@@ -222,12 +317,14 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
               <option value="USA">United States</option>
               <option value="Canada">Canada</option>
               <option value="UK">United Kingdom</option>
+              <option value="Russia">Russia</option>
               <option value="Mexico">Mexico</option>
+              <option value="China">China</option>
               <option value="Australia">Australia</option>
               <option value="Austria">Austria</option>
+              <option value="Germany">Germany</option>
               <option value="South Africa">South Africa</option>
               <option value="Switzerland">Switzerland</option>
-              <option value="Germany">Germany</option>
               <option value="Other">Other</option>
               <option value="custom">➕ Add custom country...</option>
             </select>
@@ -268,7 +365,7 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
           )}
         </div>
 
-        {/* Mint */}
+        {/* Mint - FILTERED BY METAL TYPE AND COUNTRY */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Mint {coinDetails.country && coinDetails.country !== 'Other' && <span className="text-red-500">*</span>}
@@ -276,19 +373,43 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
           
           {coinDetails.country && coinDetails.country !== 'Other' ? (
             !showCustomMint ? (
-              <select
-                value={coinDetails.mint}
-                onChange={(e) => handleMintChange(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white"
-              >
-                <option value="">Select mint...</option>
-                {currentMints.map((mint) => (
-                  <option key={mint} value={mint}>
-                    {mint}
-                  </option>
-                ))}
-                <option value="custom">➕ Add custom mint...</option>
-              </select>
+              <>
+                <select
+                  value={coinDetails.mint}
+                  onChange={(e) => handleMintChange(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white"
+                >
+                  <option value="">Select mint...</option>
+                  {currentMints.map((mint) => (
+                    <option key={mint} value={mint}>
+                      {mint}
+                    </option>
+                  ))}
+                  <option value="custom">➕ Add custom mint...</option>
+                </select>
+                
+                {/* Context hints */}
+                <div className="mt-1 space-y-1">
+                  <p className="text-xs text-blue-600">
+                    Showing mints for {coinDetails.country} {metalType && `that produced ${metalType}`}
+                  </p>
+                  {metalType === 'Platinum' && coinDetails.country === 'USA' && (
+                    <p className="text-xs text-amber-600">
+                      💡 Platinum Eagles were only minted at Philadelphia (P) and West Point (W)
+                    </p>
+                  )}
+                  {metalType === 'Palladium' && coinDetails.country === 'USA' && (
+                    <p className="text-xs text-amber-600">
+                      💡 Palladium Eagles are only minted at West Point (W)
+                    </p>
+                  )}
+                  {metalType === 'Platinum' && coinDetails.country === 'Russia' && (
+                    <p className="text-xs text-amber-600">
+                      💡 Russian imperial platinum was only minted at Saint Petersburg (СПБ)
+                    </p>
+                  )}
+                </div>
+              </>
             ) : (
               <div className="flex gap-2">
                 <input
@@ -331,7 +452,7 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
           )}
         </div>
 
-        {/* Year - FIXED: Using local state */}
+        {/* Year */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Year <span className="text-red-500">*</span>
@@ -340,15 +461,15 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
             type="text"
             value={localYear}
             onChange={handleYearChange}
-            placeholder="e.g., 2024, 1986, 1879-CC, 1909-S"
+            placeholder="e.g., 1832, 1895, 1993"
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
           />
           <p className="text-xs text-gray-500 mt-1">
-            Include mint mark if applicable (e.g., 2024-P, 1883-CC)
+            Include mint mark if applicable (e.g., 1832-CПБ)
           </p>
         </div>
 
-        {/* Mintage - FIXED: Using local state */}
+        {/* Mintage */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Mintage <span className="text-xs text-gray-500">(optional)</span>
@@ -368,7 +489,7 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
         <label className="flex items-center gap-2">
           <input
             type="checkbox"
-            checked={coinDetails.isNumismatic || false}
+            checked={coinDetails.isNumismatic}
             onChange={(e) => updateField('isNumismatic', e.target.checked)}
             className="rounded border-gray-300"
           />
@@ -388,7 +509,7 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
             Grade / Condition
           </label>
           <select
-            value={coinDetails.grade || ''}
+            value={coinDetails.grade}
             onChange={(e) => updateField('grade', e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
           >
@@ -411,21 +532,6 @@ export default function CoinDetailsForm({ coinDetails, onChange }: CoinDetailsFo
             <option value="VG">VG (Very Good)</option>
             <option value="G">G (Good)</option>
           </select>
-        </div>
-      )}
-
-      {/* Helper text */}
-      {coinDetails.country === 'USA' && (
-        <div className="mt-3 p-2 bg-blue-50 rounded text-xs text-blue-700">
-          <p>💡 Examples of valuable US coins:</p>
-          <ul className="grid grid-cols-2 gap-1 mt-1">
-            <li>• 1909-S VDB Lincoln Cent</li>
-            <li>• 1916-D Mercury Dime</li>
-            <li>• 1933 Saint-Gaudens $20</li>
-            <li>• 1955 Double Die Lincoln</li>
-            <li>• 1970-S Small Date Cent</li>
-            <li>• 1995-W Silver Eagle</li>
-          </ul>
         </div>
       )}
     </div>

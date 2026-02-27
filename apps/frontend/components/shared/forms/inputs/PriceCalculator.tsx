@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 
 interface PriceCalculatorProps {
-  metalType: string;
+  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Copper' | 'Other';
   weight: number;
   weightUnit: 'troy_oz' | 'grams' | 'ounces';
   purity: number;

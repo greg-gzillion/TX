@@ -1,26 +1,29 @@
 'use client';
 
+import { MetalType } from '@/lib/types/metals';
+
 interface MetalSelectorProps {
-  value: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other';
-  onChange: (value: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other') => void;
+  value: MetalType;
+  onChange: (value: MetalType) => void;
 }
 
 export default function MetalSelector({ value, onChange }: MetalSelectorProps) {
-  const metals = [
+  const metals: { id: MetalType; label: string; icon: string }[] = [
     { id: 'Gold', label: 'Gold', icon: '🪙' },
     { id: 'Silver', label: 'Silver', icon: '🥈' },
     { id: 'Platinum', label: 'Platinum', icon: '🔷' },
     { id: 'Palladium', label: 'Palladium', icon: '🔶' },
+    { id: 'Copper', label: 'Copper', icon: '🟤' },
     { id: 'Other', label: 'Other', icon: '💎' },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
       {metals.map((metal) => (
         <button
           key={metal.id}
           type="button"
-          onClick={() => onChange(metal.id as any)}
+          onClick={() => onChange(metal.id)}
           className={`flex items-center gap-2 p-3 rounded-lg border-2 transition ${
             value === metal.id
               ? 'border-blue-500 bg-blue-50'

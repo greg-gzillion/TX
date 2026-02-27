@@ -1,15 +1,36 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface WeightInputProps {
   value: number;
   unit: 'troy_oz' | 'grams' | 'ounces';
   onChange: (value: number, unit: 'troy_oz' | 'grams' | 'ounces') => void;
+  metalType?: string; // Add metalType prop
 }
 
-export default function WeightInput({ value, unit, onChange }: WeightInputProps) {
+export default function WeightInput({ value, unit, onChange, metalType }: WeightInputProps) {
   const [selectedCommon, setSelectedCommon] = useState<string | null>(null);
+
+  // Reset weight based on metal type when metalType changes
+  useEffect(() => {
+    if (!metalType) return;
+    
+    console.log('🔄 WeightInput: metalType changed to', metalType);
+    
+    // Set default weights based on metal type
+    if (metalType === 'Gold') {
+      onChange(1, 'troy_oz'); // 1 troy oz gold default
+    } else if (metalType === 'Silver') {
+      onChange(10, 'troy_oz'); // 10 troy oz silver default
+    } else if (metalType === 'Platinum') {
+      onChange(1, 'troy_oz'); // 1 troy oz platinum default
+    } else if (metalType === 'Palladium') {
+      onChange(1, 'troy_oz'); // 1 troy oz palladium default
+    }
+    
+    setSelectedCommon(null);
+  }, [metalType]); // Only run when metalType changes
 
   const units = [
     { id: 'troy_oz', label: 'oz t', full: 'Troy Ounces' },
