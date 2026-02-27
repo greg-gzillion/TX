@@ -11,33 +11,57 @@ interface PriceBannerProps {
 }
 
 export default function PriceBanner({ spotPrices, lastUpdated }: PriceBannerProps) {
+  const metals = [
+    { name: 'GOLD', price: spotPrices.gold, icon: '🥇', color: 'amber', bg: 'amber-50', text: 'amber-700' },
+    { name: 'SILVER', price: spotPrices.silver, icon: '🥈', color: 'gray', bg: 'gray-50', text: 'gray-700' },
+    { name: 'PLATINUM', price: spotPrices.platinum, icon: '🔷', color: 'slate', bg: 'slate-50', text: 'slate-700' },
+    { name: 'PALLADIUM', price: spotPrices.palladium, icon: '🔶', color: 'zinc', bg: 'zinc-50', text: 'zinc-700' },
+  ];
+
   return (
-    <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-      <div className="flex justify-between items-center">
-        <span className="font-medium text-blue-900">Current Market Prices:</span>
+    <div className="mt-6 mb-8">
+      {/* Header with TESTUSD badge and timestamp */}
+      <div className="flex justify-between items-center mb-3">
+        <div className="flex items-center gap-2">
+          <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-medium">
+            🧪 TESTUSD
+          </span>
+          <span className="text-xs text-gray-500">
+            Test tokens only - no real value
+          </span>
+        </div>
         {lastUpdated && (
-          <span className="text-xs text-blue-600">Updated: {lastUpdated}</span>
+          <span className="text-xs text-gray-400">
+            Updated: {lastUpdated}
+          </span>
         )}
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-3">
-        <div className="bg-white p-2 rounded shadow-sm">
-          <span className="text-xs text-amber-600 block">GOLD</span>
-          <span className="text-lg font-bold">${spotPrices.gold.toFixed(2)}</span>
-        </div>
-        <div className="bg-white p-2 rounded shadow-sm">
-          <span className="text-xs text-gray-600 block">SILVER</span>
-          <span className="text-lg font-bold">${spotPrices.silver.toFixed(2)}</span>
-        </div>
-        <div className="bg-white p-2 rounded shadow-sm">
-          <span className="text-xs text-slate-600 block">PLATINUM</span>
-          <span className="text-lg font-bold">${spotPrices.platinum.toFixed(2)}</span>
-        </div>
-        <div className="bg-white p-2 rounded shadow-sm">
-          <span className="text-xs text-zinc-600 block">PALLADIUM</span>
-          <span className="text-lg font-bold">${spotPrices.palladium.toFixed(2)}</span>
-        </div>
+
+      {/* Price cards grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {metals.map((metal) => (
+          <div
+            key={metal.name}
+            className={`bg-${metal.bg} rounded-xl p-4 border border-${metal.color}-200 shadow-sm hover:shadow-md transition-shadow`}
+          >
+            <div className="flex items-center gap-2 mb-2">
+              <span className="text-xl">{metal.icon}</span>
+              <span className={`text-xs font-medium text-${metal.text} uppercase tracking-wider`}>
+                {metal.name}
+              </span>
+            </div>
+            <div className={`text-2xl font-bold text-${metal.text}`}>
+              ${metal.price.toFixed(2)}
+            </div>
+            <div className="text-xs text-gray-400 mt-1">
+              per troy oz
+            </div>
+          </div>
+        ))}
       </div>
-      <p className="text-xs text-gray-500 mt-2">
+
+      {/* Refresh note */}
+      <p className="text-xs text-gray-400 text-center mt-4">
         ⚡ Prices loaded from database. Refresh page to update.
       </p>
     </div>
