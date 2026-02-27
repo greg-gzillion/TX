@@ -1,11 +1,9 @@
 'use client';
 
+import { useEffect } from 'react';
 import MetalSelector from '@/components/shared/forms/inputs/MetalSelector';
 import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector';
-import CoinDetailsForm from '../forms/CoinDetailsForm';
-import RoundsDetailsForm from '../forms/RoundsDetailsForm';
-import BarsDetailsForm from '../forms/BarsDetailsForm';
-import JewelryDetailsForm from '../forms/JewelryDetailsForm';
+import CoinDetailsForm from '../forms/coin';
 
 interface BasicInfoStepProps {
   metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Other';
@@ -36,6 +34,11 @@ export default function BasicInfoStep({
   jewelryDetails,
   setJewelryDetails
 }: BasicInfoStepProps) {
+  // Force re-render when formType changes
+  useEffect(() => {
+    console.log('🔄 BasicInfoStep formType changed to:', formType);
+  }, [formType]);
+
   return (
     <section className="bg-white p-6 rounded-xl border shadow-sm">
       <h2 className="text-xl font-semibold text-gray-900 mb-6">1. Basic Information</h2>
@@ -49,31 +52,12 @@ export default function BasicInfoStep({
         </div>
         
         {formType === 'coin' && (
-          <CoinDetailsForm 
-            coinDetails={coinDetails}
-            onChange={setCoinDetails}
-          />
-        )}
-        
-        {formType === 'round' && (
-          <RoundsDetailsForm 
-            roundDetails={roundDetails}
-            onChange={setRoundDetails}
-          />
-        )}
-        
-        {formType === 'bar' && (
-          <BarsDetailsForm 
-            barDetails={barDetails}
-            onChange={setBarDetails}
-          />
-        )}
-        
-        {formType === 'jewelry' && (
-          <JewelryDetailsForm 
-            jewelryDetails={jewelryDetails}
-            onChange={setJewelryDetails}
-          />
+          <div key={`coin-form-${Date.now()}`}> {/* Force re-render with unique key */}
+            <CoinDetailsForm 
+              coinDetails={coinDetails}
+              onChange={setCoinDetails}
+            />
+          </div>
         )}
       </div>
     </section>
