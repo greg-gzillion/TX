@@ -51,12 +51,12 @@ export default function FeeDisplay({ estimatedValue }: FeeDisplayProps) {
           </div>
         </div>
       </div>
-<div className="mt-4 p-3 bg-white rounded-lg border border-amber-200">
+	<div className="mt-4 p-3 bg-white rounded-lg border border-amber-200">
         <p className="text-xs text-gray-600">
           💡 <strong>Compare to eBay:</strong> Same item would cost you ${ebayFee.toFixed(2)} in fees (10%). 
-          You save <span className="font-bold text-green-600">${savings.toFixed(2)}</span> by using PhoenixPME!
+          You save <span className="font-bold text-green-600">${savings.toFixed(2)}</span> by using PhoenixPME! <span className="text-xl" role="img" aria-label="mind blown">🤯</span>
         </p>
-      </div>      
+      </div>
     </div>
   );
 }
