@@ -18,21 +18,29 @@ export default function SubmitButton({ isSubmitting }: SubmitButtonProps) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl border shadow-sm">
-      <div className="flex justify-between items-center">
+    <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-300 rounded-xl">
+      <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold">Ready to List</h3>
+          <h3 className="text-xl font-bold text-gray-900">🚀 Ready to List!</h3>
+          <p className="text-sm text-gray-600 mt-1">
+            Your listing is complete
+          </p>
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
           onClick={handleClick}
-          className={`px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className="px-8 py-4 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-xl transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isSubmitting ? 'Creating...' : 'Create Test Auction'}
+          {isSubmitting ? 'Creating...' : 'Create Test Auction →'}
         </button>
+      </div>
+      
+      <div className="mt-4 pt-4 border-t border-green-200">
+        <p className="text-xs text-gray-600">
+          💡 This will create a test listing with TESTUSD (no real value). 
+          On March 6, you'll be able to create real listings with RLUSD.
+        </p>
       </div>
     </div>
   );

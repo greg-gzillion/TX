@@ -356,8 +356,9 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
               </div>
             )
           ) : (
-            <div className="px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-500">
-              {!coinDetails.country ? 'Select a country first' : 'Select "Other" or custom country for custom mint'}
+            <div className="px-3 py-2 bg-blue-50 border border-blue-300 rounded-md text-blue-700">
+              <p className="text-sm font-medium">💡 Select a country above first</p>
+              <p className="text-xs mt-1">Then you'll see the mints for that country</p>
             </div>
           )}
         </div>

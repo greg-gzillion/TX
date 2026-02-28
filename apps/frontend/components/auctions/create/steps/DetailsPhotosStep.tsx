@@ -29,16 +29,35 @@ export default function DetailsPhotosStep({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Item Photos</label>
-          <ImageUploader images={images} onChange={setImages} />
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Item Photos
+          </label>
+          <ImageUploader 
+            images={images}
+            onChange={setImages}
+          />
           <p className="text-xs text-gray-500 mt-2">
             Max 5 images, 2MB each. First image is the primary thumbnail.
-            {process.env.NEXT_PUBLIC_PINATA_JWT ? ' 📤 Uploading to IPFS via Pinata' : ' ⚠️ Pinata not configured'}
           </p>
+          
+          {/* Pinata warning - user friendly */}
+          {!process.env.NEXT_PUBLIC_PINATA_JWT && (
+            <div className="mt-2 p-3 bg-yellow-50 border border-yellow-300 rounded-md">
+              <p className="text-sm font-medium text-yellow-800">
+                📸 Photo upload temporarily disabled
+              </p>
+              <p className="text-xs text-yellow-700 mt-1">
+                Will be enabled at launch on March 6. For now, you can still create test listings.
+              </p>
+            </div>
+          )}
         </div>
 
+        {/* Video Option */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Video URL (Optional)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Video URL (Optional)
+          </label>
           <input
             type="url"
             value={videoUrl}
