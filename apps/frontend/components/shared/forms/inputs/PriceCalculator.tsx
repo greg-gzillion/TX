@@ -3,12 +3,12 @@
 import { useState, useEffect } from 'react';
 
 interface PriceCalculatorProps {
-  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Copper' | 'Other';
+  metalType: string;
   weight: number;
   weightUnit: 'troy_oz' | 'grams' | 'ounces';
   purity: number;
-  spotPrice: number;  // ✅ ADD THIS
-  onPriceUpdate: (price: number) => void;
+  spotPrice: number;
+  onPriceUpdate: (value: number) => void;
 }
 
 export default function PriceCalculator({
@@ -16,12 +16,10 @@ export default function PriceCalculator({
   weight,
   weightUnit,
   purity,
-  spotPrice,  // ✅ ADD THIS
-  onPriceUpdate,
+  spotPrice,
+  onPriceUpdate
 }: PriceCalculatorProps) {
   const [premiumPercent, setPremiumPercent] = useState<number>(5);
-  const [isCollectible, setIsCollectible] = useState<boolean>(false);
-  const [collectiblePremium, setCollectiblePremium] = useState<number>(0);
 
   // Convert to troy oz
   const convertToTroyOz = (): number => {
@@ -33,183 +31,84 @@ export default function PriceCalculator({
     }
   };
 
-  // Calculate all prices
+  // Calculate prices
   const calculatePrices = () => {
     const troyOz = convertToTroyOz();
-    const pureMetalValue = troyOz * spotPrice;  // ✅ Use passed spotPrice
+    const pureMetalValue = troyOz * spotPrice;
     const actualMetalValue = pureMetalValue * purity;
     const premiumValue = actualMetalValue * (premiumPercent / 100);
-    const collectibleValue = isCollectible ? 
-      actualMetalValue * (collectiblePremium / 100) : 0;
-    
-    const totalValue = actualMetalValue + premiumValue + collectibleValue;
+    const totalValue = actualMetalValue + premiumValue;
     
     return {
       pureMetalValue,
       actualMetalValue,
       premiumValue,
-      collectibleValue,
       totalValue
     };
   };
 
-  // Use useEffect to update parent only when values change
   useEffect(() => {
     const prices = calculatePrices();
-    if (onPriceUpdate) {
-      onPriceUpdate(prices.totalValue);
-    }
-  }, [spotPrice, premiumPercent, isCollectible, collectiblePremium, weight, weightUnit, purity, onPriceUpdate]);
+    onPriceUpdate(prices.totalValue);
+  }, [spotPrice, premiumPercent, weight, weightUnit, purity]);
 
   const prices = calculatePrices();
   const troyOz = convertToTroyOz();
 
   return (
-    <div className="space-y-6 p-4 border rounded-lg bg-white">
+    <div className="space-y-4 p-4 border rounded-lg bg-white">
       <h3 className="text-lg font-semibold text-gray-900">Pricing Calculator</h3>
       
       {/* Spot Price Display */}
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+      <div className="bg-blue-50 p-3 rounded-lg">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-blue-900">
-            Spot Price (per troy ounce)
-          </span>
-          <div className="text-right">
-            <span className="text-xl font-bold text-blue-700">
-              ${spotPrice.toFixed(2)}
-            </span>
-            <span className="text-xs text-blue-500 block">
-              Current market for {metalType}
-            </span>
-          </div>
+          <span className="text-sm font-medium text-blue-900">Spot Price:</span>
+          <span className="text-lg font-bold text-blue-700">${spotPrice.toFixed(2)}</span>
         </div>
+        <p className="text-xs text-blue-600 mt-1">per troy ounce</p>
       </div>
 
-      {/* Premium Slider */}
+      {/* Simple Premium Input */}
       <div>
-        <div className="flex justify-between items-center mb-2">
-          <label className="text-sm font-medium text-gray-700">
-            Market Premium: <span className="text-blue-600">{premiumPercent}%</span>
-          </label>
-          <span className="text-sm text-gray-500">
-            {premiumPercent >= 0 ? '+' : ''}{premiumPercent}%
-          </span>
-        </div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          Premium (%)
+        </label>
         <input
-          type="range"
+          type="number"
+          value={premiumPercent}
+          onChange={(e) => setPremiumPercent(parseFloat(e.target.value) || 0)}
           min="-20"
           max="100"
-          step="1"
-          value={premiumPercent}
-          onChange={(e) => setPremiumPercent(parseInt(e.target.value))}
-          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+          step="0.5"
+          className="w-full px-3 py-2 border border-gray-300 rounded-md"
         />
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>-20% (Below spot)</span>
-          <span>0% (At spot)</span>
-          <span>+100% (High premium)</span>
-        </div>
-      </div>
-
-      {/* Collectible Toggle */}
-      <div className="space-y-3">
-        <div className="flex items-center">
-          <input
-            type="checkbox"
-            id="collectible"
-            checked={isCollectible}
-            onChange={(e) => setIsCollectible(e.target.checked)}
-            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-          />
-          <label htmlFor="collectible" className="ml-2 text-sm font-medium text-gray-700">
-            Collector/Numismatic Item
-          </label>
-        </div>
-        
-        {isCollectible && (
-          <div>
-            <div className="flex justify-between items-center mb-2">
-              <label className="text-sm font-medium text-gray-700">
-                Collector Premium: <span className="text-green-600">{collectiblePremium}%</span>
-              </label>
-              <span className="text-sm text-gray-500">
-                +{collectiblePremium}%
-              </span>
-            </div>
-            <input
-              type="range"
-              min="0"
-              max="500"
-              step="5"
-              value={collectiblePremium}
-              onChange={(e) => setCollectiblePremium(parseInt(e.target.value))}
-              className="w-full h-2 bg-green-100 rounded-lg appearance-none cursor-pointer"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>0% (Bullion)</span>
-              <span>100% (Collectible)</span>
-              <span>500% (Rare)</span>
-            </div>
-          </div>
-        )}
+        <p className="text-xs text-gray-500 mt-1">
+          Enter premium percentage (typical: 2-15%)
+        </p>
       </div>
 
       {/* Price Breakdown */}
-      <div className="bg-gray-50 p-4 rounded-lg border">
-        <h4 className="font-medium text-gray-900 mb-3">Price Breakdown</h4>
-        <div className="space-y-2">
+      <div className="bg-gray-50 p-3 rounded-lg">
+        <h4 className="font-medium text-gray-900 mb-2 text-sm">Breakdown</h4>
+        <div className="space-y-1 text-sm">
           <div className="flex justify-between">
-            <span className="text-sm text-gray-600">Pure metal value:</span>
-            <span className="font-medium">${prices.pureMetalValue.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-sm text-gray-600">Purity adjustment ({purity * 100}%):</span>
+            <span className="text-gray-600">Metal value:</span>
             <span className="font-medium">${prices.actualMetalValue.toFixed(2)}</span>
           </div>
-          {premiumPercent !== 0 && (
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Market premium ({premiumPercent}%):</span>
-              <span className={`font-medium ${premiumPercent > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                {premiumPercent > 0 ? '+' : ''}${prices.premiumValue.toFixed(2)}
-              </span>
-            </div>
-          )}
-          {isCollectible && collectiblePremium > 0 && (
-            <div className="flex justify-between">
-              <span className="text-sm text-gray-600">Collector premium ({collectiblePremium}%):</span>
-              <span className="font-medium text-green-600">
-                +${prices.collectibleValue.toFixed(2)}
-              </span>
-            </div>
-          )}
-          <div className="border-t pt-2 mt-2">
-            <div className="flex justify-between">
-              <span className="font-semibold text-gray-900">Total Estimated Value:</span>
-              <span className="font-bold text-lg text-blue-600">
-                ${prices.totalValue.toFixed(2)}
-              </span>
+          <div className="flex justify-between">
+            <span className="text-gray-600">Premium ({premiumPercent}%):</span>
+            <span className="font-medium text-green-600">+${prices.premiumValue.toFixed(2)}</span>
+          </div>
+          <div className="border-t pt-1 mt-1">
+            <div className="flex justify-between font-bold">
+              <span>Total:</span>
+              <span className="text-blue-600">${prices.totalValue.toFixed(2)}</span>
             </div>
           </div>
         </div>
-        <div className="mt-3 text-xs text-gray-500">
-          <div>Based on: {troyOz.toFixed(4)} troy oz × ${spotPrice.toFixed(2)}/oz × {purity} purity</div>
-        </div>
-      </div>
-
-      {/* Fair Pricing Guide */}
-      <div className="bg-blue-50 p-3 rounded-md border border-blue-100">
-        <div className="flex items-start">
-          <span className="text-blue-500 mr-2">💡</span>
-          <div>
-            <h5 className="text-sm font-semibold text-blue-800">Fair Pricing Guide</h5>
-            <ul className="mt-1 text-xs text-blue-700 space-y-1">
-              <li>• <strong>Bullion bars:</strong> Typically +2% to +8% over spot</li>
-              <li>• <strong>Government coins:</strong> +5% to +15% (American Eagles, etc.)</li>
-              <li>• <strong>Rounds/Generic:</strong> +3% to +10% over spot</li>
-              <li>• <strong>Premiums above +50%</strong> may require justification</li>
-            </ul>
-          </div>
-        </div>
+        <p className="text-xs text-gray-500 mt-2">
+          {troyOz.toFixed(4)} oz × ${spotPrice.toFixed(2)} × {purity}
+        </p>
       </div>
     </div>
   );

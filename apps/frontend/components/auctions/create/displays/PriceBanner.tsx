@@ -11,47 +11,109 @@ interface PriceBannerProps {
 }
 
 export default function PriceBanner({ spotPrices, lastUpdated }: PriceBannerProps) {
-  const metals = [
-    { name: 'GOLD', price: spotPrices.gold, icon: '🥇', color: 'amber' },
-    { name: 'SILVER', price: spotPrices.silver, icon: '🥈', color: 'gray' },
-    { name: 'PLATINUM', price: spotPrices.platinum, icon: '🔷', color: 'slate' },
-    { name: 'PALLADIUM', price: spotPrices.palladium, icon: '🔶', color: 'zinc' },
-  ];
-
   return (
-    <div className="mt-4 mb-6 bg-white rounded-lg border border-gray-200 overflow-hidden">
-      {/* Header bar */}
-      <div className="bg-gray-50 px-4 py-2 border-b border-gray-200 flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-xs font-medium">
+    <div style={{
+      marginTop: '1rem',
+      marginBottom: '1.5rem',
+      backgroundColor: '#ffffff',
+      border: '1px solid #e5e7eb',
+      borderRadius: '0.5rem',
+      overflow: 'hidden',
+      width: '100%'
+    }}>
+      {/* Header */}
+      <div style={{
+        backgroundColor: '#f9fafb',
+        padding: '0.5rem 1rem',
+        borderBottom: '1px solid #e5e7eb',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{
+            backgroundColor: '#f3e8ff',
+            color: '#6b21a8',
+            padding: '0.125rem 0.5rem',
+            borderRadius: '9999px',
+            fontSize: '0.75rem',
+            fontWeight: '500'
+          }}>
             🧪 TESTUSD
           </span>
-          <span className="text-xs text-gray-500">
+          <span style={{ fontSize: '0.75rem', color: '#6b7280' }}>
             Test tokens only
           </span>
         </div>
         {lastUpdated && (
-          <span className="text-xs text-gray-400">
+          <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
             {lastUpdated}
           </span>
         )}
       </div>
 
-      {/* Price row - horizontal compact */}
-      <div className="p-3 grid grid-cols-4 gap-2">
-        {metals.map((metal) => (
-          <div key={metal.name} className="text-center">
-            <div className="text-xs text-gray-500 mb-1">{metal.name}</div>
-            <div className={`text-base font-bold text-${metal.color}-600`}>
-              ${metal.price.toFixed(2)}
-            </div>
+      {/* Price row - USING FLEXBOX (guaranteed horizontal) */}
+      <div style={{
+        padding: '1rem',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
+        {/* Gold */}
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#d97706' }}>
+            ${spotPrices.gold.toFixed(2)}
           </div>
-        ))}
+          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+            🥇 GOLD
+          </div>
+        </div>
+
+        <div style={{ width: '1px', height: '2rem', backgroundColor: '#e5e7eb', margin: '0 0.5rem' }}></div>
+
+        {/* Silver */}
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#4b5563' }}>
+            ${spotPrices.silver.toFixed(2)}
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+            🥈 SILVER
+          </div>
+        </div>
+
+        <div style={{ width: '1px', height: '2rem', backgroundColor: '#e5e7eb', margin: '0 0.5rem' }}></div>
+
+        {/* Platinum */}
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#475569' }}>
+            ${spotPrices.platinum.toFixed(2)}
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+            🔷 PLATINUM
+          </div>
+        </div>
+
+        <div style={{ width: '1px', height: '2rem', backgroundColor: '#e5e7eb', margin: '0 0.5rem' }}></div>
+
+        {/* Palladium */}
+        <div style={{ textAlign: 'center', flex: 1 }}>
+          <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#52525b' }}>
+            ${spotPrices.palladium.toFixed(2)}
+          </div>
+          <div style={{ fontSize: '0.75rem', color: '#6b7280' }}>
+            🔶 PALLADIUM
+          </div>
+        </div>
       </div>
 
-      {/* Footer note */}
-      <div className="bg-gray-50 px-4 py-1 border-t border-gray-200 text-right">
-        <span className="text-xs text-gray-400">⚡ from database</span>
+      {/* Footer */}
+      <div style={{
+        backgroundColor: '#f9fafb',
+        padding: '0.25rem 1rem',
+        borderTop: '1px solid #e5e7eb',
+        textAlign: 'right'
+      }}>
+        <span style={{ fontSize: '0.75rem', color: '#9ca3af' }}>⚡ from database</span>
       </div>
     </div>
   );

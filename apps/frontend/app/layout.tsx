@@ -1,18 +1,7 @@
 import { WalletProvider } from '@/hooks/useWallet';
 import Link from 'next/link';
 import UniversalWalletButton from '@/components/shared/UniversalWalletButton';
-import { GoogleAnalytics } from '@next/third-parties/google';
-
-export default function RootLayout({ children }) {
-  return (
-    <html lang="en">
-      <body>
-        {children}
-        <GoogleAnalytics gaId="G-FXD292BQT8" />
-      </body>
-    </html>
-  );
-}
+import { Analytics } from '@vercel/analytics/react';
 
 export const metadata = {
   title: 'Phoenix Precious Metals Exchange',
@@ -30,7 +19,7 @@ export default function RootLayout({
         <WalletProvider>
           <nav className="border-b bg-white shadow-sm">
             <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-              <div className="flex gap-6">
+              <div className="flex items-center gap-6">
                 <Link href="/" className="font-bold text-xl text-amber-600">PhoenixPME</Link>
                 <Link href="/sandbox" className="text-purple-600 hover:text-purple-800">🧪 Sandbox</Link>
                 <Link href="/auctions" className="text-gray-600 hover:text-gray-900">Auctions</Link>
@@ -41,6 +30,7 @@ export default function RootLayout({
           </nav>
           {children}
         </WalletProvider>
+        <Analytics />
       </body>
     </html>
   );
