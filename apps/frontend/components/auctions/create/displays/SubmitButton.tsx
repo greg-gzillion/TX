@@ -38,7 +38,7 @@ export default function SubmitButton({ isSubmitting }: SubmitButtonProps) {
 	<div className="mt-4 pt-4 border-t border-green-200">
         <p className="text-xs text-gray-600">
           💡 TESTUSD are test tokens with no real value. 
-          March 6 is TX testnet launch — that's when REAL testing begins! 🧪
+          March 6 is a new TX testnet will launch — that's when REAL testing begins! 🧪
         </p>
       </div>      
     </div>
