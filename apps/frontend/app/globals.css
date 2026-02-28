@@ -11,3 +11,52 @@
 }
 
 /* Any other global styles you need */
+/* React Select Custom Styles */
+.react-select-container {
+  @apply w-full;
+}
+
+.react-select__control {
+  @apply border border-gray-300 rounded-md shadow-sm hover:border-gray-400 !important;
+  min-height: 42px;
+}
+
+.react-select__control--is-focused {
+  @apply border-blue-500 ring-1 ring-blue-500 !important;
+}
+
+.react-select__menu {
+  @apply bg-white border border-gray-200 rounded-md shadow-lg z-50 !important;
+}
+
+.react-select__option {
+  @apply cursor-pointer hover:bg-amber-50 !important;
+}
+
+.react-select__option--is-selected {
+  @apply bg-amber-100 text-amber-900 !important;
+}
+
+.react-select__option--is-focused {
+  @apply bg-amber-50 !important;
+}
+
+.react-select__placeholder {
+  @apply text-gray-400 !important;
+}
+
+.react-select__single-value {
+  @apply text-gray-900 !important;
+}
+
+.react-select__indicator-separator {
+  @apply hidden !important;
+}
+
+.react-select__dropdown-indicator {
+  @apply text-gray-400 hover:text-gray-600 !important;
+}
+
+.react-select__group-heading {
+  @apply text-xs font-semibold text-gray-500 uppercase tracking-wider px-3 py-2 !important;
+}
