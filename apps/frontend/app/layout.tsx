@@ -2,10 +2,22 @@ import { WalletProvider } from '@/hooks/useWallet';
 import Link from 'next/link';
 import UniversalWalletButton from '@/components/shared/UniversalWalletButton';
 import { Analytics } from '@vercel/analytics/react';
+import Script from 'next/script';
 
 export const metadata = {
   title: 'Phoenix Precious Metals Exchange',
   description: 'Professional precious metals trading on Coreum blockchain',
+  openGraph: {
+    title: 'PhoenixPME - Peer-to-Peer Precious Metals Exchange',
+    description: 'Trade gold, silver, platinum, and palladium directly with 1.1% fees',
+    images: ['/Phoenix-sketch002.png'],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PhoenixPME',
+    description: 'Peer-to-peer precious metals trading',
+    images: ['/Phoenix-sketch002.png'],
+  },
 };
 
 export default function RootLayout({
@@ -31,6 +43,20 @@ export default function RootLayout({
           {children}
         </WalletProvider>
         <Analytics />
+        
+        {/* Google Analytics using script tags */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-FXD292BQT8"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-FXD292BQT8');
+          `}
+        </Script>
       </body>
     </html>
   );
