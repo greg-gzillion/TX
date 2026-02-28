@@ -8,7 +8,7 @@ export default function FeeDisplay({ estimatedValue }: FeeDisplayProps) {
   if (estimatedValue <= 0) return null;
 
   const yourFee = estimatedValue * 0.011;
-  const ebayFee = estimatedValue * 0.15;
+  const ebayFee = estimatedValue * 0.10;
   const savings = ebayFee - yourFee;
 
   return (
@@ -51,13 +51,12 @@ export default function FeeDisplay({ estimatedValue }: FeeDisplayProps) {
           </div>
         </div>
       </div>
-      
-      <div className="mt-4 p-3 bg-white rounded-lg border border-amber-200">
+<div className="mt-4 p-3 bg-white rounded-lg border border-amber-200">
         <p className="text-xs text-gray-600">
-          💡 <strong>Compare to eBay:</strong> Same item would cost you ${ebayFee.toFixed(2)} in fees (15%). 
+          💡 <strong>Compare to eBay:</strong> Same item would cost you ${ebayFee.toFixed(2)} in fees (10%). 
           You save <span className="font-bold text-green-600">${savings.toFixed(2)}</span> by using PhoenixPME!
         </p>
-      </div>
+      </div>      
     </div>
   );
 }
