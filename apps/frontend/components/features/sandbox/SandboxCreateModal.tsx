@@ -6,6 +6,7 @@ import FormTypeSelector from '@/components/shared/forms/inputs/FormTypeSelector'
 import WeightInput from '@/components/shared/forms/inputs/WeightInput';
 import PuritySelector from '@/components/shared/forms/inputs/PuritySelector';
 import { MetalType } from '@/lib/types/metals';
+import CoinDetailsForm from '@/components/auctions/create/forms/coin';
 
 interface Props {
   selectedWallet: any;
@@ -92,63 +93,14 @@ export default function SandboxCreateModal({ selectedWallet, onCreateAuction, on
             </div>
 
             {formData.formType === 'coin' && (
-              <div className="p-4 bg-amber-50 rounded-lg">
-                <h3 className="font-medium text-amber-800 mb-3">Coin Details</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  <input
-                    type="text"
-                    placeholder="Country"
-                    value={formData.coinDetails.country}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      coinDetails: { ...formData.coinDetails, country: e.target.value }
-                    })}
-                    className="px-3 py-2 border rounded-md"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Mint"
-                    value={formData.coinDetails.mint}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      coinDetails: { ...formData.coinDetails, mint: e.target.value }
-                    })}
-                    className="px-3 py-2 border rounded-md"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Year"
-                    value={formData.coinDetails.year}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      coinDetails: { ...formData.coinDetails, year: e.target.value }
-                    })}
-                    className="px-3 py-2 border rounded-md"
-                  />
-                  <input
-                    type="text"
-                    placeholder="Mintage"
-                    value={formData.coinDetails.mintage}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      coinDetails: { ...formData.coinDetails, mintage: e.target.value }
-                    })}
-                    className="px-3 py-2 border rounded-md"
-                  />
-                </div>
-                <label className="flex items-center gap-2 mt-3">
-                  <input
-                    type="checkbox"
-                    checked={formData.coinDetails.isNumismatic}
-                    onChange={(e) => setFormData({
-                      ...formData,
-                      coinDetails: { ...formData.coinDetails, isNumismatic: e.target.checked }
-                    })}
-                    className="rounded"
-                  />
-                  <span className="text-sm">Numismatic / Collectible</span>
-                </label>
-              </div>
+              <CoinDetailsForm
+                coinDetails={formData.coinDetails}
+                onChange={(updated) => setFormData({ 
+                  ...formData, 
+                  coinDetails: updated 
+                })}
+                metalType={formData.metalType}
+              />
             )}
 
             <div className="flex justify-end gap-2">
