@@ -35,13 +35,12 @@ export default function SubmitButton({ isSubmitting }: SubmitButtonProps) {
           {isSubmitting ? 'Creating...' : 'Create Test Auction →'}
         </button>
       </div>
-      
-      <div className="mt-4 pt-4 border-t border-green-200">
+	<div className="mt-4 pt-4 border-t border-green-200">
         <p className="text-xs text-gray-600">
-          💡 This will create a test listing with TESTUSD (no real value). 
-          On March 6, you'll be able to create real listings with RLUSD.
+          💡 TESTUSD are test tokens with no real value. 
+          March 6 is TX testnet launch — that's when REAL testing begins! 🧪
         </p>
-      </div>
+      </div>      
     </div>
   );
 }
