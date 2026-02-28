@@ -71,7 +71,7 @@ export default function CreateAuctionForm() {
 
           <div style={{ marginBottom: '2rem' }}>
             <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#111827', marginBottom: '0.5rem' }}>
-              Create Precious Metals Auction
+              Create Precious Metals Exchange
             </h1>
             <p style={{ fontSize: '1rem', color: '#4b5563', marginBottom: '1rem' }}>
               List your items for sale
