@@ -54,6 +54,7 @@ export default function BasicInfoStep({
           <CoinDetailsForm 
             coinDetails={coinDetails}
             onChange={setCoinDetails}
+            metalType={metalType}
           />
         )}
         
