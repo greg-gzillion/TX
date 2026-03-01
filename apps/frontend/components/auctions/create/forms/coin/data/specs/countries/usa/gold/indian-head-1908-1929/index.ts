@@ -1,0 +1,40 @@
+import { CoinSpec } from '../../../../../types';
+
+export const indianHeadGold: CoinSpec[] = [
+  {
+    name: 'Indian Head Gold $2.50',
+    years: '1908-1929',
+    weight: 4.18,
+    purity: 0.900,
+    diameter: 18,
+    thickness: 1.2,
+    composition: '90% Gold, 10% Copper',
+    designer: 'Bela Lyon Pratt',
+    notes: 'Incuse design (recessed), unique in US coinage',
+    category: 'Indian Head Gold'
+  },
+  {
+    name: 'Indian Head Gold $5',
+    years: '1908-1929',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    designer: 'Bela Lyon Pratt',
+    notes: 'Also features incuse design',
+    category: 'Indian Head Gold'
+  },
+  {
+    name: 'Indian Head Gold $10',
+    years: '1907-1933',
+    weight: 16.718,
+    purity: 0.900,
+    diameter: 27,
+    thickness: 2.2,
+    composition: '90% Gold, 10% Copper',
+    designer: 'Augustus Saint-Gaudens',
+    notes: 'Often called "Indian Head" but actually Liberty in war bonnet',
+    category: 'Indian Head Gold'
+  }
+];

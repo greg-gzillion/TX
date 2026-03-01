@@ -1,0 +1,65 @@
+import { CoinSpec } from '@/components/auctions/create/forms/coin/types';
+
+export const largeCents: CoinSpec[] = [
+  {
+    name: 'Chain Cent',
+    years: '1793',
+    weight: 13.48,
+    purity: 1.0,
+    diameter: 26,
+    thickness: 2.0,
+    composition: '100% Copper',
+    designer: 'Henry Voigt',
+    category: 'Large Cents'
+  },
+  {
+    name: 'Wreath Cent',
+    years: '1793',
+    weight: 13.48,
+    purity: 1.0,
+    diameter: 26,
+    thickness: 2.0,
+    composition: '100% Copper',
+    category: 'Large Cents'
+  },
+  {
+    name: 'Liberty Cap Cent',
+    years: '1793-1796',
+    weight: 13.48,
+    purity: 1.0,
+    diameter: 26,
+    thickness: 2.0,
+    composition: '100% Copper',
+    category: 'Large Cents'
+  },
+  {
+    name: 'Draped Bust Cent',
+    years: '1796-1807',
+    weight: 10.89,
+    purity: 1.0,
+    diameter: 29,
+    thickness: 2.0,
+    composition: '100% Copper',
+    category: 'Large Cents'
+  },
+  {
+    name: 'Classic Head Cent',
+    years: '1808-1814',
+    weight: 10.89,
+    purity: 1.0,
+    diameter: 29,
+    thickness: 2.0,
+    composition: '100% Copper',
+    category: 'Large Cents'
+  },
+  {
+    name: 'Coronet Head Cent',
+    years: '1816-1857',
+    weight: 10.89,
+    purity: 1.0,
+    diameter: 28,
+    thickness: 2.0,
+    composition: '100% Copper',
+    category: 'Large Cents'
+  }
+];
