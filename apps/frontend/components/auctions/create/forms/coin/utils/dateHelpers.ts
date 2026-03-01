@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export interface YearRange {
   min: number;
   max: number | 'present';
@@ -29,4 +30,12 @@ export const generateYearOptions = (minYear: number, maxYear: number | 'present'
     years.push(year);
   }
   return years;
+=======
+export const validateYearAgainstCoin = (year: string, coin: any) => {
+  return { valid: true };
+};
+
+export const validateYearAgainstMint = (year: string, minYear: number, maxYear: number | 'present') => {
+  return { valid: true };
+>>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 };

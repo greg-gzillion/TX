@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // Grade options with categories
+=======
+>>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 export const gradeOptions = [
   {
     label: '🏆 Mint State (Uncirculated)',

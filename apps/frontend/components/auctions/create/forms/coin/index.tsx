@@ -18,6 +18,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [selectedMint, setSelectedMint] = useState<any>(null);
   
+<<<<<<< HEAD
   // Coin data hook
   const {
     coinCategories,
@@ -33,6 +34,14 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
   
   // Year validation hook
   const { yearWarning } = useYearValidation(selectedCoin, selectedMint, coinDetails.year);
+=======
+  const { coinCategories, coinOptions, activeCategory, selectedCoin, handleCategoryClick, handleCoinSelect } = useCoinData(selectedCountry, metalType);
+  
+  // ✅ FIXED: Pass selectedCoin to useMintData
+  const { mintOptions } = useMintData(selectedCountry, metalType, selectedCoin);
+  
+  const { yearWarning, validYears } = useYearValidation(selectedCoin, selectedMint, coinDetails.year);
+>>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 
   // Initialize selectedCountry from props
   useEffect(() => {
@@ -140,13 +149,14 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
             className="react-select-container"
             classNamePrefix="react-select"
           />
-          {selectedCountry && mintOptions.length === 0 && (
-            <p className="text-xs text-amber-600 mt-1">
-              No mints found for {metalType || 'Gold'} in {selectedCountry.label}
+          {selectedCoin && mintOptions.length > 0 && (
+            <p className="text-xs text-gray-500 mt-1">
+              {mintOptions.length} mint(s) operational during this coin's era
             </p>
           )}
         </div>
 
+<<<<<<< HEAD
         {/* Year Dropdown - Based on COIN years, not mint years */}
 <div>
   <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -208,6 +218,41 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
     </p>
   )}
 </div>
+=======
+        {/* Year Dropdown */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Year <span className="text-red-500">*</span>
+          </label>
+          <Select
+            options={validYears.map(year => ({ value: year, label: year }))}
+            value={coinDetails.year ? { value: coinDetails.year, label: coinDetails.year } : null}
+            onChange={handleYearChange}
+            placeholder={selectedCoin ? "Select year..." : "Select a coin first"}
+            isDisabled={!selectedCoin || validYears.length === 0}
+            isSearchable
+            className="react-select-container"
+            classNamePrefix="react-select"
+          />
+          {selectedCoin && validYears.length > 0 && (
+            <p className="text-xs text-gray-500 mt-1">
+              Valid years: {validYears[validYears.length-1]} - {validYears[0]}
+            </p>
+          )}
+          {yearWarning && !coinDetails.overrideYear && (
+            <div className="mt-2">
+              <p className="text-xs text-red-600 mb-2">{yearWarning}</p>
+              <button
+                type="button"
+                onClick={handleOverrideYear}
+                className="text-xs bg-amber-100 text-amber-700 px-2 py-1 rounded hover:bg-amber-200"
+              >
+                This is correct - override validation
+              </button>
+            </div>
+          )}
+        </div>
+>>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 
         {/* Mintage */}
         <div>
@@ -236,9 +281,6 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
               This is a numismatic / collectible coin
             </span>
           </label>
-          <p className="text-xs text-gray-500 mt-1 ml-6">
-            Numismatic coins have value beyond their metal content (rarity, condition, historical significance)
-          </p>
         </div>
 
         {/* Grade Dropdown */}
