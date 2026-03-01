@@ -11,15 +11,7 @@ import { germanyMints } from './germany';
 import { chinaMints } from './china';
 import { otherMints } from './other';
 
-export interface MintData {
-  value: string;
-  label: string;
-  minYear: number;
-  maxYear: number | 'present';
-}
-
-// Combined mint database
-export const mintDatabase: Record<string, Record<string, MintData[]>> = {
+export const mintDatabase: Record<string, Record<string, any[]>> = {
   'USA': usaMints,
   'Canada': canadaMints,
   'UK': ukMints,

@@ -18,7 +18,7 @@ export const CoinDetailsDisplay = ({ coin }: CoinDetailsDisplayProps) => {
           {coin.years}
         </span>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div>
           <span className="text-gray-500">Weight:</span>
@@ -37,7 +37,7 @@ export const CoinDetailsDisplay = ({ coin }: CoinDetailsDisplayProps) => {
           <span className="ml-2 font-mono">{coin.thickness}mm</span>
         </div>
       </div>
-      
+
       {reference && (
         <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
           <h6 className="font-semibold text-blue-900 text-xs mb-2">📚 Reference Data</h6>
@@ -68,17 +68,17 @@ export const CoinDetailsDisplay = ({ coin }: CoinDetailsDisplayProps) => {
           </div>
         </div>
       )}
-      
+
       <p className="text-xs text-gray-600 mt-3 pt-2 border-t border-gray-100">
         <span className="font-medium">Composition:</span> {coin.composition}
       </p>
-      
+
       {coin.designer && (
         <p className="text-xs text-gray-600 mt-1">
           <span className="font-medium">Designer:</span> {coin.designer}
         </p>
       )}
-      
+
       {coin.notes && (
         <p className="text-xs text-amber-600 mt-2 italic">
           📝 {coin.notes}

@@ -1,3 +1,11 @@
+export interface MintData {
+  value: string;
+  label: string;
+  minYear: number;
+  maxYear: number | 'present';
+  metals?: string[];
+}
+
 export interface CoinSpec {
   name: string;
   years: string;
@@ -10,14 +18,6 @@ export interface CoinSpec {
   notes?: string;
   mint?: string;
   category?: string;
-}
-
-export interface MintData {
-  value: string;
-  label: string;
-  minYear: number;
-  maxYear: number | 'present';
-  metals?: string[];
 }
 
 export interface CoinDetails {
