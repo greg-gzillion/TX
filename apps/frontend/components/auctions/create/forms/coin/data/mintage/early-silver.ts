@@ -1,4 +1,4 @@
-import { MintageData } from './index';
+import { MintageData } from './early-gold';
 
 export const earlySilverMintages: Record<string, MintageData> = {
   'Flowing Hair Half Dime': {

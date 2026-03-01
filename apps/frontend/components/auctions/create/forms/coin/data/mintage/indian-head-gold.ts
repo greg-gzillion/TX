@@ -1,4 +1,4 @@
-import { MintageData } from './index';
+import { MintageData } from './early-gold';
 
 export const indianHeadGoldMintages: Record<string, MintageData> = {
   'Indian Head Gold $2.50': {

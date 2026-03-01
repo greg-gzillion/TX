@@ -1,4 +1,4 @@
-import { MintageData } from './index';
+import { MintageData } from './early-gold';
 
 export const modernGoldMintages: Record<string, MintageData> = {
   'American Gold Eagle (1 oz)': {
