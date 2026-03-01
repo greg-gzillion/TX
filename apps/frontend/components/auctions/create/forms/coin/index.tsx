@@ -18,7 +18,6 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [selectedMint, setSelectedMint] = useState<any>(null);
   
-<<<<<<< HEAD
   // Coin data hook
   const {
     coinCategories,
@@ -34,14 +33,12 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
   
   // Year validation hook
   const { yearWarning } = useYearValidation(selectedCoin, selectedMint, coinDetails.year);
-=======
   const { coinCategories, coinOptions, activeCategory, selectedCoin, handleCategoryClick, handleCoinSelect } = useCoinData(selectedCountry, metalType);
   
   // ✅ FIXED: Pass selectedCoin to useMintData
   const { mintOptions } = useMintData(selectedCountry, metalType, selectedCoin);
   
   const { yearWarning, validYears } = useYearValidation(selectedCoin, selectedMint, coinDetails.year);
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 
   // Initialize selectedCountry from props
   useEffect(() => {
@@ -140,6 +137,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
             Mint {selectedCountry && <span className="text-red-500">*</span>}
           </label>
           <Select
+
             options={mintOptions}
             value={mintOptions.find((m: any) => m.value === coinDetails.mint)}
             onChange={handleMintChange}
