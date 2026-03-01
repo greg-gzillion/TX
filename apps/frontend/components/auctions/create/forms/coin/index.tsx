@@ -37,14 +37,21 @@ const countryOptions = [
 const mintDatabase: Record<string, Record<string, Array<{ value: string; label: string; minYear: number; maxYear: number | 'present' }>>> = {
   'USA': {
     'Gold': [
-      { value: 'Philadelphia (P) - 1792-present', label: '🇺🇸 Philadelphia (P)', minYear: 1792, maxYear: 'present' },
-      { value: 'Denver (D) - 1906-present', label: '🇺🇸 Denver (D)', minYear: 1906, maxYear: 'present' },
-      { value: 'San Francisco (S) - 1854-present', label: '🇺🇸 San Francisco (S)', minYear: 1854, maxYear: 'present' },
-      { value: 'West Point (W) - 1988-present', label: '🇺🇸 West Point (W)', minYear: 1988, maxYear: 'present' },
-      { value: 'Carson City (CC) - 1870-1893', label: '🇺🇸 Carson City (CC)', minYear: 1870, maxYear: 1893 },
-      { value: 'Charlotte (C) - 1838-1861', label: '🇺🇸 Charlotte (C)', minYear: 1838, maxYear: 1861 },
-      { value: 'Dahlonega (D) - 1838-1861', label: '🇺🇸 Dahlonega (D)', minYear: 1838, maxYear: 1861 },
-      { value: 'New Orleans (O) - 1838-1909', label: '🇺🇸 New Orleans (O)', minYear: 1838, maxYear: 1909 },
+      // MOST COMMON FIRST - Modern mints everyone knows
+      { value: 'Philadelphia (P) - 1792-present', label: '🇺🇸 Philadelphia (P) - 1792-present', minYear: 1792, maxYear: 'present' },
+      { value: 'Denver (D) - 1906-present', label: '🇺🇸 Denver (D) - 1906-present', minYear: 1906, maxYear: 'present' },
+      { value: 'San Francisco (S) - 1854-present', label: '🇺🇸 San Francisco (S) - 1854-present', minYear: 1854, maxYear: 'present' },
+      { value: 'West Point (W) - 1988-present', label: '🇺🇸 West Point (W) - 1988-present', minYear: 1988, maxYear: 'present' },
+      
+      // HISTORICAL BUT STILL KNOWN
+      { value: 'New Orleans (O) - 1838-1909', label: '🇺🇸 New Orleans (O) - 1838-1909', minYear: 1838, maxYear: 1909 },
+      
+      // RARE - For serious collectors
+      { value: 'Carson City (CC) - 1870-1893', label: '🇺🇸 Carson City (CC) - 1870-1893', minYear: 1870, maxYear: 1893 },
+      
+      // EXTREMELY RARE - Civil War era Southern mints
+      { value: 'Charlotte (C) - 1838-1861', label: '🇺🇸 Charlotte (C) - 1838-1861', minYear: 1838, maxYear: 1861 },
+      { value: 'Dahlonega (D) - 1838-1861', label: '🇺🇸 Dahlonega (D) - 1838-1861', minYear: 1838, maxYear: 1861 },
     ],
     'Silver': [
       { value: 'Philadelphia (P) - 1792-present', label: '🇺🇸 Philadelphia (P)', minYear: 1792, maxYear: 'present' },
@@ -154,16 +161,43 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [selectedMint, setSelectedMint] = useState<any>(null);
 
-  // Update mint options when country or metal type changes
+  // Initialize selectedCountry from props on mount
   useEffect(() => {
-    if (selectedCountry && metalType) {
-      const mints = mintDatabase[selectedCountry.value]?.[metalType] || [];
+    if (coinDetails.country && !selectedCountry) {
+      const country = countryOptions.find(c => c.value === coinDetails.country);
+      if (country) {
+        setSelectedCountry(country);
+      }
+    }
+  }, [coinDetails.country]);
+
+  // SINGLE useEffect to handle mint options
+  useEffect(() => {
+    console.log('🔍 Mint useEffect triggered:', {
+      selectedCountry: selectedCountry?.value,
+      metalType: metalType,
+      hasData: !!mintDatabase[selectedCountry?.value]?.[metalType || ''],
+      mintCount: mintDatabase[selectedCountry?.value]?.[metalType || '']?.length
+    });
+    
+    if (selectedCountry) {
+      // Use provided metalType or default to 'Gold'
+      const currentMetal = metalType || 'Gold';
+      const mints = mintDatabase[selectedCountry.value]?.[currentMetal] || [];
+      
+      console.log(`🏛️ Loading mints for ${selectedCountry.label} (${currentMetal}):`, mints.length);
       setMintOptions(mints);
       
-      // Reset mint selection
-      setSelectedMint(null);
-      onChange({ ...coinDetails, mint: '', year: '' });
+      // Reset mint selection if current mint not in new options
+      if (selectedMint && !mints.find((m: any) => m.value === selectedMint.value)) {
+        setSelectedMint(null);
+        onChange({ ...coinDetails, mint: '', year: '' });
+      }
+      
       setYearOptions([]);
+    } else {
+      console.log('❌ No country selected');
+      setMintOptions([]);
     }
   }, [selectedCountry, metalType]);
 
@@ -180,6 +214,8 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
       }
       
       setYearOptions(years);
+    } else {
+      setYearOptions([]);
     }
   }, [selectedMint]);
 
@@ -245,7 +281,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
           </label>
           <Select
             options={mintOptions}
-            value={mintOptions.find(m => m.value === coinDetails.mint)}
+            value={mintOptions.find((m: any) => m.value === coinDetails.mint)}
             onChange={handleMintChange}
             placeholder={selectedCountry ? "Select mint..." : "Select a country first"}
             isDisabled={!selectedCountry}
@@ -255,7 +291,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
           />
           {selectedCountry && mintOptions.length === 0 && (
             <p className="text-xs text-amber-600 mt-1">
-              No mints found for {metalType} in {selectedCountry.label}
+              No mints found for {metalType || 'Gold'} in {selectedCountry.label}
             </p>
           )}
         </div>
@@ -267,7 +303,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
           </label>
           <Select
             options={yearOptions}
-            value={yearOptions.find(y => y.value === coinDetails.year)}
+            value={yearOptions.find((y: any) => y.value === coinDetails.year)}
             onChange={handleYearChange}
             placeholder={selectedMint ? "Select year..." : "Select a mint first"}
             isDisabled={!selectedMint}
@@ -322,7 +358,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
             </label>
             <Select
               options={gradeOptions}
-              value={gradeOptions.flatMap(g => g.options).find(g => g.value === coinDetails.grade)}
+              value={gradeOptions.flatMap(g => g.options).find((g: any) => g.value === coinDetails.grade)}
               onChange={handleGradeChange}
               placeholder="Select grade..."
               isSearchable
