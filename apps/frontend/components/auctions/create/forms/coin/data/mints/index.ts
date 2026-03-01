@@ -1,5 +1,4 @@
 import { usaMints } from './usa';
-<<<<<<< HEAD
 import { canadaMints } from './canada';
 import { ukMints } from './uk';
 import { russiaMints } from './russia';
@@ -25,9 +24,4 @@ export const mintDatabase: Record<string, Record<string, any[]>> = {
   'Germany': germanyMints,
   'China': chinaMints,
   'Other': otherMints,
-=======
-
-export const mintDatabase: Record<string, Record<string, any[]>> = {
-  'USA': usaMints,
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 };

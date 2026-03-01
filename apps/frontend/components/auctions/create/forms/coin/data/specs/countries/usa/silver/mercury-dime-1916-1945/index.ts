@@ -1,4 +1,4 @@
-import { CoinSpec } from '../../../../../types';
+import { CoinSpec } from '../../../../../../types';
 
 export const mercuryDime: CoinSpec[] = [
   {

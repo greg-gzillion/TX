@@ -1,19 +1,19 @@
-<<<<<<< HEAD
 export interface YearRange {
   min: number;
   max: number | 'present';
 }
 
 export const parseYearRange = (years: string): YearRange => {
-  // Handle formats: "1907-1933", "1986-present", "1849-1889"
   if (years.includes('-')) {
     const parts = years.split('-');
-    const min = parseInt(parts[0]);
-    const max = parts[1].includes('present') ? 'present' : parseInt(parts[1]);
-    return { min, max };
+    return {
+      min: parseInt(parts[0]),
+      max: parts[1].includes('present') ? 'present' : parseInt(parts[1])
+    };
+  } else {
+    const year = parseInt(years);
+    return { min: year, max: year };
   }
-  // Single year
-  return { min: parseInt(years), max: parseInt(years) };
 };
 
 export const isYearInRange = (year: number, range: YearRange): boolean => {
@@ -21,21 +21,6 @@ export const isYearInRange = (year: number, range: YearRange): boolean => {
   return year >= range.min && year <= max;
 };
 
-export const getCurrentYear = (): number => new Date().getFullYear();
-
-export const generateYearOptions = (minYear: number, maxYear: number | 'present'): number[] => {
-  const years = [];
-  const max = maxYear === 'present' ? getCurrentYear() : maxYear;
-  for (let year = max; year >= minYear; year--) {
-    years.push(year);
-  }
-  return years;
-=======
-export const validateYearAgainstCoin = (year: string, coin: any) => {
-  return { valid: true };
-};
-
-export const validateYearAgainstMint = (year: string, minYear: number, maxYear: number | 'present') => {
-  return { valid: true };
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
+export const getYearRange = (years: string): YearRange => {
+  return parseYearRange(years);
 };

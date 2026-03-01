@@ -1,4 +1,4 @@
-import { CoinSpec } from '../../../../../types';
+import { CoinSpec } from '../../../../../../types';
 
 export const platinumEagleProof: CoinSpec[] = [
   {
@@ -9,7 +9,7 @@ export const platinumEagleProof: CoinSpec[] = [
     diameter: 32.7,
     thickness: 2.7,
     composition: '99.95% Platinum',
-    notes: 'Proof finish with special mintmark',
+    notes: 'Proof finish',
     category: 'Platinum Eagle Proof'
   }
 ];

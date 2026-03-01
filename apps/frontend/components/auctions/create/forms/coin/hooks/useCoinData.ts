@@ -12,16 +12,11 @@ export const useCoinData = (
   const [selectedCoin, setSelectedCoin] = useState<CoinSpec | null>(null);
 
   useEffect(() => {
-<<<<<<< HEAD
-    if (selectedCountry?.value === 'USA' && metalType) {
-      const categories = getCategorizedByCountryAndMetal('USA', metalType);
-=======
     console.log('🔍 useCoinData triggered:', { selectedCountry, metalType });
     
     if (selectedCountry?.value === 'USA' && metalType) {
       const categories = getCategorizedByCountryAndMetal('USA', metalType);
       console.log('📊 Categories loaded:', categories);
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
       setCoinCategories(categories);
       
       const firstCategory = Object.keys(categories)[0];

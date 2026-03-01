@@ -18,10 +18,7 @@ export interface CoinSpec {
   notes?: string;
   mint?: string;
   category?: string;
-<<<<<<< HEAD
-=======
   mintage?: any;
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 }
 
 export interface CoinDetails {

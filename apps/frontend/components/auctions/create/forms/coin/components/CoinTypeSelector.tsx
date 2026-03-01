@@ -2,10 +2,6 @@
 
 import Select from 'react-select';
 import { CoinSpec } from '../types';
-<<<<<<< HEAD
-import { CoinDetailsDisplay } from './CoinDetailsDisplay';
-=======
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
 
 interface CoinTypeSelectorProps {
   coinCategories: Record<string, any>;
@@ -31,10 +27,6 @@ export const CoinTypeSelector = ({
         Coin Type / Series
       </h4>
       
-<<<<<<< HEAD
-      {/* Category tabs */}
-=======
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
       <div className="flex flex-wrap gap-2 mb-4">
         {Object.keys(coinCategories).map(category => (
           <button
@@ -51,10 +43,6 @@ export const CoinTypeSelector = ({
         ))}
       </div>
       
-<<<<<<< HEAD
-      {/* Coin selector dropdown */}
-=======
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
       <Select
         options={coinOptions}
         value={selectedCoin ? {
@@ -68,12 +56,6 @@ export const CoinTypeSelector = ({
         classNamePrefix="react-select"
         isDisabled={coinOptions.length === 0}
       />
-<<<<<<< HEAD
-      
-      {/* Display coin details when selected */}
-      {selectedCoin && <CoinDetailsDisplay coin={selectedCoin} />}
-=======
->>>>>>> acc41d4 (Fix: Complete coin module with all 9 US mints and date filtering)
     </div>
   );
 };

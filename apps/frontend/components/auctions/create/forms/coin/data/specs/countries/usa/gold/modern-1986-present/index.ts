@@ -1,4 +1,5 @@
-import { CoinSpec } from '../../../../../types';
+import { CoinSpec } from '../../../../../../types';
+import { goldCommemoratives } from './commemoratives';
 
 export const modernGold: CoinSpec[] = [
   {
@@ -52,5 +53,6 @@ export const modernGold: CoinSpec[] = [
     composition: '99.99% Gold',
     designer: 'James Earle Fraser',
     category: 'Modern Gold'
-  }
+  },
+  ...goldCommemoratives
 ];

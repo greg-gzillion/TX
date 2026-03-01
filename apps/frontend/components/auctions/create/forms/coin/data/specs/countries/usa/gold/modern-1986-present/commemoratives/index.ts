@@ -1,0 +1,260 @@
+import { CoinSpec } from '../../../../../../../types';
+
+export const goldCommemoratives: CoinSpec[] = [
+  {
+    name: 'Olympic Gold $10',
+    years: '1984',
+    weight: 16.718,
+    purity: 0.900,
+    diameter: 27,
+    thickness: 2.2,
+    composition: '90% Gold, 10% Copper',
+    notes: 'Los Angeles Olympics commemorative',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Statue of Liberty Gold $5',
+    years: '1986',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    notes: 'Centennial of Statue of Liberty',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Constitution Bicentennial Gold $5',
+    years: '1987',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Congress Bicentennial Gold $5',
+    years: '1989',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Mount Rushmore Gold $5',
+    years: '1991',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Olympics Gold $5',
+    years: '1992',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    notes: 'Barcelona Olympics commemorative',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'World Cup Gold $5',
+    years: '1994',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    notes: 'World Cup soccer',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Civil War Gold $5',
+    years: '1995',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Smithsonian Gold $5',
+    years: '1996',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Jackie Robinson Gold $5',
+    years: '1997',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Black Patriots Gold $5',
+    years: '1998',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Yellowstone Gold $5',
+    years: '1999',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Library of Congress Gold $5',
+    years: '2000',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'American Buffalo Gold $5',
+    years: '2001',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    notes: 'Commemorative, not bullion Buffalo',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'West Point Gold $5',
+    years: '2002',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'First Flight Gold $5',
+    years: '2003',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    notes: 'Wright Brothers centennial',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Lewis & Clark Gold $5',
+    years: '2004',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Marine Corps Gold $5',
+    years: '2005',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'San Francisco Mint Gold $5',
+    years: '2006',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Jamestown Gold $5',
+    years: '2007',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Lincoln Bicentennial Gold $5',
+    years: '2009',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Boy Scouts Gold $5',
+    years: '2010',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Army Gold $5',
+    years: '2011',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Star-Spangled Banner Gold $5',
+    years: '2012',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  },
+  {
+    name: 'Baseball Gold $5',
+    years: '2014',
+    weight: 8.359,
+    purity: 0.900,
+    diameter: 21.6,
+    thickness: 1.8,
+    composition: '90% Gold, 10% Copper',
+    category: 'Modern Gold Commemoratives'
+  }
+];
