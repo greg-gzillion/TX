@@ -19,7 +19,7 @@
     "lint": "echo 'Linting skipped for now'"
   },
   "dependencies": {
-    "@cosmjs/amino": "^0.32.4",
+    "@cosmjs/amino": "^0.38.1",
     "@cosmjs/cosmwasm-stargate": "^0.32.4",
     "@cosmjs/crypto": "^0.32.4",
     "@cosmjs/proto-signing": "^0.32.4",
