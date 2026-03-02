@@ -1,0 +1,71 @@
+[33mcommit acc41d4f4e564ad7cb97ea656e7ccf508d843608[m[33m ([m[1;32mmy-coin-work[m[33m)[m
+Author: Greg <gjf20842@gmail.com>
+Date:   Sun Mar 1 01:20:35 2026 -0700
+
+    Fix: Complete coin module with all 9 US mints and date filtering
+    
+    - Added Charlotte, Dahlonega, and Manila mints to database
+    - Fixed mint filtering based on coin production years
+    - Updated index.ts to import from usa.ts instead of hardcoding
+    - All gold series now show correct mints by era
+    - Liberty Head Gold 0 shows 7 mints (Charlotte/Dahlonega need denomination filtering)
+    
+    Ready for tomorrow's work on denomination-specific mint filtering
+
+A	apps/frontend/components/auctions/create/forms/coin/components/CoinTypeSelector.tsx
+A	apps/frontend/components/auctions/create/forms/coin/components/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/countries.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/grades.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/mints/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/mints/usa.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/half-cents/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/indian-head/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/large-cents/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/lincoln/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/nickels/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/copper/nickels/war-nickels-1942-1945/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/gold/capped-bust-1795-1834/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/gold/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/gold/indian-head-1908-1929/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/gold/liberty-head-1838-1907/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/gold/modern-1986-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/gold/saint-gaudens-1907-1933/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/palladium/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/palladium/palladium-eagle-1oz-2017-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/platinum/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/platinum/platinum-eagle-1oz-1997-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/platinum/platinum-eagle-proof-1997-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/american-silver-eagle-bullion-1986-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/barber-1892-1916/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/capped-bust-1807-1838/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/commemoratives-1982-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/draped-bust-1796-1807/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/flowing-hair-1794-1795/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/franklin-half-1948-1963/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/kennedy-half-1964/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/kennedy-half-40percent-1965-1970/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/mercury-dime-1916-1945/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/proof-sets-1992-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/roosevelt-dime-1946-1964/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/seated-liberty-1837-1891/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/silver-proof-eagle-1986-present/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/standing-quarter-1916-1930/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/walking-liberty-1916-1947/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/countries/usa/silver/washington-quarter-1932-1964/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/data/specs/types/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/hooks/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/hooks/useCoinData.ts
+A	apps/frontend/components/auctions/create/forms/coin/hooks/useMintData.ts
+A	apps/frontend/components/auctions/create/forms/coin/hooks/useMintFiltering.ts
+A	apps/frontend/components/auctions/create/forms/coin/hooks/useScrollPrevention.ts
+A	apps/frontend/components/auctions/create/forms/coin/hooks/useYearValidation.ts
+M	apps/frontend/components/auctions/create/forms/coin/index.tsx
+A	apps/frontend/components/auctions/create/forms/coin/types/index.ts
+A	apps/frontend/components/auctions/create/forms/coin/useYearValidation.ts
+A	apps/frontend/components/auctions/create/forms/coin/utils/dateHelpers.ts
+A	apps/frontend/components/auctions/create/forms/coin/utils/index.ts
