@@ -12,49 +12,41 @@ interface WeightInputProps {
 export default function WeightInput({ value, unit, onChange, metalType }: WeightInputProps) {
   const [selectedCommon, setSelectedCommon] = useState<string | null>(null);
 
-  // Define which units are appropriate for each metal
-  const getAvailableUnits = () => {
-    const allUnits = [
-      { id: 'troy_oz', label: 'oz t', full: 'Troy Ounces', metals: ['Gold', 'Silver', 'Platinum', 'Palladium'] },
-      { id: 'grams', label: 'g', full: 'Grams', metals: ['Gold', 'Silver', 'Platinum', 'Palladium', 'Copper', 'Other'] },
-      { id: 'ounces', label: 'oz', full: 'Avoirdupois Ounces', metals: ['Copper', 'Other'] },
-    ];
-
-    return allUnits.map(u => ({
-      ...u,
-      available: !metalType || u.metals.includes(metalType)
-    }));
-  };
-
-  const units = getAvailableUnits();
-
-  const commonWeights = [
-    { oz: 1, g: 31.1, label: "1 oz" },
-    { oz: 5, g: 155.5, label: "5 oz" },
-    { oz: 10, g: 311.0, label: "10 oz" },
-    { oz: 100, g: 3110.3, label: "100 oz" },
+  const units = [
+    { id: 'troy_oz', label: 'oz t', full: 'Troy Ounces', metals: ['Gold', 'Silver', 'Platinum', 'Palladium'] },
+    { id: 'grams', label: 'g', full: 'Grams', metals: ['Gold', 'Silver', 'Platinum', 'Palladium', 'Copper', 'Other'] },
+    { id: 'ounces', label: 'oz', full: 'Avoirdupois Ounces', metals: ['Copper', 'Other'] },
   ];
 
-  const commonGramWeights = [
-    { g: 1, oz: 0.032, label: "1 g" },
-    { g: 10, oz: 0.32, label: "10 g" },
-    { g: 100, oz: 3.21, label: "100 g" },
-    { g: 1000, oz: 32.15, label: "1000 g" },
-  ];
-
-  // Auto-switch to an available unit if current unit becomes unavailable
+  // Auto-switch unit when metal type changes
   useEffect(() => {
     if (metalType) {
-      const currentUnitAvailable = units.find(u => u.id === unit)?.available;
-      if (!currentUnitAvailable) {
-        // Switch to first available unit
-        const firstAvailable = units.find(u => u.available);
-        if (firstAvailable) {
-          handleUnitChange(firstAvailable.id as any);
+      // Check if current unit is allowed for this metal
+      const currentUnitAllowed = units.find(u => u.id === unit)?.metals?.includes(metalType);
+      
+      if (!currentUnitAllowed) {
+        // Find first allowed unit for this metal
+        const allowedUnit = units.find(u => u.metals?.includes(metalType));
+        if (allowedUnit) {
+          handleUnitChange(allowedUnit.id as any);
         }
       }
     }
-  }, [metalType, unit]);
+  }, [metalType]);
+
+  const commonWeights = [
+    { oz: 1, g: 31.1, label: '1 oz' },
+    { oz: 5, g: 155.5, label: '5 oz' },
+    { oz: 10, g: 311.0, label: '10 oz' },
+    { oz: 100, g: 3110.3, label: '100 oz' },
+  ];
+
+  const commonGramWeights = [
+    { g: 1, oz: 0.032, label: '1 g' },
+    { g: 10, oz: 0.32, label: '10 g' },
+    { g: 100, oz: 3.21, label: '100 g' },
+    { g: 1000, oz: 32.15, label: '1000 g' },
+  ];
 
   const handleUnitChange = (newUnit: 'troy_oz' | 'grams' | 'ounces') => {
     let newValue = value;
@@ -116,9 +108,7 @@ export default function WeightInput({ value, unit, onChange, metalType }: Weight
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Weight {metalType && <span className="text-xs text-gray-500">({metalType})</span>}
-        </label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Weight</label>
         <div className="flex gap-2">
           <input
             type="number"
@@ -132,51 +122,62 @@ export default function WeightInput({ value, unit, onChange, metalType }: Weight
             className="w-32 px-3 py-2 border border-gray-300 rounded-md"
           />
           <div className="flex gap-1">
-            {units.map((u) => (
-              <button
-                key={u.id}
-                type="button"
-                onClick={() => u.available && handleUnitChange(u.id as any)}
-                disabled={!u.available}
-                className={`px-3 py-2 rounded-md border flex items-center gap-1 ${
-                  !u.available
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
-                    : unit === u.id
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-300 hover:bg-gray-50'
-                }`}
-                title={!u.available ? `${u.full} not typically used for ${metalType}` : ''}
-              >
-                <span className="text-lg">
-                  {u.available ? (unit === u.id ? '●' : '○') : '○'}
-                </span>
-                {u.label}
-              </button>
-            ))}
+            {units.map((u) => {
+              const isAvailable = !metalType || (u.metals && u.metals.includes(metalType));
+              return (
+                <button
+                  key={u.id}
+                  type="button"
+                  onClick={() => isAvailable && handleUnitChange(u.id as any)}
+                  disabled={!isAvailable}
+                  className={`px-3 py-2 rounded-md border flex items-center gap-1 ${
+                    !isAvailable
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                      : unit === u.id
+                        ? 'border-blue-500 bg-blue-50 text-blue-700'
+                        : 'border-gray-300 hover:bg-gray-50'
+                  }`}
+                  title={!isAvailable ? `${u.full} not used for ${metalType}` : ''}
+                >
+                  <span className="text-lg">{unit === u.id && isAvailable ? '●' : '○'}</span>
+                  {u.label}
+                </button>
+              );
+            })}
           </div>
         </div>
-        {metalType === 'Silver' && (
-          <p className="text-xs text-amber-600 mt-1">
-            💡 Troy ounces (oz t) are standard for silver. Avoirdupois ounces (oz) are grayed out.
-          </p>
-        )}
-        {metalType === 'Copper' && (
-          <p className="text-xs text-amber-600 mt-1">
-            💡 Avoirdupois ounces (oz) and grams are common for copper. Troy ounces (oz t) are grayed out.
-          </p>
-        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <p className="text-xs text-gray-500 mb-2">Troy Ounces</p>
-          <p className="text-lg font-mono">{(unit === 'troy_oz' ? value : 
-            unit === 'grams' ? value / 31.1035 : value / 1.09714).toFixed(4)} oz t</p>
-        </div>
+        {/* Troy Ounces - hide for copper/other */}
+        {metalType !== 'Copper' && metalType !== 'Other' && (
+          <div>
+            <p className="text-xs text-gray-500 mb-2">Troy Ounces</p>
+            <p className="text-lg font-mono">
+              {(unit === 'troy_oz' ? value : 
+                unit === 'grams' ? value / 31.1035 : value / 1.09714).toFixed(4)} oz t
+            </p>
+          </div>
+        )}
+        
+        {/* Avoirdupois Ounces - show for copper/other */}
+        {(metalType === 'Copper' || metalType === 'Other') && (
+          <div>
+            <p className="text-xs text-gray-500 mb-2">Avoirdupois Ounces</p>
+            <p className="text-lg font-mono">
+              {(unit === 'ounces' ? value : 
+                unit === 'grams' ? value / 28.3495 : value * 1.09714).toFixed(4)} oz
+            </p>
+          </div>
+        )}
+        
+        {/* Grams - always show */}
         <div>
           <p className="text-xs text-gray-500 mb-2">Grams</p>
-          <p className="text-lg font-mono">{(unit === 'grams' ? value : 
-            unit === 'troy_oz' ? value * 31.1035 : value * 28.3495).toFixed(4)} g</p>
+          <p className="text-lg font-mono">
+            {(unit === 'grams' ? value : 
+              unit === 'troy_oz' ? value * 31.1035 : value * 28.3495).toFixed(4)} g
+          </p>
         </div>
       </div>
 

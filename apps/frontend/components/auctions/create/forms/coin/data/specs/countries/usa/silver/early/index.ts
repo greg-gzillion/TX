@@ -1,3 +1,5 @@
+import { CoinSpec } from '../../../../../../types';
+
 import { flowingHairSilver } from './flowing-hair';
 import { drapedBustSilver } from './draped-bust';
 import { cappedBustSilver } from './capped-bust';

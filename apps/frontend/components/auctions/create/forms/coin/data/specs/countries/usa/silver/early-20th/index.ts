@@ -1,3 +1,5 @@
+import { CoinSpec } from '../../../../../../types';
+
 import { mercuryDime } from './mercury-dime';
 import { standingQuarter } from './standing-quarter';
 import { walkingLiberty } from './walking-liberty';

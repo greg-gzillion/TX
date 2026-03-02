@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CoinSpec, MintData } from '../types';
+import { CoinSpec, MintData } from './types';
 
 export const useYearValidation = (
   selectedCoin: CoinSpec | null,

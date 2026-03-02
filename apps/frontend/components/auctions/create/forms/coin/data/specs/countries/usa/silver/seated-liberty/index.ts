@@ -1,3 +1,5 @@
+import { CoinSpec } from '../../../../../../types';
+
 import { seatedLibertyDimes } from './dimes';
 import { seatedLibertyQuarters } from './quarters';
 import { seatedLibertyHalves } from './halves';

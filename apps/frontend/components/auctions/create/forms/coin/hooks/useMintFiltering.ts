@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { mintDatabase } from '../data/mints';
-import { MintData } from '../types';
+import { MintData } from '@/components/auctions/create/forms/coin/types';
 
 export function useMintFiltering(selectedCountry: any, metalType?: string) {
   const [mintOptions, setMintOptions] = useState<MintData[]>([]);

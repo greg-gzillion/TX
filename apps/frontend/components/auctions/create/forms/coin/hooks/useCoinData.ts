@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { CoinSpec } from '../types';
+import { CoinSpec } from '@/components/auctions/create/forms/coin/types';
 import { getCategorizedByCountryAndMetal } from '../data/specs';
 
 export const useCoinData = (

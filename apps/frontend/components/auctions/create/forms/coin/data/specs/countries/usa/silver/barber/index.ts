@@ -1,3 +1,5 @@
+import { CoinSpec } from '../../../../../../types';
+
 import { barberDimes } from './dimes';
 import { barberQuarters } from './quarters';
 import { barberHalves } from './halves';

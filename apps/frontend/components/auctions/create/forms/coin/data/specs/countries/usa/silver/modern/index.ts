@@ -1,3 +1,5 @@
+import { CoinSpec } from '../../../../../../types';
+
 import { silverEagles, silverEaglesByType } from './eagle';
 import { modernSilverCommemoratives, modernSilverCommemorativesByDecade } from './commemoratives';
 import { silverProofSets, silverProofSetsByType } from './proof-sets';

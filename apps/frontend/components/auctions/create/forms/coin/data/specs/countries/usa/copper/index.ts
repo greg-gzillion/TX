@@ -2,7 +2,7 @@ import { halfCents } from './half-cents';
 import { largeCents } from './large-cents';
 import { indianHeadCents } from './indian-head';
 import { lincolnCents } from './lincoln';
-import { nickels } from './nickels';
+import { allNickels as nickels } from './nickels';
 
 export const usCopperCoins = {
   'Half Cents (1793-1857)': halfCents,

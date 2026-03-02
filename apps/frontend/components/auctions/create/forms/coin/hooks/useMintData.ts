@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { mintDatabase } from '../data/mints';
-import { MintData, CoinSpec } from '../types';
+import { MintData, CoinSpec } from '@/components/auctions/create/forms/coin/types';
 
 export const useMintData = (
   selectedCountry: any,

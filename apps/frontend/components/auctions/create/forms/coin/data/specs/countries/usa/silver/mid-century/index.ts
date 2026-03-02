@@ -1,3 +1,5 @@
+import { CoinSpec } from '../../../../../../types';
+
 import { rooseveltDime } from './roosevelt-dime';
 import { washingtonQuarter } from './washington-quarter';
 import { franklinHalf } from './franklin-half';
