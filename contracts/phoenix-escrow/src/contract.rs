@@ -113,18 +113,16 @@ fn execute_create_auction(
         .add_attribute("reserve_price", reserve_price.to_string())
         .add_attribute("seller_collateral", seller_collateral.to_string()))
 }
-fn execute_place_bid(
+    fn execute_place_bid(
     deps: DepsMut,
     env: Env,
     info: MessageInfo,
     auction_id: u64,
 ) -> StdResult<Response> {
     let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
-    let mut auction = AUCTIONS.load(deps.storage, auction_id)?;
-        if auction.status != AuctionStatus::Active {
+    if auction.status != AuctionStatus::Active {
         return Err(StdError::generic_err("Auction is not active"));
-    }
-    
+    }    
     if env.block.time.seconds() > auction.end_time {
         auction.status = AuctionStatus::Ended;
         AUCTIONS.save(deps.storage, auction_id, &auction)?;
