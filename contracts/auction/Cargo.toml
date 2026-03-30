@@ -16,7 +16,7 @@ schemars = "0.8"
 thiserror = "2.0"
 
 [dev-dependencies]
-proptest = "1.4"
+proptest = "1.11"
 
 [profile.release]
 opt-level = "z"
