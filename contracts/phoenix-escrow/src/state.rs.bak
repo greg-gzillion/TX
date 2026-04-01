@@ -1,4 +1,4 @@
-use cosmwasm_std::{Addr, Uint128};
+use cosmwasm_std::Uint128;
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 use cw_storage_plus::{Item, Map};
@@ -23,7 +23,7 @@ pub struct Auction {
     pub start_time: u64,
     pub end_time: u64,
     pub current_bid: Option<Bid>,
-    // ✅ REMOVED: pub bids: Vec<Bid> - causes memory error
+    pub bids: Vec<Bid>,
     pub status: AuctionStatus,
     pub escrow_released: bool,
     pub seller_collateral: Uint128,
@@ -64,10 +64,3 @@ pub const AUCTION_COUNT: Item<u64> = Item::new("auction_count");
 pub const AUCTIONS: Map<u64, Auction> = Map::new("auctions");
 pub const REPUTATION: Map<String, Reputation> = Map::new("reputation");
 pub const CONFIG: Item<Config> = Item::new("config");
-
-// ✅ NEW: Store bids individually to prevent memory errors
-// Key: (auction_id, bidder_address)
-pub const BIDS: Map<(u64, &str), Bid> = Map::new("bids");
-
-// Track bid count per auction for pagination
-pub const BID_COUNT: Map<u64, u64> = Map::new("bid_count");

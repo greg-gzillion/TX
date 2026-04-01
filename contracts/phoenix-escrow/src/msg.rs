@@ -1,20 +1,21 @@
+use cosmwasm_schema::{cw_serde, QueryResponses};
 use cosmwasm_std::Uint128;
-use schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct InstantiateMsg {
-    pub admin: String,
+    pub owner: String,
+    pub community_reserve_fund: String,
+    pub fee_bps: Option<u64>,
+    pub inspection_period: Option<u64>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
+#[cw_serde]
 pub enum ExecuteMsg {
     CreateAuction {
         item_id: String,
         description: String,
         starting_price: Uint128,
-        reserve_price: Uint128,        // ← ADD THIS
+        reserve_price: Uint128,
         duration_hours: u64,
     },
     PlaceBid {
@@ -23,33 +24,39 @@ pub enum ExecuteMsg {
     EndAuction {
         auction_id: u64,
     },
+    ApproveInspection {
+        auction_id: u64,
+    },
+    RejectInspection {
+        auction_id: u64,
+        reason: String,
+    },
     ReleaseEscrow {
         auction_id: u64,
     },
     CancelAuction {
         auction_id: u64,
     },
-}
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-#[serde(rename_all = "snake_case")]
-pub enum QueryMsg {
-    GetAuction {
+    ClaimRefund {
         auction_id: u64,
     },
-    GetActiveAuctions {},
-    GetAuctionCount {},
 }
 
-// ============ RESPONSE TYPES ============
-use crate::state::{Auction, Config};
-
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
-pub struct ConfigResponse {
-    pub config: Config,
+#[cw_serde]
+#[derive(QueryResponses)]
+pub enum QueryMsg {
+    #[returns(AuctionResponse)]
+    GetAuction { auction_id: u64 },
+    #[returns(ReputationResponse)]
+    GetReputation { address: String },
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq, JsonSchema)]
+#[cw_serde]
 pub struct AuctionResponse {
-    pub auction: Auction,
+    pub auction: crate::state::Auction,
+}
+
+#[cw_serde]
+pub struct ReputationResponse {
+    pub reputation: crate::state::Reputation,
 }
