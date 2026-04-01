@@ -35,3 +35,5 @@
 # Temp
 *.tmp
 *.log
+*.bak
+tests/

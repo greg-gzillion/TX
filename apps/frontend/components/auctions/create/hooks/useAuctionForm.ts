@@ -1,10 +1,10 @@
-import { MetalType } from '@/lib/types/metals';
 'use client';
 
+import { MetalType } from '@/lib/types/metals';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { usePhoenixEscrow } from '@/lib/contract/phoenix-escrow';
 import { useWallet } from '@/hooks/useWallet';
+import { usePhoenixEscrow } from '@/lib/contract/phoenix-escrow';
 
 const API_URL = 'https://phoenix-api-756y.onrender.com';
 const PINATA_API_URL = 'https://api.pinata.cloud/pinning/pinFileToIPFS';
