@@ -1,18 +1,13 @@
 use cosmwasm_std::{
     entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
-    to_json_binary, Addr, BankMsg, coins, Uint128,
+    to_json_binary, BankMsg, coins, Uint128,
 };
 use crate::error::ContractError;
 use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg, AuctionResponse, BidResponse};
-use crate::state::{Config, Auction, Bid, AUCTIONS, CONFIG, AUCTION_COUNT};
-use cw_storage_plus::{Map, Item};
+use crate::state::{Config, Auction, Bid, AUCTIONS, CONFIG, AUCTION_COUNT, BIDS, BID_COUNT};
+// use cw_storage_plus::{Map, Item}; // not needed
 
 // Storage keys
-const HIGHEST_BIDS: Map<u64, u128> = Map::new("highest_bids");
-const AUCTION_STATES: Map<u64, bool> = Map::new("auction_states");
-const WINNERS: Map<u64, Addr> = Map::new("winners");
-const AUCTION_COUNTER: Item<u64> = Item::new("auction_counter");
-const BIDDERS: Map<(u64, Addr), Bid> = Map::new("bidders");
 
 #[entry_point]
 pub fn instantiate(
@@ -109,7 +104,7 @@ fn execute_create_auction(
     }
     
     // Get next auction ID
-    let mut auction_count = AUCTION_COUNTER.may_load(deps.storage)?.unwrap_or(0);
+    let mut auction_count = AUCTION_COUNT.may_load(deps.storage)?.unwrap_or(0);
     auction_count += 1;
     let auction_id = auction_count;
     
@@ -126,18 +121,15 @@ fn execute_create_auction(
         created_at: env.block.time.seconds(),
         expires_at: env.block.time.seconds() + duration,
         status: "active".to_string(),
-        bids: vec![],
         seller_collateral,
         buyer_collateral: None,
     };
     
     // Save auction
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    AUCTION_COUNTER.save(deps.storage, &auction_count)?;
+    AUCTION_COUNT.save(deps.storage, &auction_count)?;
     
     // Initialize auction state
-    AUCTION_STATES.save(deps.storage, auction_id, &true)?;
-    HIGHEST_BIDS.save(deps.storage, auction_id, &starting_bid.u128())?;
     
     Ok(Response::new()
         .add_attribute("method", "create_auction")
@@ -196,14 +188,17 @@ fn execute_buy_it_now(
         amount: bin_price,
         timestamp: env.block.time.seconds(),
     };
-    auction.bids.push(bid);
+	// Store bid in BIDS Map (fixes memory error)
+    let bid_key = (auction_id, &bid.bidder);
+    BIDS.save(deps.storage, bid_key, &bid)?;
     
+    // Update bid count
+    let count = BID_COUNT.may_load(deps.storage, auction_id)?.unwrap_or(0);
+    BID_COUNT.save(deps.storage, auction_id, &(count + 1))?;    
     // Save auction
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
     
     // Store winner
-    WINNERS.save(deps.storage, auction_id, &info.sender)?;
-    AUCTION_STATES.save(deps.storage, auction_id, &false)?;
     
     Ok(Response::new()
         .add_attribute("method", "buy_it_now")
@@ -241,7 +236,6 @@ fn execute_place_bid(
     if env.block.time.seconds() > auction.expires_at {
         auction.status = "expired".to_string();
         AUCTIONS.save(deps.storage, auction_id, &auction)?;
-        AUCTION_STATES.save(deps.storage, auction_id, &false)?;
         return Err(ContractError::AuctionExpired {});
     }
     
@@ -291,11 +285,16 @@ fn execute_place_bid(
     };
     
     // Store bid
-    let bid_key = (auction_id, info.sender.clone());
-    BIDDERS.save(deps.storage, bid_key, &bid)?;
+    let _bid_key = (auction_id, info.sender.clone());
     
     // Update auction
-    auction.bids.push(bid);
+    // Store bid in BIDS Map (fixes memory error)
+    let bid_key = (auction_id, &bid.bidder);
+    BIDS.save(deps.storage, bid_key, &bid)?;
+    
+    // Update bid count
+    let count = BID_COUNT.may_load(deps.storage, auction_id)?.unwrap_or(0);
+    BID_COUNT.save(deps.storage, auction_id, &(count + 1))?;	
     auction.current_bid = bid_amount_u128;
     auction.highest_bidder = Some(info.sender.clone());
     auction.buyer_collateral = Some(buyer_collateral);
@@ -304,7 +303,6 @@ fn execute_place_bid(
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
     
     // Update highest bid
-    HIGHEST_BIDS.save(deps.storage, auction_id, &bid_amount)?;
     
     Ok(Response::new()
         .add_attribute("method", "place_bid")
@@ -341,11 +339,10 @@ fn execute_close_auction(
     
     // Determine if auction expired or was closed manually
     let is_expired = env.block.time.seconds() > auction.expires_at;
-    
-    if !is_expired && auction.bids.is_empty() {
+    let bid_count = BID_COUNT.may_load(deps.storage, auction_id)?.unwrap_or(0);
+    if !is_expired && bid_count == 0 {
         // No bids and not expired - just cancel, return seller collateral
-        auction.status = "cancelled".to_string();
-        
+        auction.status = "cancelled".to_string();        
         // Return seller collateral
         if !auction.seller_collateral.is_zero() {
             let return_collateral = BankMsg::Send {
@@ -365,15 +362,13 @@ fn execute_close_auction(
         // Auction has bids or expired - determine winner
         auction.status = "closed".to_string();
         
-        if let Some(highest_bidder) = &auction.highest_bidder {
+        if let Some(_highest_bidder) = &auction.highest_bidder {
             // Store winner
-            WINNERS.save(deps.storage, auction_id, highest_bidder)?;
         }
     }
     
     // Save auction
     AUCTIONS.save(deps.storage, auction_id, &auction)?;
-    AUCTION_STATES.save(deps.storage, auction_id, &false)?;
     
     Ok(Response::new()
         .add_attribute("method", "close_auction")
@@ -400,9 +395,10 @@ fn execute_claim_winnings(
         return Err(ContractError::AuctionNotClosed {});
     }
     
-    // Check if caller is winner
-    let winner = WINNERS.may_load(deps.storage, auction_id)?;
+    // Get winner from auction.highest_bidder
+    let winner = auction.highest_bidder.clone();
     
+    // Check if caller is winner
     match winner {
         Some(w) if w == info.sender => {
             // Winner claiming
