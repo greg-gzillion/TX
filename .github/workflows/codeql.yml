@@ -20,6 +20,28 @@ jobs:
       matrix:
         language: [ 'javascript-typescript', 'rust', 'python' ]
 
+kname: "CodeQL"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript-typescript', 'rust', 'python' ]
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -34,3 +56,5 @@ jobs:
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
