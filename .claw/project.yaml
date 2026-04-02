@@ -1,0 +1,107 @@
+name: PhoenixPME
+description: Precious metals exchange protocol on TX blockchain with dual collateral
+
+version: 0.1.0
+website: https://phoenix-frontend-seven.vercel.app
+repository: https://github.com/greg-gzillion/TX
+
+modules:
+  - name: phoenix-escrow
+    path: contracts/phoenix-escrow
+    language: rust
+    type: smart-contract
+    framework: cosmwasm
+    purpose: "Main auction escrow contract with dual collateral, dispute resolution, and TRUST/DONT_TRUST minting"
+    key_files:
+      - src/contract.rs
+      - src/msg.rs
+      - src/state.rs
+      - tests/integration_tests.rs
+
+  - name: frontend
+    path: apps/frontend
+    language: typescript
+    type: web-app
+    framework: next.js
+    purpose: "Next.js application with wallet integration (Keplr, Leap), auction UI, and sandbox"
+    key_files:
+      - app/page.tsx
+      - app/auctions/create/page.tsx
+      - components/UniversalWalletV2.tsx
+      - lib/contract/phoenix-escrow.ts
+
+  - name: backend
+    path: apps/backend
+    language: typescript
+    type: api
+    framework: express
+    purpose: "REST API for price feeds, auction metadata, and admin operations"
+    key_files:
+      - src/routes/price.routes.ts
+      - src/services/price.service.ts
+      - prisma/schema.prisma
+
+concepts:
+  - name: TESTUSD
+    description: "Test stablecoin on TX testnet with 6 decimal places"
+    denom: "utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6"
+    decimals: 6
+    purpose: "Currency for all auctions and fees"
+
+  - name: TRUST
+    description: "Non-transferable reputation NFT minted to successful trade participants"
+    attributes: ["soulbound", "non-transferable", "permanent"]
+    purpose: "Builds positive reputation on-chain"
+
+  - name: DONT_TRUST
+    description: "Non-transferable reputation NFT minted to participants who fail obligations"
+    attributes: ["soulbound", "non-transferable", "permanent"]
+    purpose: "Records negative reputation permanently"
+
+  - name: PHNX
+    description: "Governance weight token - 1 PHNX per 1 TESTUSD in fees generated"
+    attributes: ["non-transferable", "governance"]
+    purpose: "Future DAO voting weight"
+
+  - name: PSE
+    description: "Proof of Support Emission - staking rewards mechanism on TX chain"
+    purpose: "Rewards delegators for supporting the network"
+
+  - name: Dual Collateral
+    description: "Both buyer and seller lock 10% collateral during auction"
+    purpose: "Ensures both parties have skin in the game"
+
+  - name: Community Reserve Fund
+    address: "testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv"
+    source: "1.1% of all successful trades"
+    purpose: "Future DAO-controlled community fund"
+
+key_workflows:
+  - name: Create Auction
+    steps:
+      - Seller selects metal type, weight, purity
+      - Sets starting price and optional buy now price
+      - Locks 10% collateral
+      - Auction becomes visible to buyers
+
+  - name: Place Bid
+    steps:
+      - Buyer selects auction
+      - Places bid (must be higher than current highest)
+      - Locks 10% collateral
+      - If outbid, previous buyer's collateral is returned
+
+  - name: Settle Auction
+    steps:
+      - Seller ships item within 48 hours
+      - Buyer has 48 hours to verify receipt
+      - If verified: release funds + return collateral
+      - If disputed: manual review
+      - On success: mint TRUST NFTs to both parties
+
+  - name: Dispute Resolution
+    steps:
+      - Either party can raise dispute
+      - 72-hour cooling period
+      - Admin review if unresolved
+      - DONT_TRUST minted to at-fault party
