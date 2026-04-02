@@ -1,0 +1,18 @@
+{
+  "auction_files": 4795,
+  "collateral_files": 230,
+  "fee_files": 1344,
+  "sample_auctions": [
+    "simulation_auctions.json",
+    "run_phoenix_auctions.py",
+    "deploy_auction.sh",
+    "create_auction_users.sh",
+    "apps/frontend/components/auctions",
+    "apps/frontend/components/auctions/CreateAuctionForm.tsx",
+    "apps/frontend/components/auctions/list",
+    "apps/frontend/components/auctions/bid",
+    "apps/frontend/components/auctions/create",
+    "apps/frontend/components/auctions/list/index.ts]"
+  ],
+  "timestamp": "/home/greg"
+}

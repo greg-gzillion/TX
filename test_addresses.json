@@ -1,0 +1,335 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "user_01",
+      "address": "testcore1h353nwerlskdnmhp52vjj3n459ewwzmv47he9l",
+      "balance": 0,
+      "escrow": "testcore12xy24r378w50ew8wgezltvuj0v2rh79ek6etw0"
+    },
+    {
+      "id": 2,
+      "name": "user_02",
+      "address": "testcore1yj4hjcppsytdr5qgsvnyyp2qfddtk28aqap75s",
+      "balance": 0,
+      "escrow": "testcore1wwancsrz9a548gngw5jdf70wy2ggjn5e00pd0e"
+    },
+    {
+      "id": 3,
+      "name": "user_03",
+      "address": "testcore1hl4z3mpvcyjghyus3vt9rl7w980jj9nc4yvdgh",
+      "balance": 0,
+      "escrow": "testcore1aal5w9g5u7ahj0qqn9tte4cgqueywzrve0qnj9"
+    },
+    {
+      "id": 4,
+      "name": "user_04",
+      "address": "testcore1vywszaly7tffegcfhe9f0fxtthht8jlhxra0jw",
+      "balance": 0,
+      "escrow": "testcore15afyuuz2t2fgm2hx4ntwe8s852nyz2x3gs758p"
+    },
+    {
+      "id": 5,
+      "name": "user_05",
+      "address": "testcore17wrm2krshrnpq3e8z49unx0fqtxs37fckmvujf",
+      "balance": 0,
+      "escrow": "testcore1x2xuym86vmqtlugmwwv5gemy7rn7ad8j4xyyg7"
+    },
+    {
+      "id": 6,
+      "name": "user_06",
+      "address": "testcore1rjcxqmpufpa9c2c9h4c2snztfkgjg4ahaxn8h9",
+      "balance": 0,
+      "escrow": "testcore14vjgtyphds8srf8nvhj079fn9ur2e7ht69s2q5"
+    },
+    {
+      "id": 7,
+      "name": "user_07",
+      "address": "testcore1wden26hxyq847t4dccee23lgqd05smpuc8dq26",
+      "balance": 0,
+      "escrow": "testcore1x49cgw5kjfl7vp3akp9drhf6hzlzjn4elcaghu"
+    },
+    {
+      "id": 8,
+      "name": "user_08",
+      "address": "testcore1d30gypumqjhyx5qu3k28l6cwe4wr69aczrpppr",
+      "balance": 0,
+      "escrow": "testcore135dv9784qwtpndtp3g4ycxr9xrnmdxgsyh287f"
+    },
+    {
+      "id": 9,
+      "name": "user_09",
+      "address": "testcore1nql6vkx6q93sfxr7xl67nd432jjgvxtv9aqvmg",
+      "balance": 0,
+      "escrow": "testcore1d8lrcksp67s2wqhy3jns06r5vemw60jyvxdxwc"
+    },
+    {
+      "id": 10,
+      "name": "user_10",
+      "address": "testcore1kupulg4ctqlk0h74ets329hdcr78dmseyumex5",
+      "balance": 0,
+      "escrow": "testcore18z0hywkrnxcrxju7rxdq5plucqvndjrsfadwj3"
+    }
+  ],
+  "auctions": [
+    {
+      "id": "AUC001",
+      "seller": "user_10",
+      "seller_addr": "testcore1kupulg4ctqlk0h74ets329hdcr78dmseyumex5",
+      "item": "1oz Gold Eagle",
+      "category": "gold",
+      "min_bid": 2100,
+      "reserve": 2150,
+      "duration_days": 7,
+      "collateral": 210,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_04",
+          "amount": 2348,
+          "collateral": 234
+        }
+      ],
+      "final_price": 2348,
+      "winner": "user_04"
+    },
+    {
+      "id": "AUC002",
+      "seller": "user_03",
+      "seller_addr": "testcore1hl4z3mpvcyjghyus3vt9rl7w980jj9nc4yvdgh",
+      "item": "10oz Silver Bar",
+      "category": "silver",
+      "min_bid": 280,
+      "reserve": 290,
+      "duration_days": 5,
+      "collateral": 28,
+      "status": "unsold",
+      "bids": [],
+      "final_price": 280
+    },
+    {
+      "id": "AUC003",
+      "seller": "user_01",
+      "seller_addr": "testcore1h353nwerlskdnmhp52vjj3n459ewwzmv47he9l",
+      "item": "1oz Platinum Maple",
+      "category": "platinum",
+      "min_bid": 950,
+      "reserve": 980,
+      "duration_days": 10,
+      "collateral": 95,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_05",
+          "amount": 1105,
+          "collateral": 110
+        }
+      ],
+      "final_price": 1105,
+      "winner": "user_05"
+    },
+    {
+      "id": "AUC004",
+      "seller": "user_06",
+      "seller_addr": "testcore1rjcxqmpufpa9c2c9h4c2snztfkgjg4ahaxn8h9",
+      "item": "Morgan Silver Dollar MS65",
+      "category": "numismatic",
+      "min_bid": 450,
+      "reserve": 475,
+      "duration_days": 14,
+      "collateral": 45,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_05",
+          "amount": 546,
+          "collateral": 54
+        }
+      ],
+      "final_price": 546,
+      "winner": "user_05"
+    },
+    {
+      "id": "AUC005",
+      "seller": "user_02",
+      "seller_addr": "testcore1yj4hjcppsytdr5qgsvnyyp2qfddtk28aqap75s",
+      "item": "14k Diamond Ring 1.5ct",
+      "category": "jewelry",
+      "min_bid": 2800,
+      "reserve": 2900,
+      "duration_days": 7,
+      "collateral": 280,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_07",
+          "amount": 3489,
+          "collateral": 348
+        },
+        {
+          "round": 2,
+          "bidder": "user_08",
+          "amount": 3796,
+          "collateral": 379
+        }
+      ],
+      "final_price": 3796,
+      "winner": "user_08"
+    },
+    {
+      "id": "AUC006",
+      "seller": "user_09",
+      "seller_addr": "testcore1nql6vkx6q93sfxr7xl67nd432jjgvxtv9aqvmg",
+      "item": "100oz Gold Bar",
+      "category": "gold",
+      "min_bid": 210000,
+      "reserve": 215000,
+      "duration_days": 30,
+      "collateral": 21000,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_03",
+          "amount": 253763,
+          "collateral": 25376
+        },
+        {
+          "round": 2,
+          "bidder": "user_04",
+          "amount": 284083,
+          "collateral": 28408
+        },
+        {
+          "round": 3,
+          "bidder": "user_03",
+          "amount": 346450,
+          "collateral": 34645
+        },
+        {
+          "round": 4,
+          "bidder": "user_03",
+          "amount": 430690,
+          "collateral": 43069
+        }
+      ],
+      "final_price": 430690,
+      "winner": "user_03"
+    },
+    {
+      "id": "AUC007",
+      "seller": "user_06",
+      "seller_addr": "testcore1rjcxqmpufpa9c2c9h4c2snztfkgjg4ahaxn8h9",
+      "item": "Rolex Daytona",
+      "category": "luxury",
+      "min_bid": 28000,
+      "reserve": 29000,
+      "duration_days": 7,
+      "collateral": 2800,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_09",
+          "amount": 34171,
+          "collateral": 3417
+        },
+        {
+          "round": 2,
+          "bidder": "user_05",
+          "amount": 39430,
+          "collateral": 3943
+        },
+        {
+          "round": 3,
+          "bidder": "user_07",
+          "amount": 43581,
+          "collateral": 4358
+        }
+      ],
+      "final_price": 43581,
+      "winner": "user_07"
+    },
+    {
+      "id": "AUC008",
+      "seller": "user_01",
+      "seller_addr": "testcore1h353nwerlskdnmhp52vjj3n459ewwzmv47he9l",
+      "item": "1/2oz Gold Kangaroo",
+      "category": "gold",
+      "min_bid": 1050,
+      "reserve": 1080,
+      "duration_days": 5,
+      "collateral": 105,
+      "status": "unsold",
+      "bids": [],
+      "final_price": 1050
+    },
+    {
+      "id": "AUC009",
+      "seller": "user_02",
+      "seller_addr": "testcore1yj4hjcppsytdr5qgsvnyyp2qfddtk28aqap75s",
+      "item": "Sterling Flatware Set",
+      "category": "silver",
+      "min_bid": 1200,
+      "reserve": 1300,
+      "duration_days": 10,
+      "collateral": 120,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_08",
+          "amount": 1427,
+          "collateral": 142
+        }
+      ],
+      "final_price": 1427,
+      "winner": "user_08"
+    },
+    {
+      "id": "AUC010",
+      "seller": "user_03",
+      "seller_addr": "testcore1hl4z3mpvcyjghyus3vt9rl7w980jj9nc4yvdgh",
+      "item": "St Gaudens Double Eagle",
+      "category": "numismatic",
+      "min_bid": 2200,
+      "reserve": 2350,
+      "duration_days": 14,
+      "collateral": 220,
+      "status": "sold",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "user_04",
+          "amount": 2508,
+          "collateral": 250
+        },
+        {
+          "round": 2,
+          "bidder": "user_01",
+          "amount": 3084,
+          "collateral": 308
+        },
+        {
+          "round": 3,
+          "bidder": "user_08",
+          "amount": 3763,
+          "collateral": 376
+        }
+      ],
+      "final_price": 3763,
+      "winner": "user_08"
+    }
+  ],
+  "summary": {
+    "total_users": 10,
+    "total_auctions": 10,
+    "sold": 8,
+    "unsold": 2,
+    "total_value": 488586
+  }
+}

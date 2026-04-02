@@ -1,0 +1,17 @@
+{
+  "network": "coreum-testnet-1",
+  "chain_id": "coreum-testnet-1",
+  "rpc": "https://rpc.testnet-1.coreum.dev:443",
+  "faucet": "https://faucet.testnet-1.coreum.dev/claim",
+  "prefix": "testcore",
+  "addresses": {
+    "buyer": "",
+    "seller": "",
+    "escrow": "",
+    "fee_collector": ""
+  },
+  "tokens": {
+    "TESTCORE": "utestcore",
+    "TESTUSD": "utestusd"
+  }
+}

@@ -1,0 +1,134 @@
+[
+  {
+    "file": "tests/generated_tests.rs",
+    "issue": "Repeated calculations in loop",
+    "suggestion": "Move invariant calculations outside loop",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/phnx_token_implementation.rs",
+    "issue": "Repeated calculations in loop",
+    "suggestion": "Move invariant calculations outside loop",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw1/src/helpers.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw1/src/lib.rs",
+    "issue": "Repeated calculations in loop",
+    "suggestion": "Move invariant calculations outside loop",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw4/src/helpers.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw4/src/query.rs",
+    "issue": "Repeated calculations in loop",
+    "suggestion": "Move invariant calculations outside loop",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw20/src/helpers.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw20/src/denom.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw3/src/proposal.rs",
+    "issue": "Repeated calculations in loop",
+    "suggestion": "Move invariant calculations outside loop",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw3/src/proposal.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/packages/cw3/src/helpers.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/test_helpers.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/contract.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/contract.rs",
+    "issue": "String operations in contract",
+    "suggestion": "Use &str or avoid string manipulation in hot paths",
+    "gas_savings": "HIGH"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/amount.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/amount.rs",
+    "issue": "String operations in contract",
+    "suggestion": "Use &str or avoid string manipulation in hot paths",
+    "gas_savings": "HIGH"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/ibc.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/ibc.rs",
+    "issue": "String operations in contract",
+    "suggestion": "Use &str or avoid string manipulation in hot paths",
+    "gas_savings": "HIGH"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw20-ics20/src/migrations.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw1-whitelist/src/state.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw1-whitelist/src/contract.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  },
+  {
+    "file": "contracts/cw-plus/contracts/cw1-whitelist/src/integration_tests.rs",
+    "issue": "Unnecessary cloning",
+    "suggestion": "Use references (&) instead of clone()",
+    "gas_savings": "MEDIUM"
+  }
+]

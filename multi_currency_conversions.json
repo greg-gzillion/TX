@@ -1,0 +1,32 @@
+[
+  {
+    "timestamp": "2026-04-02T14:26:46.202841",
+    "original_currency": "BTC",
+    "original_amount": 0.01,
+    "exchange_rate": 65000,
+    "usd_value": 650.0,
+    "settlement_currency": "TESTUSD",
+    "settlement_amount": 650.0,
+    "settlement_raw": 650000000
+  },
+  {
+    "timestamp": "2026-04-02T14:26:46.202910",
+    "original_currency": "ETH",
+    "original_amount": 0.5,
+    "exchange_rate": 3200,
+    "usd_value": 1600.0,
+    "settlement_currency": "TESTUSD",
+    "settlement_amount": 1600.0,
+    "settlement_raw": 1600000000
+  },
+  {
+    "timestamp": "2026-04-02T14:26:46.202944",
+    "original_currency": "XRP",
+    "original_amount": 1000,
+    "exchange_rate": 0.55,
+    "usd_value": 550.0,
+    "settlement_currency": "TESTUSD",
+    "settlement_amount": 550.0,
+    "settlement_raw": 550000000
+  }
+]

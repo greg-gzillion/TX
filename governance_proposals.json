@@ -1,0 +1,36 @@
+{
+  "timestamp": "2026-04-02T14:24:29.753571",
+  "deficiencies": [
+    {
+      "severity": "HIGH",
+      "category": "Price Oracles",
+      "issue": "No price oracle integration for real-time conversion",
+      "suggestion": "Integrate Chainlink or Pyth oracles for BTC/ETH/XRP prices",
+      "proposal_id": "PROP-002"
+    }
+  ],
+  "proposals": [
+    {
+      "id": "PROP-002",
+      "title": "Improve Price Oracles: No price oracle integration for real-time conversi",
+      "description": "Integrate Chainlink or Pyth oracles for BTC/ETH/XRP prices",
+      "severity": "HIGH",
+      "created": "2026-04-02T14:24:29.753332",
+      "voting_ends": "2026-04-16T14:24:29.753355",
+      "status": "active",
+      "votes_for": 78.50709755463468,
+      "votes_against": 21.492902445365317,
+      "phnx_required": 1000,
+      "implementation_cost": 3000,
+      "passed": true
+    }
+  ],
+  "governance_rules": {
+    "phnx_per_usd_fee": 1,
+    "founder_voting_weight": 10,
+    "community_weight": 90,
+    "quorum_percent": 30,
+    "pass_threshold": 66.7,
+    "voting_period_days": 14
+  }
+}

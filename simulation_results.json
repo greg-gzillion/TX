@@ -1,0 +1,53 @@
+{
+  "timestamp": "2026-04-02T14:13:27.491015",
+  "rules": {
+    "collateral_percent": 10,
+    "fee_percent": 1.1,
+    "inspection_hours": 48,
+    "phnx_per_usd": 1,
+    "trust_per_success": 1,
+    "dont_trust_per_failure": 1
+  },
+  "market_prices": {
+    "gold": {
+      "bid": 4675.1,
+      "ask": 4677.1,
+      "change": -82.4,
+      "change_percent": -1.73,
+      "low": 4554.3,
+      "high": 4801.3,
+      "timestamp": "2026-04-02 16:05:00 EST"
+    },
+    "silver": {
+      "bid": 72.64,
+      "ask": 72.89,
+      "change": -2.34,
+      "change_percent": -3.13,
+      "low": 69.48,
+      "high": 76.85
+    },
+    "platinum": {
+      "bid": 1999.0,
+      "ask": 2009.0,
+      "change": 38.0,
+      "change_percent": 1.94,
+      "low": 1871.0,
+      "high": 2010.0
+    },
+    "palladium": {
+      "bid": 1494.0,
+      "ask": 1534.0,
+      "change": 33.0,
+      "change_percent": 2.26,
+      "low": 1407.0,
+      "high": 1537.0
+    }
+  },
+  "results": {
+    "successful_trades": 5,
+    "failed_trades": 1,
+    "total_fees": 129,
+    "total_phnx_issued": 10,
+    "disputes_resolved": 0
+  }
+}

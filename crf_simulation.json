@@ -1,0 +1,98 @@
+{
+  "community_reserve_fund": {
+    "address": "testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv",
+    "balance_testusd": 264319000.0,
+    "balance_usd": 264.319,
+    "source": "1.1% auction fees only",
+    "withdrawal_allowed": false
+  },
+  "auctions": [
+    {
+      "id": "AUC001",
+      "item": "1 oz Gold American Eagle MS70",
+      "final_price_usd": 5973,
+      "fee_usd": 65.703,
+      "fee_testusd": 65703000.0,
+      "crf_after": 65703000.0
+    },
+    {
+      "id": "AUC002",
+      "item": "1/2 oz Gold Maple Leaf",
+      "final_price_usd": 2295,
+      "fee_usd": 25.245,
+      "fee_testusd": 25245000.0,
+      "crf_after": 90948000.0
+    },
+    {
+      "id": "AUC003",
+      "item": "1 oz Silver Eagle MS70",
+      "final_price_usd": 100,
+      "fee_usd": 1.1,
+      "fee_testusd": 1100000.0,
+      "crf_after": 92048000.0
+    },
+    {
+      "id": "AUC004",
+      "item": "10 oz Silver Bar",
+      "final_price_usd": 787,
+      "fee_usd": 8.657,
+      "fee_testusd": 8657000.0,
+      "crf_after": 100705000.0
+    },
+    {
+      "id": "AUC005",
+      "item": "1 oz Platinum Eagle",
+      "final_price_usd": 2734,
+      "fee_usd": 30.074,
+      "fee_testusd": 30074000.0,
+      "crf_after": 130779000.0
+    },
+    {
+      "id": "AUC006",
+      "item": "1 oz Palladium Maple Leaf",
+      "final_price_usd": 1610,
+      "fee_usd": 17.71,
+      "fee_testusd": 17710000.0,
+      "crf_after": 148489000.0
+    },
+    {
+      "id": "AUC007",
+      "item": "14k Gold Diamond Ring",
+      "final_price_usd": 2006,
+      "fee_usd": 22.066000000000003,
+      "fee_testusd": 22066000.000000004,
+      "crf_after": 170555000.0
+    },
+    {
+      "id": "AUC008",
+      "item": "St Gaudens $20 Gold",
+      "final_price_usd": 7240,
+      "fee_usd": 79.64000000000001,
+      "fee_testusd": 79640000.00000001,
+      "crf_after": 250195000.0
+    },
+    {
+      "id": "AUC009",
+      "item": "Morgan Silver Dollar MS64",
+      "final_price_usd": 84,
+      "fee_usd": 0.924,
+      "fee_testusd": 924000.0,
+      "crf_after": 251119000.0
+    },
+    {
+      "id": "AUC010",
+      "item": "1/4 oz Gold Coin",
+      "final_price_usd": 1200,
+      "fee_usd": 13.200000000000001,
+      "fee_testusd": 13200000.000000002,
+      "crf_after": 264319000.0
+    }
+  ],
+  "total_fees_usd": 264.319,
+  "phnx_issued": 264.319,
+  "rules": {
+    "fee_percent": 1.1,
+    "collateral_percent": 10,
+    "inspection_hours": 48
+  }
+}

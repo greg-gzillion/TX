@@ -1,0 +1,43 @@
+{
+  "timestamp": "2026-04-02T14:39:20.563224",
+  "crf_balance": 264319000,
+  "crf_address": "testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv",
+  "phnx_distribution": {
+    "user_01": 65,
+    "user_02": 25,
+    "user_03": 30,
+    "user_04": 22,
+    "user_05": 79,
+    "founder": 26
+  },
+  "total_phnx": 247,
+  "proposals": [
+    {
+      "id": 1,
+      "title": "Add Multi-Currency Payment Gateway",
+      "cost": 5000,
+      "votes_for": 75.5,
+      "votes_against": 24.5,
+      "status": "PASSED",
+      "eta": "2026-04-09"
+    },
+    {
+      "id": 2,
+      "title": "Integrate Chainlink Oracles",
+      "cost": 3000,
+      "votes_for": 68.2,
+      "votes_against": 31.8,
+      "status": "PASSED",
+      "eta": "2026-04-16"
+    },
+    {
+      "id": 3,
+      "title": "Governance Dashboard UI",
+      "cost": 2000,
+      "votes_for": 45.0,
+      "votes_against": 55.0,
+      "status": "FAILED",
+      "eta": null
+    }
+  ]
+}
