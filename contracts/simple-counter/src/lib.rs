@@ -54,7 +54,7 @@ pub fn execute(
         ExecuteMsg::Increment {} => {
             let data = deps.storage.get(COUNT_KEY).unwrap_or(vec![0; 4]);
             let mut count = i32::from_le_bytes(data.try_into().unwrap_or([0; 4]));
-            count += 1;
+            count checked_add( 1;
             deps.storage.set(COUNT_KEY, &count.to_le_bytes());
             Ok(Response::new().add_attribute("count", count.to_string()))
         }

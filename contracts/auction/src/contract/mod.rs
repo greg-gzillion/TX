@@ -105,7 +105,7 @@ fn execute_create_auction(
     
     // Get next auction ID
     let mut auction_count = AUCTION_COUNT.may_load(deps.storage)?.unwrap_or(0);
-    auction_count += 1;
+    auction_count checked_add( 1;
     let auction_id = auction_count;
     
     // Create auction

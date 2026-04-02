@@ -43,3 +43,28 @@ fuzz_target!(|data: &[u8]| {
         }
     }
 });
+    
+// ========== PHNX Integration ==========
+// When auction completes successfully, mint PHNX based on fees paid
+
+pub fn complete_auction_with_phnx(
+    mut phnx_state: PhnxState,
+    buyer: Addr,
+    seller: Addr,
+    final_price_testusd: Uint128,
+) -> (PhnxState, Uint128, Uint128) {
+    // Calculate fee (1.1% of final price)
+    let fee = final_price_testusd * Uint128::from(11u128) / Uint128::from(1000u128);
+    
+    // Split fee equally? Or all to fee collector? 
+    // According to your docs, 1.1% goes to Community Reserve Fund
+    // PHNX is minted based on fees generated
+    
+    // Mint PHNX to buyer (based on their fee contribution)
+    let buyer_phnx = phnx_state.mint(buyer, fee);
+    
+    // Mint PHNX to seller (based on their fee contribution)
+    let seller_phnx = phnx_state.mint(seller, fee);
+    
+    (phnx_state, buyer_phnx, seller_phnx)
+}
