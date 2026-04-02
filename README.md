@@ -204,3 +204,10 @@ TX Blockchain Coreum Sologenic CosmWasm Precious Metals Gold Silver Platinum Pal
 
 Last Updated: February 24, 2026
 *Next Milestone: March 6, 2026 - TX Testnet Launch* 🚀
+
+## Related Repositories
+
+- **[TXdocumentation](https://github.com/greg-gzillion/TXdocumentation)** - Source of truth for TX blockchain rules
+- **[Claw-Coder](https://github.com/greg-gzillion/claw-coder)** - AI agent for validation and optimization
+
+See the [ecosystem overview](https://github.com/greg-gzillion/TXdocumentation) for how all pieces work together.
