@@ -1,1 +1,1 @@
-export * from './CoinTypeSelector';
+export * from "./CoinTypeSelector";

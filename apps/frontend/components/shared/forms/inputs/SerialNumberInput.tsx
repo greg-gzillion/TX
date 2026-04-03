@@ -1,5 +1,5 @@
-'use client';
-import * as React from 'react';
+"use client";
+import * as React from "react";
 
 interface SerialNumberInputProps {
   value: string;
@@ -7,8 +7,13 @@ interface SerialNumberInputProps {
 }
 
 const COMMON_EXAMPLES = [
-  '123456', 'JM Bullion', 'APMEX', 'PAMP Suisse',
-  'Engelhard', 'Johnson Matthey', 'Credit Suisse',
+  "123456",
+  "JM Bullion",
+  "APMEX",
+  "PAMP Suisse",
+  "Engelhard",
+  "Johnson Matthey",
+  "Credit Suisse",
 ];
 
 export default function SerialNumberInput({

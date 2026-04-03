@@ -1,8 +1,6 @@
-use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
-};
+use crate::msg::{ExecuteMsg, InstantiateMsg, QueryMsg};
+use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
 use cw2::set_contract_version;
-use crate::msg::{InstantiateMsg, ExecuteMsg, QueryMsg};
 
 const CONTRACT_NAME: &str = "crates.io:phoenix-escrow";
 const CONTRACT_VERSION: &str = "1.0.0";

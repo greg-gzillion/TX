@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/shared/ui/Button';
+import { useState, useEffect } from "react";
+import { Button } from "@/components/shared/ui/Button";
 
 declare global {
   interface Window {
@@ -12,7 +12,7 @@ declare global {
 
 // Update Wallet interface to include id
 interface Wallet {
-  id: string;           // ✅ Added id field
+  id: string; // ✅ Added id field
   name: string;
   address: string;
   balance: string;
@@ -23,24 +23,24 @@ interface WalletSelectorProps {
 }
 
 export function WalletSelector({ onSelect }: WalletSelectorProps) {
-  const [address, setAddress] = useState<string>('');
+  const [address, setAddress] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState<string>('');
+  const [balance, setBalance] = useState<string>("");
 
-  const CHAIN_ID = 'coreum-testnet-1';
+  const CHAIN_ID = "coreum-testnet-1";
 
   // Check if already connected
   useEffect(() => {
-    const savedAddress = localStorage.getItem('walletAddress');
-    const savedWalletId = localStorage.getItem('walletId');
+    const savedAddress = localStorage.getItem("walletAddress");
+    const savedWalletId = localStorage.getItem("walletId");
     if (savedAddress) {
       setAddress(savedAddress);
       fetchBalance(savedAddress);
       onSelect({
-        id: savedWalletId || `wallet-${Date.now()}`,  // ✅ Use saved id or create new
-        name: 'Connected Wallet',
+        id: savedWalletId || `wallet-${Date.now()}`, // ✅ Use saved id or create new
+        name: "Connected Wallet",
         address: savedAddress,
-        balance: balance || '5,000,000'
+        balance: balance || "5,000,000",
       });
     }
   }, []);
@@ -48,9 +48,9 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
   const fetchBalance = async (addr: string) => {
     try {
       // Mock balance for now
-      setBalance('5,000,000');
+      setBalance("5,000,000");
     } catch (error) {
-      console.error('Error fetching balance:', error);
+      console.error("Error fetching balance:", error);
     }
   };
 
@@ -58,29 +58,28 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
     setLoading(true);
     try {
       if (!window.keplr) {
-        window.open('https://www.keplr.app', '_blank');
+        window.open("https://www.keplr.app", "_blank");
         return;
       }
 
       await window.keplr.enable(CHAIN_ID);
       const offlineSigner = window.keplr.getOfflineSigner(CHAIN_ID);
       const accounts = await offlineSigner.getAccounts();
-      
-      const walletId = `keplr-${Date.now()}`;  // ✅ Generate unique id
+
+      const walletId = `keplr-${Date.now()}`; // ✅ Generate unique id
       setAddress(accounts[0].address);
-      localStorage.setItem('walletAddress', accounts[0].address);
-      localStorage.setItem('walletId', walletId);
+      localStorage.setItem("walletAddress", accounts[0].address);
+      localStorage.setItem("walletId", walletId);
       await fetchBalance(accounts[0].address);
-      
+
       onSelect({
-        id: walletId,  // ✅ Include id
-        name: 'Keplr Wallet',
+        id: walletId, // ✅ Include id
+        name: "Keplr Wallet",
         address: accounts[0].address,
-        balance: '5,000,000'
+        balance: "5,000,000",
       });
-      
     } catch (error) {
-      console.error('Error connecting:', error);
+      console.error("Error connecting:", error);
     } finally {
       setLoading(false);
     }
@@ -90,39 +89,38 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
     setLoading(true);
     try {
       if (!window.leap) {
-        window.open('https://www.leapwallet.io', '_blank');
+        window.open("https://www.leapwallet.io", "_blank");
         return;
       }
 
       await window.leap.enable(CHAIN_ID);
       const offlineSigner = window.leap.getOfflineSigner(CHAIN_ID);
       const accounts = await offlineSigner.getAccounts();
-      
-      const walletId = `leap-${Date.now()}`;  // ✅ Generate unique id
+
+      const walletId = `leap-${Date.now()}`; // ✅ Generate unique id
       setAddress(accounts[0].address);
-      localStorage.setItem('walletAddress', accounts[0].address);
-      localStorage.setItem('walletId', walletId);
+      localStorage.setItem("walletAddress", accounts[0].address);
+      localStorage.setItem("walletId", walletId);
       await fetchBalance(accounts[0].address);
-      
+
       onSelect({
-        id: walletId,  // ✅ Include id
-        name: 'Leap Wallet',
+        id: walletId, // ✅ Include id
+        name: "Leap Wallet",
         address: accounts[0].address,
-        balance: '5,000,000'
+        balance: "5,000,000",
       });
-      
     } catch (error) {
-      console.error('Error connecting:', error);
+      console.error("Error connecting:", error);
     } finally {
       setLoading(false);
     }
   };
 
   const disconnect = () => {
-    setAddress('');
-    setBalance('');
-    localStorage.removeItem('walletAddress');
-    localStorage.removeItem('walletId');
+    setAddress("");
+    setBalance("");
+    localStorage.removeItem("walletAddress");
+    localStorage.removeItem("walletId");
     onSelect(null);
   };
 
@@ -134,7 +132,9 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
           <p className="text-purple-800 text-sm flex items-center">
             <span className="text-xl mr-2">🧪</span>
             <strong>SANDBOX MODE:</strong> Test wallets with fake TESTUSD.
-            <a href="/auctions/create" className="underline ml-1 font-bold">Connect real wallet →</a>
+            <a href="/auctions/create" className="underline ml-1 font-bold">
+              Connect real wallet →
+            </a>
           </p>
         </div>
 
@@ -174,7 +174,9 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
         <p className="text-purple-800 text-sm flex items-center">
           <span className="text-xl mr-2">🧪</span>
           <strong>SANDBOX MODE:</strong> Test wallet connection.
-          <a href="/auctions/create" className="underline ml-1 font-bold">Use real wallet →</a>
+          <a href="/auctions/create" className="underline ml-1 font-bold">
+            Use real wallet →
+          </a>
         </p>
       </div>
 
@@ -195,7 +197,7 @@ export function WalletSelector({ onSelect }: WalletSelectorProps) {
         )}
         {/* ✅ Show wallet ID for debugging (optional) */}
         <div className="text-xs text-gray-400">
-          Wallet ID: {localStorage.getItem('walletId') || 'pending'}
+          Wallet ID: {localStorage.getItem("walletId") || "pending"}
         </div>
       </div>
     </div>

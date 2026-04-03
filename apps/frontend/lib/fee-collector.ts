@@ -4,8 +4,8 @@
 export interface FeeRecord {
   id: string;
   auctionId: string;
-  amount: number;        // Transaction amount
-  feeAmount: number;      // 1.1% fee
+  amount: number; // Transaction amount
+  feeAmount: number; // 1.1% fee
   timestamp: Date;
   fromWallet: string;
 }
@@ -20,21 +20,23 @@ class FeeCollector {
    */
   recordFee(auctionId: string, amount: number, fromWallet: string): FeeRecord {
     const feeAmount = (amount * this.FEE_PERCENTAGE) / 100;
-    
+
     const record: FeeRecord = {
       id: `fee_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
       auctionId,
       amount,
       feeAmount,
       timestamp: new Date(),
-      fromWallet
+      fromWallet,
     };
 
     this.fees.push(record);
     this.totalFees += feeAmount;
-    
-    console.log(`💰 Fee collected: ${feeAmount.toFixed(6)} RLUSD for auction ${auctionId}`);
-    
+
+    console.log(
+      `💰 Fee collected: ${feeAmount.toFixed(6)} RLUSD for auction ${auctionId}`,
+    );
+
     return record;
   }
 

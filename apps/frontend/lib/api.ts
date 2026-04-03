@@ -1,5 +1,5 @@
 // lib/api.ts
-const API_BASE_URL = 'https://phoenix-api-756y.onrender.com/api';
+const API_BASE_URL = "https://phoenix-api-756y.onrender.com/api";
 
 export interface CreateAuctionData {
   title: string;
@@ -17,7 +17,7 @@ export interface Auction {
   currentBid: number;
   timeLeft: string;
   bids: number;
-  metal: 'gold' | 'silver' | 'platinum' | 'palladium';
+  metal: "gold" | "silver" | "platinum" | "palladium";
   image?: string;
   description?: string;
   startingPrice?: number;
@@ -38,21 +38,21 @@ class ApiService {
 
   setToken(token: string) {
     this.token = token;
-    localStorage.setItem('auth_token', token);
+    localStorage.setItem("auth_token", token);
   }
 
   getToken(): string | null {
-    return this.token || localStorage.getItem('auth_token');
+    return this.token || localStorage.getItem("auth_token");
   }
 
   private getHeaders(): HeadersInit {
     const headers: HeadersInit = {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     };
 
     const token = this.getToken();
     if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
     return headers;
@@ -70,7 +70,7 @@ class ApiService {
   // Auth endpoints
   async register(email: string, password: string, name: string) {
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify({ email, password, name }),
     });
@@ -79,7 +79,7 @@ class ApiService {
 
   async login(email: string, password: string) {
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify({ email, password }),
     });
@@ -100,19 +100,22 @@ class ApiService {
   // Auction endpoints
   async createAuction(auctionData: CreateAuctionData) {
     const response = await fetch(`${API_BASE_URL}/auctions`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify(auctionData),
     });
     return response.json();
   }
 
-  async getAuctions(filters?: { metalType?: string; status?: string }): Promise<{ success: boolean; data: Auction[] }> {
+  async getAuctions(filters?: {
+    metalType?: string;
+    status?: string;
+  }): Promise<{ success: boolean; data: Auction[] }> {
     const params = new URLSearchParams();
-    if (filters?.metalType) params.append('metalType', filters.metalType);
-    if (filters?.status) params.append('status', filters.status);
+    if (filters?.metalType) params.append("metalType", filters.metalType);
+    if (filters?.status) params.append("status", filters.status);
 
-    const url = `${API_BASE_URL}/auctions${params.toString() ? `?${params.toString()}` : ''}`;
+    const url = `${API_BASE_URL}/auctions${params.toString() ? `?${params.toString()}` : ""}`;
     const response = await fetch(url, {
       headers: this.getHeaders(),
     });
@@ -128,7 +131,7 @@ class ApiService {
 
   async placeBid(auctionId: string, amount: number) {
     const response = await fetch(`${API_BASE_URL}/auctions/${auctionId}/bid`, {
-      method: 'POST',
+      method: "POST",
       headers: this.getHeaders(),
       body: JSON.stringify({ amount }),
     });
@@ -138,48 +141,48 @@ class ApiService {
   // Helper for mock data until auction endpoints are ready
   async getMockAuctions(): Promise<Auction[]> {
     const prices = await this.getPrices();
-    
+
     return [
       {
         id: 1,
-        title: '1oz Gold Bar - 999.9 Fine',
+        title: "1oz Gold Bar - 999.9 Fine",
         currentBid: prices.gold,
-        timeLeft: '2h 15m',
+        timeLeft: "2h 15m",
         bids: 12,
-        metal: 'gold',
-        description: 'PAMP Suisse gold bar in original assay card',
+        metal: "gold",
+        description: "PAMP Suisse gold bar in original assay card",
         endTime: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
       },
       {
         id: 2,
-        title: '10oz Silver Bar',
+        title: "10oz Silver Bar",
         currentBid: prices.silver * 10,
-        timeLeft: '1d 3h',
+        timeLeft: "1d 3h",
         bids: 8,
-        metal: 'silver',
-        description: 'Engelhard silver bar, serial number visible',
+        metal: "silver",
+        description: "Engelhard silver bar, serial number visible",
         endTime: new Date(Date.now() + 27 * 60 * 60 * 1000).toISOString(),
       },
       {
         id: 3,
-        title: '1oz Platinum Bar',
+        title: "1oz Platinum Bar",
         currentBid: prices.platinum,
-        timeLeft: '3h 45m',
+        timeLeft: "3h 45m",
         bids: 5,
-        metal: 'platinum',
-        description: 'Valcambi platinum bar in sealed package',
+        metal: "platinum",
+        description: "Valcambi platinum bar in sealed package",
         endTime: new Date(Date.now() + 3.75 * 60 * 60 * 1000).toISOString(),
       },
       {
         id: 4,
-        title: '1oz Palladium Bar',
+        title: "1oz Palladium Bar",
         currentBid: prices.palladium,
-        timeLeft: '4h 20m',
+        timeLeft: "4h 20m",
         bids: 3,
-        metal: 'palladium',
-        description: 'PAMP palladium bar with certificate',
+        metal: "palladium",
+        description: "PAMP palladium bar with certificate",
         endTime: new Date(Date.now() + 4.33 * 60 * 60 * 1000).toISOString(),
-      }
+      },
     ];
   }
 }

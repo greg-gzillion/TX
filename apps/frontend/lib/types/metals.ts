@@ -1,1 +1,7 @@
-export type MetalType = 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Copper' | 'Other';
+export type MetalType =
+  | "Gold"
+  | "Silver"
+  | "Platinum"
+  | "Palladium"
+  | "Copper"
+  | "Other";

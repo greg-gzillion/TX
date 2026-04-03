@@ -1,5 +1,5 @@
-use cosmwasm_std::{Addr, Uint128};
 use cosmwasm_schema::cw_serde;
+use cosmwasm_std::{Addr, Uint128};
 
 #[cw_serde]
 pub struct InstantiateMsg {
@@ -47,8 +47,8 @@ pub struct AuctionResponse {
     pub reserve_price: Uint128,
     pub current_bid: Option<Uint128>,
     pub current_bidder: Option<Addr>,
-    pub buy_it_now_price: Option<Uint128>,      
-    pub has_buy_it_now: bool,                    
+    pub buy_it_now_price: Option<Uint128>,
+    pub has_buy_it_now: bool,
     pub end_time: u64,
     pub status: String,
     pub created_at: u64,

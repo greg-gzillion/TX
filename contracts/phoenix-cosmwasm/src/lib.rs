@@ -1,13 +1,11 @@
-use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Empty, Env, MessageInfo, Response, StdResult,
-};
 use cosmwasm_schema::{cw_serde, QueryResponses};
+use cosmwasm_std::{entry_point, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult};
 
 #[cw_serde]
 pub struct InstantiateMsg {
     pub admin: String,
-    pub fee_bps: u16,  // 110 = 1.1%
-    pub developer_stake: u8,  // 10 = 10%
+    pub fee_bps: u16,        // 110 = 1.1%
+    pub developer_stake: u8, // 10 = 10%
 }
 
 #[cw_serde]
@@ -44,21 +42,21 @@ pub struct ConfigResponse {
 
 #[entry_point]
 pub fn instantiate(
-    deps: DepsMut,
+    _deps: DepsMut,
     _env: Env,
     _info: MessageInfo,
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     // Store configuration
-    let config = ConfigResponse {
+    let _config = ConfigResponse {
         admin: msg.admin,
         fee_bps: msg.fee_bps,
         developer_stake: msg.developer_stake,
         community_reserve_target: "50000000000".to_string(), // 50,000 RLUSD
     };
-    
+
     // In a real contract, we would store this
-    
+
     Ok(Response::new()
         .add_attribute("action", "instantiate")
         .add_attribute("fee_bps", msg.fee_bps.to_string())
@@ -68,7 +66,7 @@ pub fn instantiate(
 
 #[entry_point]
 pub fn execute(
-    _deps: DepsMut,
+    __deps: DepsMut,
     _env: Env,
     _info: MessageInfo,
     _msg: ExecuteMsg,

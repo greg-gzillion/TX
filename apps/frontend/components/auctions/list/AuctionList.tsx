@@ -1,9 +1,9 @@
 "use client";
 
 // components/auctions/list/AuctionList.tsx
-import { useEffect, useState } from 'react';
-import { usePhoenixEscrow, Auction } from '@/lib/contract/phoenix-escrow';
-import AuctionCard from './AuctionCard';
+import { useEffect, useState } from "react";
+import { usePhoenixEscrow, Auction } from "@/lib/contract/phoenix-escrow";
+import AuctionCard from "./AuctionCard";
 
 export default function AuctionList() {
   const [auctions, setAuctions] = useState<Auction[]>([]);
@@ -20,7 +20,7 @@ export default function AuctionList() {
       // Just set the data directly - no transformation needed!
       setAuctions(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error('Failed to load auctions:', error);
+      console.error("Failed to load auctions:", error);
       setAuctions([]);
     } finally {
       setLoading(false);
@@ -44,7 +44,9 @@ export default function AuctionList() {
       {auctions.length === 0 && (
         <div className="col-span-full text-center py-12 text-gray-500">
           <p className="text-lg">No active metal auctions</p>
-          <p className="text-sm mt-2">Be the first to list gold, silver, platinum, or palladium!</p>
+          <p className="text-sm mt-2">
+            Be the first to list gold, silver, platinum, or palladium!
+          </p>
         </div>
       )}
     </div>

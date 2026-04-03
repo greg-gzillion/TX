@@ -1,40 +1,40 @@
-import { CoinSpec } from '../../../../../../types';
+import { CoinSpec } from "../../../../../../types";
 
 export const barberSilver: CoinSpec[] = [
   {
-    name: 'Barber Dime',
-    years: '1892-1916',
+    name: "Barber Dime",
+    years: "1892-1916",
     weight: 2.5,
-    purity: 0.900,
+    purity: 0.9,
     diameter: 17.9,
     thickness: 1.0,
-    composition: '90% Silver, 10% Copper',
-    designer: 'Charles E. Barber',
-    notes: '1894 and 1895 are key dates',
-    category: 'Barber Silver'
+    composition: "90% Silver, 10% Copper",
+    designer: "Charles E. Barber",
+    notes: "1894 and 1895 are key dates",
+    category: "Barber Silver",
   },
   {
-    name: 'Barber Quarter',
-    years: '1892-1916',
+    name: "Barber Quarter",
+    years: "1892-1916",
     weight: 6.25,
-    purity: 0.900,
+    purity: 0.9,
     diameter: 24.3,
     thickness: 1.7,
-    composition: '90% Silver, 10% Copper',
-    designer: 'Charles E. Barber',
-    notes: '1901 and 1913 are key dates',
-    category: 'Barber Silver'
+    composition: "90% Silver, 10% Copper",
+    designer: "Charles E. Barber",
+    notes: "1901 and 1913 are key dates",
+    category: "Barber Silver",
   },
   {
-    name: 'Barber Half Dollar',
-    years: '1892-1915',
+    name: "Barber Half Dollar",
+    years: "1892-1915",
     weight: 12.5,
-    purity: 0.900,
+    purity: 0.9,
     diameter: 30.6,
     thickness: 2.0,
-    composition: '90% Silver, 10% Copper',
-    designer: 'Charles E. Barber',
-    notes: '1892 and 1915 are key dates',
-    category: 'Barber Silver'
-  }
+    composition: "90% Silver, 10% Copper",
+    designer: "Charles E. Barber",
+    notes: "1892 and 1915 are key dates",
+    category: "Barber Silver",
+  },
 ];

@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useWallet } from '@/hooks/useWallet';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useWallet } from "@/hooks/useWallet";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 export default function WalletButton() {
   const { address, isConnected, connect, disconnect } = useWallet();
   const pathname = usePathname();
   const [showOptions, setShowOptions] = useState(false);
-  const isSandbox = pathname?.includes('/sandbox');
+  const isSandbox = pathname?.includes("/sandbox");
 
   // Don't show on sandbox pages
   if (isSandbox) {
@@ -19,9 +19,9 @@ export default function WalletButton() {
     return (
       <div className="flex items-center gap-2">
         <span className="text-sm bg-gray-100 px-3 py-1 rounded">
-          {address.slice(0,6)}...{address.slice(-4)}
+          {address.slice(0, 6)}...{address.slice(-4)}
         </span>
-        <button 
+        <button
           onClick={disconnect}
           className="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
         >
@@ -40,12 +40,12 @@ export default function WalletButton() {
         Connect Wallet
         <span className="text-xs">▼</span>
       </button>
-      
+
       {showOptions && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border py-1 z-50">
           <button
             onClick={() => {
-              connect('keplr');
+              connect("keplr");
               setShowOptions(false);
             }}
             className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2"
@@ -55,7 +55,7 @@ export default function WalletButton() {
           </button>
           <button
             onClick={() => {
-              connect('leap');
+              connect("leap");
               setShowOptions(false);
             }}
             className="w-full text-left px-4 py-2 hover:bg-gray-100 flex items-center gap-2"

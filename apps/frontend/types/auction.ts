@@ -4,7 +4,7 @@ export interface Auction {
   currentBid: number;
   timeLeft: string;
   bids: number;
-  metal: 'gold' | 'silver' | 'platinum' | 'palladium';
+  metal: "gold" | "silver" | "platinum" | "palladium";
   seller: string;
   premium: string;
   image?: string;

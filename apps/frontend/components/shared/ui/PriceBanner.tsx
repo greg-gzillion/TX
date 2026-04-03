@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-const API_URL = 'https://phoenix-api-756y.onrender.com';
+const API_URL = "https://phoenix-api-756y.onrender.com";
 
 interface Prices {
   gold: number;
@@ -18,26 +18,26 @@ export default function PriceBanner() {
 
   const fetchPrices = async () => {
     try {
-      console.log('🔄 Fetching prices...');
+      console.log("🔄 Fetching prices...");
       // SIMPLE FETCH - no extra options, just works
       const response = await fetch(`${API_URL}/api/prices`);
-      
+
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-      
+
       const data = await response.json();
-      console.log('✅ Prices received:', data);
-      
+      console.log("✅ Prices received:", data);
+
       if (data.success && data.data) {
         setPrices(data.data);
         setError(null);
       } else {
-        throw new Error('Invalid data format');
+        throw new Error("Invalid data format");
       }
     } catch (err) {
-      console.error('❌ Fetch failed:', err);
-      setError(err instanceof Error ? err.message : 'Failed to fetch');
+      console.error("❌ Fetch failed:", err);
+      setError(err instanceof Error ? err.message : "Failed to fetch");
     } finally {
       setLoading(false);
     }
@@ -76,10 +76,14 @@ export default function PriceBanner() {
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 max-w-3xl mx-auto">
       <div className="flex flex-wrap items-center justify-center gap-4 text-sm">
         <span className="font-medium text-gray-700">Reference:</span>
-        <span className="text-amber-700 font-semibold">🥇 ${prices.gold?.toFixed(2)}</span>
+        <span className="text-amber-700 font-semibold">
+          🥇 ${prices.gold?.toFixed(2)}
+        </span>
         <span className="text-gray-600">🥈 ${prices.silver?.toFixed(2)}</span>
         <span className="text-gray-600">🔷 ${prices.platinum?.toFixed(2)}</span>
-        <span className="text-gray-600">🔶 ${prices.palladium?.toFixed(2)}</span>
+        <span className="text-gray-600">
+          🔶 ${prices.palladium?.toFixed(2)}
+        </span>
       </div>
       <div className="mt-2 text-xs text-gray-500 text-center border-t border-gray-200 pt-2">
         ⓘ Reference prices updated manually. Metal prices fluctuate constantly.

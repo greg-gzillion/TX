@@ -1,11 +1,11 @@
 {
   "chainId": "osmo-test-5",
-  "chainName": "Osmosis Testnet", 
+  "chainName": "Osmosis Testnet",
   "rpc": "https://rpc.testnet.osmosis.zone",
   "rest": "https://lcd.testnet.osmosis.zone",
   "stakeCurrency": {
     "coinDenom": "OSMO",
-    "coinMinimalDenom": "uosmo", 
+    "coinMinimalDenom": "uosmo",
     "coinDecimals": 6
   },
   "bip44": {
@@ -29,7 +29,7 @@
   "feeCurrencies": [
     {
       "coinDenom": "OSMO",
-      "coinMinimalDenom": "uosmo", 
+      "coinMinimalDenom": "uosmo",
       "coinDecimals": 6
     }
   ],

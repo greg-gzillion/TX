@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
-const API_URL = 'https://phoenix-api-756y.onrender.com';
+const API_URL = "https://phoenix-api-756y.onrender.com";
 
 export function PriceFeed() {
   const [prices, setPrices] = useState({
-    gold: 5183.70,
+    gold: 5183.7,
     silver: 87.38,
-    platinum: 2254.00,
-    palladium: 1754.00
+    platinum: 2254.0,
+    palladium: 1754.0,
   });
-  const [lastUpdated, setLastUpdated] = useState('');
+  const [lastUpdated, setLastUpdated] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,30 +19,32 @@ export function PriceFeed() {
       try {
         const response = await fetch(`${API_URL}/api/prices`);
         const data = await response.json();
-        
+
         if (data.success && data.data) {
           setPrices({
             gold: data.data.gold,
             silver: data.data.silver,
             platinum: data.data.platinum,
-            palladium: data.data.palladium
+            palladium: data.data.palladium,
           });
-          
+
           const date = new Date(data.data.createdAt);
           setLastUpdated(date.toLocaleTimeString());
         }
       } catch (error) {
-        console.error('Error fetching prices:', error);
+        console.error("Error fetching prices:", error);
       } finally {
         setLoading(false);
       }
     }
-    
+
     fetchPrices();
   }, []);
 
   if (loading) {
-    return <div className="bg-white p-6 rounded-xl border shadow-sm animate-pulse h-32"></div>;
+    return (
+      <div className="bg-white p-6 rounded-xl border shadow-sm animate-pulse h-32"></div>
+    );
   }
 
   return (
@@ -56,11 +58,10 @@ export function PriceFeed() {
       </div>
 
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">Reference Prices</h3>  {/* Changed from "Live Price Feed" */}
+        <h3 className="text-lg font-semibold">Reference Prices</h3>{" "}
+        {/* Changed from "Live Price Feed" */}
         {lastUpdated && (
-          <span className="text-sm text-gray-500">
-            Updated: {lastUpdated}
-          </span>
+          <span className="text-sm text-gray-500">Updated: {lastUpdated}</span>
         )}
       </div>
 
@@ -75,14 +76,18 @@ export function PriceFeed() {
         </div>
         <div className="bg-slate-50 p-4 rounded-lg">
           <div className="text-sm text-slate-600 font-medium">PLATINUM</div>
-          <div className="text-2xl font-bold">${prices.platinum.toFixed(2)}</div>
+          <div className="text-2xl font-bold">
+            ${prices.platinum.toFixed(2)}
+          </div>
         </div>
         <div className="bg-zinc-50 p-4 rounded-lg">
           <div className="text-sm text-zinc-600 font-medium">PALLADIUM</div>
-          <div className="text-2xl font-bold">${prices.palladium.toFixed(2)}</div>
+          <div className="text-2xl font-bold">
+            ${prices.palladium.toFixed(2)}
+          </div>
         </div>
       </div>
-      
+
       {/* Static note */}
       <p className="text-xs text-gray-400 text-center mt-4">
         ⚡ Prices loaded once on page load. Refresh to see latest updates.

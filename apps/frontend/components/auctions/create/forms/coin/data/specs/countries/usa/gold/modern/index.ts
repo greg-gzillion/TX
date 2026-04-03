@@ -1,6 +1,6 @@
-import { goldEagles, goldEaglesBySize } from './eagles';
-import { goldBuffalo } from './buffalo';
-import { firstSpouse2007 } from './first-spouse/2007';
+import { goldEagles, goldEaglesBySize } from "./eagles";
+import { goldBuffalo } from "./buffalo";
+import { firstSpouse2007 } from "./first-spouse/2007";
 // Import other first spouse years as needed
 
 export const modernGold = [
@@ -11,7 +11,7 @@ export const modernGold = [
 ];
 
 export const modernGoldByType = {
-  'American Gold Eagles': goldEaglesBySize,
-  'Gold Buffalo': goldBuffalo,
-  'First Spouse (2007)': firstSpouse2007,
+  "American Gold Eagles": goldEaglesBySize,
+  "Gold Buffalo": goldBuffalo,
+  "First Spouse (2007)": firstSpouse2007,
 };

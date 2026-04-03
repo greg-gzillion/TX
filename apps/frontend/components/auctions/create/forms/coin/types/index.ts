@@ -2,7 +2,7 @@ export interface MintData {
   value: string;
   label: string;
   minYear: number;
-  maxYear: number | 'present';
+  maxYear: number | "present";
   metals?: string[];
 }
 

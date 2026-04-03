@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
 interface JewelryDetailsFormProps {
   jewelryDetails: {
-    type: 'ring' | 'necklace' | 'bracelet' | 'earrings' | 'other';
-    gender: 'men' | 'women' | 'unisex';
+    type: "ring" | "necklace" | "bracelet" | "earrings" | "other";
+    gender: "men" | "women" | "unisex";
     style: string;
     gemstones: string[];
     gemstoneDetails: string;
@@ -14,30 +14,42 @@ interface JewelryDetailsFormProps {
   onChange: (details: any) => void;
 }
 
-export default function JewelryDetailsForm({ jewelryDetails, onChange }: JewelryDetailsFormProps) {
+export default function JewelryDetailsForm({
+  jewelryDetails,
+  onChange,
+}: JewelryDetailsFormProps) {
   const updateField = (field: string, value: any) => {
     onChange({ ...jewelryDetails, [field]: value });
   };
 
   const jewelryTypes = [
-    { value: 'ring', label: 'Ring' },
-    { value: 'necklace', label: 'Necklace / Pendant' },
-    { value: 'bracelet', label: 'Bracelet' },
-    { value: 'earrings', label: 'Earrings' },
-    { value: 'other', label: 'Other' }
+    { value: "ring", label: "Ring" },
+    { value: "necklace", label: "Necklace / Pendant" },
+    { value: "bracelet", label: "Bracelet" },
+    { value: "earrings", label: "Earrings" },
+    { value: "other", label: "Other" },
   ];
 
   const commonGemstones = [
-    'Diamond', 'Sapphire', 'Ruby', 'Emerald', 
-    'Opal', 'Turquoise', 'Pearl', 'Cubic Zirconia'
+    "Diamond",
+    "Sapphire",
+    "Ruby",
+    "Emerald",
+    "Opal",
+    "Turquoise",
+    "Pearl",
+    "Cubic Zirconia",
   ];
 
   const toggleGemstone = (stone: string) => {
     const current = jewelryDetails.gemstones || [];
     if (current.includes(stone)) {
-      updateField('gemstones', current.filter(s => s !== stone));
+      updateField(
+        "gemstones",
+        current.filter((s) => s !== stone),
+      );
     } else {
-      updateField('gemstones', [...current, stone]);
+      updateField("gemstones", [...current, stone]);
     }
   };
 
@@ -47,7 +59,7 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
         <span className="text-xl">💎</span>
         Jewelry Details
       </h3>
-      
+
       <div className="grid md:grid-cols-2 gap-4">
         {/* Jewelry Type */}
         <div>
@@ -56,11 +68,13 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           </label>
           <select
             value={jewelryDetails.type}
-            onChange={(e) => updateField('type', e.target.value)}
+            onChange={(e) => updateField("type", e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
           >
-            {jewelryTypes.map(t => (
-              <option key={t.value} value={t.value}>{t.label}</option>
+            {jewelryTypes.map((t) => (
+              <option key={t.value} value={t.value}>
+                {t.label}
+              </option>
             ))}
           </select>
         </div>
@@ -72,7 +86,7 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           </label>
           <select
             value={jewelryDetails.gender}
-            onChange={(e) => updateField('gender', e.target.value)}
+            onChange={(e) => updateField("gender", e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
           >
             <option value="men">Men's</option>
@@ -89,7 +103,7 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           <input
             type="text"
             value={jewelryDetails.style}
-            onChange={(e) => updateField('style', e.target.value)}
+            onChange={(e) => updateField("style", e.target.value)}
             placeholder="e.g., Tennis, Solitaire, Vintage"
             className="w-full px-3 py-2 border rounded-md"
           />
@@ -103,7 +117,7 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           <input
             type="text"
             value={jewelryDetails.hallmarks}
-            onChange={(e) => updateField('hallmarks', e.target.value)}
+            onChange={(e) => updateField("hallmarks", e.target.value)}
             placeholder="e.g., 14k, 925, Tiffany & Co."
             className="w-full px-3 py-2 border rounded-md"
           />
@@ -116,15 +130,15 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           Gemstones Present
         </label>
         <div className="flex flex-wrap gap-2 mb-2">
-          {commonGemstones.map(stone => (
+          {commonGemstones.map((stone) => (
             <button
               key={stone}
               type="button"
               onClick={() => toggleGemstone(stone)}
               className={`px-3 py-1 text-xs rounded-full border ${
                 (jewelryDetails.gemstones || []).includes(stone)
-                  ? 'bg-pink-600 text-white border-pink-600'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  ? "bg-pink-600 text-white border-pink-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
               }`}
             >
               {stone}
@@ -136,12 +150,12 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           placeholder="Other gemstones (comma separated)"
           className="w-full px-3 py-2 text-sm border rounded-md"
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if (e.key === "Enter") {
               e.preventDefault();
               const input = e.currentTarget;
               if (input.value) {
                 toggleGemstone(input.value);
-                input.value = '';
+                input.value = "";
               }
             }
           }}
@@ -155,7 +169,7 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
         </label>
         <textarea
           value={jewelryDetails.gemstoneDetails}
-          onChange={(e) => updateField('gemstoneDetails', e.target.value)}
+          onChange={(e) => updateField("gemstoneDetails", e.target.value)}
           placeholder="e.g., 1.5ct diamond, VS1 clarity"
           rows={2}
           className="w-full px-3 py-2 border rounded-md"
@@ -169,7 +183,7 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
         </label>
         <select
           value={jewelryDetails.condition}
-          onChange={(e) => updateField('condition', e.target.value)}
+          onChange={(e) => updateField("condition", e.target.value)}
           className="w-full px-3 py-2 border rounded-md"
         >
           <option value="">Select condition...</option>
@@ -187,10 +201,12 @@ export default function JewelryDetailsForm({ jewelryDetails, onChange }: Jewelry
           <input
             type="checkbox"
             checked={jewelryDetails.includesBox}
-            onChange={(e) => updateField('includesBox', e.target.checked)}
+            onChange={(e) => updateField("includesBox", e.target.checked)}
             className="rounded border-gray-300"
           />
-          <span className="text-sm font-medium">Includes original box / packaging</span>
+          <span className="text-sm font-medium">
+            Includes original box / packaging
+          </span>
         </label>
       </div>
 

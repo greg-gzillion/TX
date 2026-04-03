@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef } from "react";
 
 export const useScrollPrevention = () => {
   const elementRef = useRef<HTMLDivElement>(null);
@@ -10,12 +10,12 @@ export const useScrollPrevention = () => {
 
     const element = elementRef.current;
     if (element) {
-      element.addEventListener('click', handleClick);
+      element.addEventListener("click", handleClick);
     }
 
     return () => {
       if (element) {
-        element.removeEventListener('click', handleClick);
+        element.removeEventListener("click", handleClick);
       }
     };
   }, []);

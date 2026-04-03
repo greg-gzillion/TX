@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 export interface SandboxAuction {
   id: string;
   title: string;
   description: string;
-  metalType: 'Gold' | 'Silver' | 'Platinum' | 'Palladium' | 'Copper' | 'Other';
-  formType: 'coin' | 'round' | 'bar' | 'jewelry' | 'other';
+  metalType: "Gold" | "Silver" | "Platinum" | "Palladium" | "Copper" | "Other";
+  formType: "coin" | "round" | "bar" | "jewelry" | "other";
   weight: number;
-  weightUnit: 'troy_oz' | 'grams' | 'ounces';
+  weightUnit: "troy_oz" | "grams" | "ounces";
   purity: number;
   startingPrice: number;
   currentBid: number;
@@ -37,7 +37,7 @@ export function useSandboxAuctions(selectedWallet: any) {
 
   // Load auctions from localStorage
   useEffect(() => {
-    const stored = localStorage.getItem('sandbox_auctions');
+    const stored = localStorage.getItem("sandbox_auctions");
     if (stored) {
       try {
         const parsed = JSON.parse(stored);
@@ -48,12 +48,12 @@ export function useSandboxAuctions(selectedWallet: any) {
           endsAt: new Date(a.endsAt),
           bids: a.bids.map((b: any) => ({
             ...b,
-            timestamp: new Date(b.timestamp)
-          }))
+            timestamp: new Date(b.timestamp),
+          })),
         }));
         setAuctions(withDates);
       } catch (e) {
-        console.error('Failed to parse stored auctions', e);
+        console.error("Failed to parse stored auctions", e);
       }
     }
     setLoading(false);
@@ -62,7 +62,7 @@ export function useSandboxAuctions(selectedWallet: any) {
   // Save to localStorage whenever auctions change
   useEffect(() => {
     if (!loading) {
-      localStorage.setItem('sandbox_auctions', JSON.stringify(auctions));
+      localStorage.setItem("sandbox_auctions", JSON.stringify(auctions));
     }
   }, [auctions, loading]);
 
@@ -70,8 +70,10 @@ export function useSandboxAuctions(selectedWallet: any) {
   const createAuction = (auctionData: any) => {
     const newAuction: SandboxAuction = {
       id: `auction_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-      title: auctionData.title || `${auctionData.weight} ${auctionData.metalType} ${auctionData.formType}`,
-      description: auctionData.description || '',
+      title:
+        auctionData.title ||
+        `${auctionData.weight} ${auctionData.metalType} ${auctionData.formType}`,
+      description: auctionData.description || "",
       metalType: auctionData.metalType,
       formType: auctionData.formType,
       weight: auctionData.weight,
@@ -80,8 +82,8 @@ export function useSandboxAuctions(selectedWallet: any) {
       startingPrice: auctionData.startingPrice,
       currentBid: auctionData.startingPrice,
       buyNowPrice: auctionData.buyNowPrice,
-      sellerAddress: selectedWallet?.address || 'sandbox_seller',
-      sellerName: selectedWallet?.name || 'Sandbox Seller',
+      sellerAddress: selectedWallet?.address || "sandbox_seller",
+      sellerName: selectedWallet?.name || "Sandbox Seller",
       bids: [],
       images: auctionData.images || [],
       year: auctionData.coinDetails?.year,
@@ -93,73 +95,81 @@ export function useSandboxAuctions(selectedWallet: any) {
       endsAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days
     };
 
-    setAuctions(prev => [newAuction, ...prev]);
+    setAuctions((prev) => [newAuction, ...prev]);
     return newAuction;
   };
 
   // Place a bid
   const placeBid = (auctionId: string, amount: number, bidderWallet: any) => {
     // Can't bid on your own auction
-    const auction = auctions.find(a => a.id === auctionId);
+    const auction = auctions.find((a) => a.id === auctionId);
     if (auction?.sellerAddress === bidderWallet?.address) {
-      return { success: false, error: 'Cannot bid on your own auction' };
+      return { success: false, error: "Cannot bid on your own auction" };
     }
 
     // Bid must be higher than current bid
     if (amount <= (auction?.currentBid || 0)) {
-      return { success: false, error: 'Bid must be higher than current bid' };
+      return { success: false, error: "Bid must be higher than current bid" };
     }
 
-    setAuctions(prev => prev.map(a => {
-      if (a.id === auctionId) {
-        return {
-          ...a,
-          currentBid: amount,
-          bids: [
-            ...a.bids,
-            {
-              bidder: bidderWallet?.address || 'unknown',
-              amount,
-              timestamp: new Date()
-            }
-          ]
-        };
-      }
-      return a;
-    }));
+    setAuctions((prev) =>
+      prev.map((a) => {
+        if (a.id === auctionId) {
+          return {
+            ...a,
+            currentBid: amount,
+            bids: [
+              ...a.bids,
+              {
+                bidder: bidderWallet?.address || "unknown",
+                amount,
+                timestamp: new Date(),
+              },
+            ],
+          };
+        }
+        return a;
+      }),
+    );
 
     return { success: true };
   };
 
   // Buy now
   const buyNow = (auctionId: string, buyerWallet: any) => {
-    const auction = auctions.find(a => a.id === auctionId);
+    const auction = auctions.find((a) => a.id === auctionId);
     if (auction?.sellerAddress === buyerWallet?.address) {
-      return { success: false, error: 'Cannot buy your own auction' };
+      return { success: false, error: "Cannot buy your own auction" };
     }
 
     if (!auction?.buyNowPrice) {
-      return { success: false, error: 'No buy now price set' };
+      return { success: false, error: "No buy now price set" };
     }
 
     // In sandbox, just mark as ended
-    setAuctions(prev => prev.map(a => 
-      a.id === auctionId 
-        ? { ...a, currentBid: a.buyNowPrice || a.currentBid, endsAt: new Date() }
-        : a
-    ));
+    setAuctions((prev) =>
+      prev.map((a) =>
+        a.id === auctionId
+          ? {
+              ...a,
+              currentBid: a.buyNowPrice || a.currentBid,
+              endsAt: new Date(),
+            }
+          : a,
+      ),
+    );
 
     return { success: true };
   };
 
   // Delete auction (for sandbox cleanup)
   const deleteAuction = (auctionId: string) => {
-    setAuctions(prev => prev.filter(a => a.id !== auctionId));
+    setAuctions((prev) => prev.filter((a) => a.id !== auctionId));
   };
 
   // Reset all auctions (clear localStorage)
   const resetAll = () => {
-    localStorage.removeItem('sandbox_auctions');
+    localStorage.removeItem("sandbox_auctions");
     setAuctions([]);
   };
 
@@ -170,6 +180,6 @@ export function useSandboxAuctions(selectedWallet: any) {
     placeBid,
     buyNow,
     deleteAuction,
-    resetAll
+    resetAll,
   };
 }

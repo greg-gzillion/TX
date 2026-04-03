@@ -24,12 +24,13 @@ export interface AuctionListResponse {
 }
 
 const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || "";
-const TESTUSD_DENOM = "utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6"; // TESTUSD denom
+const TESTUSD_DENOM =
+  "utestusd-testcore1tymxlev27p5rhxd36g4j3a82c7uucjjz4xuzc6"; // TESTUSD denom
 
 export class PhoenixEscrowClient {
   constructor(
     private client: SigningCosmWasmClient,
-    private senderAddress: string
+    private senderAddress: string,
   ) {}
 
   // ==================== EXECUTE METHODS ====================
@@ -45,13 +46,13 @@ export class PhoenixEscrowClient {
   async createAuction(
     itemId: string,
     description: string,
-    startingPrice: string,  // in uTESTUSD
-    reservePrice: string,   // in uTESTUSD
-    durationHours: number
+    startingPrice: string, // in uTESTUSD
+    reservePrice: string, // in uTESTUSD
+    durationHours: number,
   ) {
     // Calculate 10% seller collateral (based on reserve price)
-    const collateral = (BigInt(reservePrice) * 10n / 100n).toString();
-    
+    const collateral = ((BigInt(reservePrice) * 10n) / 100n).toString();
+
     const msg = {
       create_auction: {
         item_id: itemId,
@@ -62,14 +63,12 @@ export class PhoenixEscrowClient {
       },
     };
 
-    const funds: Coin[] = [
-      { denom: TESTUSD_DENOM, amount: collateral }
-    ];
+    const funds: Coin[] = [{ denom: TESTUSD_DENOM, amount: collateral }];
 
     console.log("Creating auction with:", {
       msg,
       funds,
-      sender: this.senderAddress
+      sender: this.senderAddress,
     });
 
     return await this.client.execute(
@@ -78,7 +77,7 @@ export class PhoenixEscrowClient {
       msg,
       "auto",
       undefined,
-      funds
+      funds,
     );
   }
 
@@ -90,25 +89,23 @@ export class PhoenixEscrowClient {
   async placeBid(auctionId: number, bidAmount: string) {
     // Calculate 10% buyer collateral
     const bid = BigInt(bidAmount);
-    const collateral = (bid * 10n / 100n).toString();
-    const total = (bid + (bid * 10n / 100n)).toString();
-    
+    const collateral = ((bid * 10n) / 100n).toString();
+    const total = (bid + (bid * 10n) / 100n).toString();
+
     console.log("Placing bid:", {
       auctionId,
       bidAmount,
       collateral,
-      total
+      total,
     });
-    
+
     const msg = {
       place_bid: {
         auction_id: auctionId,
       },
     };
 
-    const funds: Coin[] = [
-      { denom: TESTUSD_DENOM, amount: total }
-    ];
+    const funds: Coin[] = [{ denom: TESTUSD_DENOM, amount: total }];
 
     return await this.client.execute(
       this.senderAddress,
@@ -116,7 +113,7 @@ export class PhoenixEscrowClient {
       msg,
       "auto",
       undefined,
-      funds
+      funds,
     );
   }
 
@@ -135,7 +132,7 @@ export class PhoenixEscrowClient {
       this.senderAddress,
       CONTRACT_ADDRESS,
       msg,
-      "auto"
+      "auto",
     );
   }
 
@@ -146,7 +143,7 @@ export class PhoenixEscrowClient {
    */
   async getAuction(auctionId: number): Promise<Auction> {
     const query = {
-      get_auction: { auction_id: auctionId }
+      get_auction: { auction_id: auctionId },
     };
     return await this.client.queryContractSmart(CONTRACT_ADDRESS, query);
   }
@@ -157,13 +154,13 @@ export class PhoenixEscrowClient {
   async getActiveAuctions(): Promise<Auction[]> {
     try {
       const query = { get_active_auctions: {} };
-      const response = await this.client.queryContractSmart(
-        CONTRACT_ADDRESS, 
-        query
-      ) as AuctionListResponse;
+      const response = (await this.client.queryContractSmart(
+        CONTRACT_ADDRESS,
+        query,
+      )) as AuctionListResponse;
       return response.auctions || [];
     } catch (error) {
-      console.error('Failed to fetch active auctions:', error);
+      console.error("Failed to fetch active auctions:", error);
       return [];
     }
   }
@@ -174,15 +171,15 @@ export class PhoenixEscrowClient {
   async getAuctionsBySeller(seller: string): Promise<Auction[]> {
     try {
       const query = {
-        get_auctions_by_seller: { seller }
+        get_auctions_by_seller: { seller },
       };
-      const response = await this.client.queryContractSmart(
-        CONTRACT_ADDRESS, 
-        query
-      ) as AuctionListResponse;
+      const response = (await this.client.queryContractSmart(
+        CONTRACT_ADDRESS,
+        query,
+      )) as AuctionListResponse;
       return response.auctions || [];
     } catch (error) {
-      console.error('Failed to fetch auctions by seller:', error);
+      console.error("Failed to fetch auctions by seller:", error);
       return [];
     }
   }
@@ -193,15 +190,15 @@ export class PhoenixEscrowClient {
   async getAuctionsByBidder(bidder: string): Promise<Auction[]> {
     try {
       const query = {
-        get_auctions_by_bidder: { bidder }
+        get_auctions_by_bidder: { bidder },
       };
-      const response = await this.client.queryContractSmart(
-        CONTRACT_ADDRESS, 
-        query
-      ) as AuctionListResponse;
+      const response = (await this.client.queryContractSmart(
+        CONTRACT_ADDRESS,
+        query,
+      )) as AuctionListResponse;
       return response.auctions || [];
     } catch (error) {
-      console.error('Failed to fetch auctions by bidder:', error);
+      console.error("Failed to fetch auctions by bidder:", error);
       return [];
     }
   }
@@ -212,9 +209,9 @@ export class PhoenixEscrowClient {
    * Convert TESTUSD amount to uTESTUSD (1 TESTUSD = 1,000,000 uTESTUSD)
    */
   static testusdToUtestusd(testusdAmount: string): string {
-    const parts = testusdAmount.split('.');
+    const parts = testusdAmount.split(".");
     const whole = parts[0];
-    const fraction = parts[1]?.padEnd(6, '0').slice(0, 6) || '000000';
+    const fraction = parts[1]?.padEnd(6, "0").slice(0, 6) || "000000";
     return whole + fraction;
   }
 
@@ -225,12 +222,12 @@ export class PhoenixEscrowClient {
     const amount = BigInt(utestusdAmount);
     const whole = amount / 1_000_000n;
     const fraction = amount % 1_000_000n;
-    
+
     if (fraction === 0n) {
       return whole.toString();
     }
-    
-    const fractionStr = fraction.toString().padStart(6, '0').replace(/0+$/, '');
+
+    const fractionStr = fraction.toString().padStart(6, "0").replace(/0+$/, "");
     return `${whole}.${fractionStr}`;
   }
 
@@ -239,7 +236,7 @@ export class PhoenixEscrowClient {
    */
   static calculateTotalForBid(bidAmount: string): string {
     const bid = BigInt(bidAmount);
-    return (bid + (bid * 10n / 100n)).toString();
+    return (bid + (bid * 10n) / 100n).toString();
   }
 
   /**
@@ -248,12 +245,18 @@ export class PhoenixEscrowClient {
   formatAuctionForDisplay(auction: Auction) {
     return {
       ...auction,
-      starting_price_testusd: PhoenixEscrowClient.utestusdToTestusd(auction.starting_price),
-      reserve_price_testusd: PhoenixEscrowClient.utestusdToTestusd(auction.reserve_price),
-      current_bid_testusd: auction.current_bid 
+      starting_price_testusd: PhoenixEscrowClient.utestusdToTestusd(
+        auction.starting_price,
+      ),
+      reserve_price_testusd: PhoenixEscrowClient.utestusdToTestusd(
+        auction.reserve_price,
+      ),
+      current_bid_testusd: auction.current_bid
         ? PhoenixEscrowClient.utestusdToTestusd(auction.current_bid)
         : null,
-      seller_collateral_testusd: PhoenixEscrowClient.utestusdToTestusd(auction.seller_collateral),
+      seller_collateral_testusd: PhoenixEscrowClient.utestusdToTestusd(
+        auction.seller_collateral,
+      ),
       buyer_collateral_testusd: auction.buyer_collateral
         ? PhoenixEscrowClient.utestusdToTestusd(auction.buyer_collateral)
         : null,
@@ -261,7 +264,7 @@ export class PhoenixEscrowClient {
       created_at_local: new Date(auction.created_at * 1000).toLocaleString(),
       status_badge: this.getStatusBadge(auction.status),
       is_active: auction.status === "Active",
-      has_bids: auction.current_bid !== null
+      has_bids: auction.current_bid !== null,
     };
   }
 
@@ -287,35 +290,47 @@ import { useCallback, useMemo } from "react";
 
 export function usePhoenixEscrow() {
   const { client, address } = useWallet();
-  
+
   const escrowClient = useMemo(() => {
     if (!client || !address) return null;
     return new PhoenixEscrowClient(client, address);
   }, [client, address]);
 
-  const createAuction = useCallback(async (
-    itemId: string,
-    description: string,
-    startingPrice: string,
-    reservePrice: string,
-    durationHours: number
-  ) => {
-    if (!escrowClient) throw new Error("Wallet not connected");
-    return escrowClient.createAuction(itemId, description, startingPrice, reservePrice, durationHours);
-  }, [escrowClient]);
+  const createAuction = useCallback(
+    async (
+      itemId: string,
+      description: string,
+      startingPrice: string,
+      reservePrice: string,
+      durationHours: number,
+    ) => {
+      if (!escrowClient) throw new Error("Wallet not connected");
+      return escrowClient.createAuction(
+        itemId,
+        description,
+        startingPrice,
+        reservePrice,
+        durationHours,
+      );
+    },
+    [escrowClient],
+  );
 
-  const placeBid = useCallback(async (
-    auctionId: number,
-    bidAmount: string
-  ) => {
-    if (!escrowClient) throw new Error("Wallet not connected");
-    return escrowClient.placeBid(auctionId, bidAmount);
-  }, [escrowClient]);
+  const placeBid = useCallback(
+    async (auctionId: number, bidAmount: string) => {
+      if (!escrowClient) throw new Error("Wallet not connected");
+      return escrowClient.placeBid(auctionId, bidAmount);
+    },
+    [escrowClient],
+  );
 
-  const getAuction = useCallback(async (auctionId: number) => {
-    if (!escrowClient) throw new Error("Wallet not connected");
-    return escrowClient.getAuction(auctionId);
-  }, [escrowClient]);
+  const getAuction = useCallback(
+    async (auctionId: number) => {
+      if (!escrowClient) throw new Error("Wallet not connected");
+      return escrowClient.getAuction(auctionId);
+    },
+    [escrowClient],
+  );
 
   const getActiveAuctions = useCallback(async () => {
     if (!escrowClient) return [];

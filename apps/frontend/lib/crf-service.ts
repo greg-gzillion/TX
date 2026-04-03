@@ -5,7 +5,7 @@ interface Transaction {
   id: string;
   auctionId: string;
   feeAmount: number;
-  status: 'pending' | 'completed';
+  status: "pending" | "completed";
   timestamp: Date;
 }
 
@@ -22,26 +22,26 @@ class CRFService {
   private lastUpdated: Date = new Date();
   private transactions: Transaction[] = [
     {
-      id: '1',
-      auctionId: 'Auction #1',
+      id: "1",
+      auctionId: "Auction #1",
       feeAmount: 5500000, // 5.5 RLUSD
-      status: 'completed',
-      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000) // 2 days ago
+      status: "completed",
+      timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
     },
     {
-      id: '2',
-      auctionId: 'Auction #2',
+      id: "2",
+      auctionId: "Auction #2",
       feeAmount: 3200000, // 3.2 RLUSD
-      status: 'completed',
-      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000) // 1 day ago
+      status: "completed",
+      timestamp: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000), // 1 day ago
     },
     {
-      id: '3',
-      auctionId: 'Auction #3',
+      id: "3",
+      auctionId: "Auction #3",
       feeAmount: 3800000, // 3.8 RLUSD
-      status: 'pending',
-      timestamp: new Date()
-    }
+      status: "pending",
+      timestamp: new Date(),
+    },
   ];
 
   getBalance(): BalanceData {
@@ -49,7 +49,7 @@ class CRFService {
       totalFees: this.totalFees,
       transactionCount: this.transactionCount,
       lastUpdated: this.lastUpdated,
-      transactions: this.transactions
+      transactions: this.transactions,
     };
   }
 
@@ -61,8 +61,8 @@ class CRFService {
       id: `tx-${Date.now()}`,
       auctionId,
       feeAmount: amount,
-      status: 'pending',
-      timestamp: new Date()
+      status: "pending",
+      timestamp: new Date(),
     });
   }
 

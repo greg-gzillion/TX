@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useWallet } from '@/hooks/useWallet';
-import { useToast } from '@/lib/contexts/ToastContext';
-import { PhoenixEscrowClient } from '@/lib/contract/phoenix-escrow';
+import { useState, useEffect } from "react";
+import { useWallet } from "@/hooks/useWallet";
+import { useToast } from "@/lib/contexts/ToastContext";
+import { PhoenixEscrowClient } from "@/lib/contract/phoenix-escrow";
 
 interface BidFormProps {
   auctionId: number;
@@ -13,28 +13,28 @@ interface BidFormProps {
   onBidPlaced?: () => void; // For auto-update
 }
 
-export default function BidForm({ 
-  auctionId, 
-  currentBid, 
+export default function BidForm({
+  auctionId,
+  currentBid,
   startingPrice,
   minBidIncrement = 0.01,
-  onBidPlaced
+  onBidPlaced,
 }: BidFormProps) {
   const { address, isConnected, client } = useWallet();
   const { showToast } = useToast();
-  const [bidAmount, setBidAmount] = useState('');
+  const [bidAmount, setBidAmount] = useState("");
   const [loading, setLoading] = useState(false);
-  const [balance, setBalance] = useState<string>('0');
+  const [balance, setBalance] = useState<string>("0");
 
   // Calculate minimum bid
-  const minBid = currentBid 
+  const minBid = currentBid
     ? (parseFloat(currentBid) + minBidIncrement).toFixed(2)
     : startingPrice;
 
   // Calculate 10% collateral
   const bidNum = parseFloat(bidAmount) || 0;
-  const collateral = (bidNum * 0.10).toFixed(2);
-  const total = (bidNum * 1.10).toFixed(2);
+  const collateral = (bidNum * 0.1).toFixed(2);
+  const total = (bidNum * 1.1).toFixed(2);
 
   // Fetch balance when connected
   useEffect(() => {
@@ -46,33 +46,33 @@ export default function BidForm({
   const fetchBalance = async () => {
     try {
       if (!address) return;
-      const balance = await client?.getBalance(address, 'ucore');
-      setBalance(balance?.amount || '0');
+      const balance = await client?.getBalance(address, "ucore");
+      setBalance(balance?.amount || "0");
     } catch (err) {
-      console.error('Failed to fetch balance:', err);
+      console.error("Failed to fetch balance:", err);
     }
   };
 
   const handlePlaceBid = async () => {
     // Validation
     if (!bidAmount || parseFloat(bidAmount) <= 0) {
-      showToast('❌ Please enter a valid bid amount', 'error');
+      showToast("❌ Please enter a valid bid amount", "error");
       return;
     }
 
     if (!auctionId) {
-      showToast('❌ Auction ID not found', 'error');
+      showToast("❌ Auction ID not found", "error");
       return;
     }
 
     // Add null check for address
     if (!address) {
-      showToast('❌ Wallet address not found', 'error');
+      showToast("❌ Wallet address not found", "error");
       return;
     }
 
     if (!client) {
-      showToast('❌ Wallet client not available', 'error');
+      showToast("❌ Wallet client not available", "error");
       return;
     }
 
@@ -84,18 +84,21 @@ export default function BidForm({
       const escrowClient = new PhoenixEscrowClient(client, address);
       const result = await escrowClient.placeBid(auctionId, bidUcore);
 
-      showToast(`✅ Bid placed successfully!`, 'success');
-      setBidAmount('');
-      
+      showToast(`✅ Bid placed successfully!`, "success");
+      setBidAmount("");
+
       // Refresh balance after bid
       await fetchBalance();
-      
+
       if (onBidPlaced) {
         onBidPlaced();
       }
     } catch (error) {
-      console.error('Error placing bid:', error);
-      showToast(`❌ Error placing bid: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error');
+      console.error("Error placing bid:", error);
+      showToast(
+        `❌ Error placing bid: ${error instanceof Error ? error.message : "Unknown error"}`,
+        "error",
+      );
     } finally {
       setLoading(false);
     }
@@ -103,25 +106,25 @@ export default function BidForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validation
     if (!isConnected) {
-      showToast('❌ Please connect your wallet first', 'error');
+      showToast("❌ Please connect your wallet first", "error");
       return;
     }
 
     if (!bidAmount || bidNum <= 0) {
-      showToast('❌ Please enter a valid bid amount', 'error');
+      showToast("❌ Please enter a valid bid amount", "error");
       return;
     }
 
     if (bidNum < parseFloat(minBid)) {
-      showToast(`❌ Minimum bid is ${minBid} CORE`, 'error');
+      showToast(`❌ Minimum bid is ${minBid} CORE`, "error");
       return;
     }
 
-    if (bidNum * 1.1 > (parseInt(balance) / 1_000_000)) {
-      showToast(`❌ Insufficient funds. Need ${total} CORE`, 'error');
+    if (bidNum * 1.1 > parseInt(balance) / 1_000_000) {
+      showToast(`❌ Insufficient funds. Need ${total} CORE`, "error");
       return;
     }
 
@@ -144,7 +147,7 @@ export default function BidForm({
         <div className="text-center py-6">
           <p className="text-gray-600 mb-4">Connect your wallet to bid</p>
           <button
-            onClick={() => window.location.href = '/wallet'}
+            onClick={() => (window.location.href = "/wallet")}
             className="bg-amber-600 text-white px-6 py-2 rounded-lg hover:bg-amber-700"
           >
             Connect Wallet
@@ -183,13 +186,15 @@ export default function BidForm({
             <div className="bg-blue-50 rounded-lg p-3 text-sm">
               <div className="flex justify-between">
                 <span>Your balance:</span>
-                <span className="font-mono">{(parseInt(balance) / 1_000_000).toFixed(2)} CORE</span>
+                <span className="font-mono">
+                  {(parseInt(balance) / 1_000_000).toFixed(2)} CORE
+                </span>
               </div>
               <div className="flex justify-between mt-1">
                 <span>Total needed (bid + 10% collateral):</span>
                 <span className="font-mono">{total} CORE</span>
               </div>
-              {bidNum * 1.1 > (parseInt(balance) / 1_000_000) && (
+              {bidNum * 1.1 > parseInt(balance) / 1_000_000 && (
                 <p className="text-red-600 text-xs mt-1">
                   ⚠️ Insufficient balance
                 </p>
@@ -200,14 +205,20 @@ export default function BidForm({
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading || !bidAmount || (bidNum * 1.1 > (parseInt(balance) / 1_000_000))}
+            disabled={
+              loading ||
+              !bidAmount ||
+              bidNum * 1.1 > parseInt(balance) / 1_000_000
+            }
             className={`w-full py-3 rounded-lg font-medium transition-colors ${
-              loading || !bidAmount || (bidNum * 1.1 > (parseInt(balance) / 1_000_000))
-                ? 'bg-gray-300 cursor-not-allowed'
-                : 'bg-amber-600 hover:bg-amber-700 text-white'
+              loading ||
+              !bidAmount ||
+              bidNum * 1.1 > parseInt(balance) / 1_000_000
+                ? "bg-gray-300 cursor-not-allowed"
+                : "bg-amber-600 hover:bg-amber-700 text-white"
             }`}
           >
-            {loading ? 'Placing Bid...' : 'Place Bid'}
+            {loading ? "Placing Bid..." : "Place Bid"}
           </button>
 
           {/* Fine print */}

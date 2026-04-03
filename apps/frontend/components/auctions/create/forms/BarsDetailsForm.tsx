@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 interface BarsDetailsFormProps {
   barDetails: {
@@ -7,35 +7,46 @@ interface BarsDetailsFormProps {
     assay: boolean;
     assayNumber: string;
     dimensions: string;
-    shape: 'bar' | 'ingot' | 'wafer' | 'odd';
+    shape: "bar" | "ingot" | "wafer" | "odd";
     features: string[];
   };
   onChange: (details: any) => void;
 }
 
-export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFormProps) {
+export default function BarsDetailsForm({
+  barDetails,
+  onChange,
+}: BarsDetailsFormProps) {
   const updateField = (field: string, value: any) => {
     onChange({ ...barDetails, [field]: value });
   };
 
   const shapes = [
-    { value: 'bar', label: 'Standard Bar' },
-    { value: 'ingot', label: 'Ingot' },
-    { value: 'wafer', label: 'Wafer' },
-    { value: 'odd', label: 'Odd Shape' }
+    { value: "bar", label: "Standard Bar" },
+    { value: "ingot", label: "Ingot" },
+    { value: "wafer", label: "Wafer" },
+    { value: "odd", label: "Odd Shape" },
   ];
 
   const commonFeatures = [
-    'Serial numbered', 'Hallmarked', 'Cast', 'Pressed',
-    'Certified', 'Original packaging', 'With assay card'
+    "Serial numbered",
+    "Hallmarked",
+    "Cast",
+    "Pressed",
+    "Certified",
+    "Original packaging",
+    "With assay card",
   ];
 
   const toggleFeature = (feature: string) => {
     const current = barDetails.features || [];
     if (current.includes(feature)) {
-      updateField('features', current.filter(f => f !== feature));
+      updateField(
+        "features",
+        current.filter((f) => f !== feature),
+      );
     } else {
-      updateField('features', [...current, feature]);
+      updateField("features", [...current, feature]);
     }
   };
 
@@ -45,7 +56,7 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
         <span className="text-xl">⬜</span>
         Bar Details
       </h3>
-      
+
       <div className="grid md:grid-cols-2 gap-4">
         {/* Manufacturer */}
         <div>
@@ -54,7 +65,7 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           </label>
           <select
             value={barDetails.manufacturer}
-            onChange={(e) => updateField('manufacturer', e.target.value)}
+            onChange={(e) => updateField("manufacturer", e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
           >
             <option value="">Select refiner...</option>
@@ -77,7 +88,7 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           <input
             type="text"
             value={barDetails.serialNumber}
-            onChange={(e) => updateField('serialNumber', e.target.value)}
+            onChange={(e) => updateField("serialNumber", e.target.value)}
             placeholder="If applicable"
             className="w-full px-3 py-2 border rounded-md"
           />
@@ -90,11 +101,13 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           </label>
           <select
             value={barDetails.shape}
-            onChange={(e) => updateField('shape', e.target.value)}
+            onChange={(e) => updateField("shape", e.target.value)}
             className="w-full px-3 py-2 border rounded-md"
           >
-            {shapes.map(s => (
-              <option key={s.value} value={s.value}>{s.label}</option>
+            {shapes.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
             ))}
           </select>
         </div>
@@ -107,7 +120,7 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           <input
             type="text"
             value={barDetails.dimensions}
-            onChange={(e) => updateField('dimensions', e.target.value)}
+            onChange={(e) => updateField("dimensions", e.target.value)}
             placeholder="e.g., 50mm x 28mm"
             className="w-full px-3 py-2 border rounded-md"
           />
@@ -120,10 +133,12 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           <input
             type="checkbox"
             checked={barDetails.assay}
-            onChange={(e) => updateField('assay', e.target.checked)}
+            onChange={(e) => updateField("assay", e.target.checked)}
             className="rounded border-gray-300"
           />
-          <span className="text-sm font-medium">Includes assay card / certificate</span>
+          <span className="text-sm font-medium">
+            Includes assay card / certificate
+          </span>
         </label>
       </div>
 
@@ -136,7 +151,7 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           <input
             type="text"
             value={barDetails.assayNumber}
-            onChange={(e) => updateField('assayNumber', e.target.value)}
+            onChange={(e) => updateField("assayNumber", e.target.value)}
             placeholder="If available"
             className="w-full px-3 py-2 border rounded-md"
           />
@@ -149,15 +164,15 @@ export default function BarsDetailsForm({ barDetails, onChange }: BarsDetailsFor
           Bar Features
         </label>
         <div className="flex flex-wrap gap-2">
-          {commonFeatures.map(feature => (
+          {commonFeatures.map((feature) => (
             <button
               key={feature}
               type="button"
               onClick={() => toggleFeature(feature)}
               className={`px-3 py-1 text-xs rounded-full border ${
                 (barDetails.features || []).includes(feature)
-                  ? 'bg-gray-700 text-white border-gray-700'
-                  : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                  ? "bg-gray-700 text-white border-gray-700"
+                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
               }`}
             >
               {feature}

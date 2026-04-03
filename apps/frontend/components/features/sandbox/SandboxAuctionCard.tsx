@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { SandboxAuction } from './hooks/useSandboxAuctions';
+import { useState } from "react";
+import { SandboxAuction } from "./hooks/useSandboxAuctions";
 
 interface Props {
   auction: SandboxAuction;
@@ -10,28 +10,33 @@ interface Props {
   onBuyNow: (auctionId: string) => void;
 }
 
-export default function SandboxAuctionCard({ auction, selectedWallet, onPlaceBid, onBuyNow }: Props) {
+export default function SandboxAuctionCard({
+  auction,
+  selectedWallet,
+  onPlaceBid,
+  onBuyNow,
+}: Props) {
   const [bidAmount, setBidAmount] = useState(auction.currentBid + 1);
   const [showBidModal, setShowBidModal] = useState(false);
   const isOwner = selectedWallet?.address === auction.sellerAddress;
 
   // Metal icons (matches your real UI)
   const metalIcons = {
-    Gold: '🥇',
-    Silver: '🥈',
-    Platinum: '🔷',
-    Palladium: '🔶',
-    Copper: '🟤',
-    Other: '💎'
+    Gold: "🥇",
+    Silver: "🥈",
+    Platinum: "🔷",
+    Palladium: "🔶",
+    Copper: "🟤",
+    Other: "💎",
   };
 
   // Form type badges (matches your real UI)
   const formTypeLabels = {
-    coin: '🪙 Coin',
-    round: '⭕ Round',
-    bar: '📦 Bar',
-    jewelry: '💎 Jewelry',
-    other: '📦 Other'
+    coin: "🪙 Coin",
+    round: "⭕ Round",
+    bar: "📦 Bar",
+    jewelry: "💎 Jewelry",
+    other: "📦 Other",
   };
 
   return (
@@ -39,9 +44,15 @@ export default function SandboxAuctionCard({ auction, selectedWallet, onPlaceBid
       {/* Image placeholder or first image */}
       <div className="h-48 bg-gradient-to-br from-amber-50 to-gray-100 flex items-center justify-center">
         {auction.images && auction.images.length > 0 ? (
-          <img src={auction.images[0]} alt={auction.title} className="w-full h-full object-cover" />
+          <img
+            src={auction.images[0]}
+            alt={auction.title}
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <span className="text-6xl opacity-30">{metalIcons[auction.metalType]}</span>
+          <span className="text-6xl opacity-30">
+            {metalIcons[auction.metalType]}
+          </span>
         )}
       </div>
 
@@ -49,7 +60,9 @@ export default function SandboxAuctionCard({ auction, selectedWallet, onPlaceBid
         {/* Header with metal and type */}
         <div className="flex justify-between items-start mb-2">
           <div>
-            <span className="text-2xl mr-2">{metalIcons[auction.metalType]}</span>
+            <span className="text-2xl mr-2">
+              {metalIcons[auction.metalType]}
+            </span>
             <span className="text-xs px-2 py-1 bg-gray-100 rounded-full">
               {formTypeLabels[auction.formType]}
             </span>
@@ -66,10 +79,11 @@ export default function SandboxAuctionCard({ auction, selectedWallet, onPlaceBid
 
         {/* Details (matches your real auction view) */}
         <div className="text-sm text-gray-600 mb-3">
-          {auction.weight} {auction.weightUnit === 'troy_oz' ? 'oz t' : auction.weightUnit} • 
+          {auction.weight}{" "}
+          {auction.weightUnit === "troy_oz" ? "oz t" : auction.weightUnit} •
           {(auction.purity * 100).toFixed(1)}% pure
           {auction.year && ` • ${auction.year}`}
-          {auction.mint && ` • ${auction.mint.split(' - ')[0]}`}
+          {auction.mint && ` • ${auction.mint.split(" - ")[0]}`}
         </div>
 
         {/* Price */}

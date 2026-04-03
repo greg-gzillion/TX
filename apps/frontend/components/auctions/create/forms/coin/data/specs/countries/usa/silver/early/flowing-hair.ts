@@ -1,37 +1,37 @@
-import { CoinSpec } from '../../../../types';
+import { CoinSpec } from "../../../../types";
 
 export const flowingHairSilver: CoinSpec[] = [
   {
-    name: 'Flowing Hair Half Dime',
-    years: '1794-1795',
+    name: "Flowing Hair Half Dime",
+    years: "1794-1795",
     weight: 1.35,
     purity: 0.8924,
     diameter: 16.5,
     thickness: 0.8,
-    composition: '89.24% Silver, 10.76% Copper',
-    designer: 'Robert Scot',
-    category: 'Early Silver'
+    composition: "89.24% Silver, 10.76% Copper",
+    designer: "Robert Scot",
+    category: "Early Silver",
   },
   {
-    name: 'Flowing Hair Half Dollar',
-    years: '1794-1795',
+    name: "Flowing Hair Half Dollar",
+    years: "1794-1795",
     weight: 13.48,
     purity: 0.8924,
     diameter: 32.5,
     thickness: 2.2,
-    composition: '89.24% Silver, 10.76% Copper',
-    notes: 'Extremely rare',
-    category: 'Early Silver'
+    composition: "89.24% Silver, 10.76% Copper",
+    notes: "Extremely rare",
+    category: "Early Silver",
   },
   {
-    name: 'Flowing Hair Silver Dollar',
-    years: '1794-1795',
+    name: "Flowing Hair Silver Dollar",
+    years: "1794-1795",
     weight: 26.96,
     purity: 0.8924,
     diameter: 39.5,
     thickness: 2.8,
-    composition: '89.24% Silver, 10.76% Copper',
-    notes: '1794 is one of the rarest and most valuable US coins',
-    category: 'Early Silver'
+    composition: "89.24% Silver, 10.76% Copper",
+    notes: "1794 is one of the rarest and most valuable US coins",
+    category: "Early Silver",
   },
 ];

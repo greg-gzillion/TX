@@ -1,13 +1,16 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
+import { useState, useRef } from "react";
 
 interface ImageUploaderProps {
   images: any[];
   onChange: (images: any[]) => void;
 }
 
-export default function ImageUploader({ images, onChange }: ImageUploaderProps) {
+export default function ImageUploader({
+  images,
+  onChange,
+}: ImageUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
@@ -16,14 +19,14 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
     if (files.length === 0) return;
 
     setUploading(true);
-    
+
     // Filter for images and limit size to 2MB
-    const validFiles = files.filter(file => 
-      file.type.startsWith('image/') && file.size <= 2 * 1024 * 1024
+    const validFiles = files.filter(
+      (file) => file.type.startsWith("image/") && file.size <= 2 * 1024 * 1024,
     );
 
     if (validFiles.length === 0) {
-      alert('Please select image files under 2MB each');
+      alert("Please select image files under 2MB each");
       setUploading(false);
       return;
     }
@@ -46,12 +49,12 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
             id: Date.now() + index,
             src: e.target.result as string,
             name: file.name,
-            size: (file.size / 1024 / 1024).toFixed(2) + 'MB',
+            size: (file.size / 1024 / 1024).toFixed(2) + "MB",
             type: file.type,
           });
-          
+
           loadedCount++;
-          
+
           // When all files are loaded, update state
           if (loadedCount === validFiles.length) {
             const updatedImages = [...images, ...newImages];
@@ -65,14 +68,14 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
   };
 
   const removeImage = (id: number) => {
-    const updatedImages = images.filter(img => img.id !== id);
+    const updatedImages = images.filter((img) => img.id !== id);
     onChange(updatedImages);
   };
 
   const setPrimaryImage = (id: number) => {
-    const image = images.find(img => img.id === id);
+    const image = images.find((img) => img.id === id);
     if (image) {
-      const otherImages = images.filter(img => img.id !== id);
+      const otherImages = images.filter((img) => img.id !== id);
       onChange([image, ...otherImages]);
     }
   };
@@ -82,7 +85,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
       <label className="block text-sm font-medium text-gray-700">
         Item Photos
       </label>
-      
+
       <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
         <input
           type="file"
@@ -92,27 +95,30 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
           multiple
           className="hidden"
         />
-        
+
         <div className="space-y-3">
           <div className="text-4xl">📸</div>
           <div>
-            <h3 className="font-medium text-gray-900">Click to upload photos</h3>
+            <h3 className="font-medium text-gray-900">
+              Click to upload photos
+            </h3>
             <p className="text-sm text-gray-500 mt-1">
               Max 5 images, 2MB each. First image is the primary thumbnail.
             </p>
           </div>
-          
+
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
             disabled={uploading || images.length >= 5}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
-            {uploading ? 'Uploading...' : 'Select Images'}
+            {uploading ? "Uploading..." : "Select Images"}
           </button>
-          
+
           <p className="text-xs text-gray-400">
-            JPG, PNG, WebP supported. For video, use YouTube/Vimeo links in description.
+            JPG, PNG, WebP supported. For video, use YouTube/Vimeo links in
+            description.
           </p>
         </div>
       </div>
@@ -132,7 +138,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
               Clear All
             </button>
           </div>
-          
+
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             {images.map((img, index) => (
               <div key={img.id} className="relative group">
@@ -143,7 +149,7 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
                     className="w-full h-full object-cover"
                   />
                 </div>
-                
+
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all flex items-center justify-center opacity-0 group-hover:opacity-100">
                   <div className="flex space-x-2">
                     <button
@@ -166,13 +172,13 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
                     )}
                   </div>
                 </div>
-                
+
                 {index === 0 && (
                   <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                     Primary
                   </div>
                 )}
-                
+
                 <div className="mt-2 text-xs text-gray-600 truncate">
                   {img.name}
                 </div>
@@ -186,8 +192,9 @@ export default function ImageUploader({ images, onChange }: ImageUploaderProps) 
       <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
         <h4 className="font-medium text-blue-800 mb-2">🎥 Video Option</h4>
         <p className="text-sm text-blue-700">
-          For video demonstrations (max 20 seconds), upload to YouTube/Vimeo and include the link in your auction description.
-          Example: "Video tour: https://youtube.com/shorts/..."
+          For video demonstrations (max 20 seconds), upload to YouTube/Vimeo and
+          include the link in your auction description. Example: "Video tour:
+          https://youtube.com/shorts/..."
         </p>
       </div>
     </div>

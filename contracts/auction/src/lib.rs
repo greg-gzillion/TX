@@ -1,7 +1,7 @@
 pub mod contract;
+pub mod error;
 pub mod msg;
 pub mod state;
-pub mod error;
 
 // Re-export key types for easier access
 pub use crate::error::ContractError;

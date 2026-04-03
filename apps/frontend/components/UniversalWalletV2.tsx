@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 
 // Add type declarations for all wallets
 declare global {
@@ -28,7 +28,10 @@ interface UniversalWalletV2Props {
   className?: string;
 }
 
-export default function UniversalWalletV2({ onConnect, className = '' }: UniversalWalletV2Props) {
+export default function UniversalWalletV2({
+  onConnect,
+  className = "",
+}: UniversalWalletV2Props) {
   const [wallets, setWallets] = useState<WalletOption[]>([]);
   const [connecting, setConnecting] = useState<string | null>(null);
 
@@ -42,99 +45,101 @@ export default function UniversalWalletV2({ onConnect, className = '' }: Univers
     // Keplr (Cosmos)
     if (window.keplr) {
       detected.push({
-        name: 'Keplr',
-        icon: '🪐',
+        name: "Keplr",
+        icon: "🪐",
         installed: true,
         connect: async () => {
           try {
-            await window.keplr.enable('coreum-testnet-1');
-            const offlineSigner = window.keplr.getOfflineSigner('coreum-testnet-1');
+            await window.keplr.enable("coreum-testnet-1");
+            const offlineSigner =
+              window.keplr.getOfflineSigner("coreum-testnet-1");
             const accounts = await offlineSigner.getAccounts();
             return {
-              name: 'Keplr',
+              name: "Keplr",
               address: accounts[0].address,
-              signer: offlineSigner
+              signer: offlineSigner,
             };
           } catch (error) {
-            console.error('Keplr connection error:', error);
+            console.error("Keplr connection error:", error);
             throw error;
           }
-        }
+        },
       });
     }
 
     // Leap (Cosmos)
     if (window.leap) {
       detected.push({
-        name: 'Leap',
-        icon: '🐆',
+        name: "Leap",
+        icon: "🐆",
         installed: true,
         connect: async () => {
           try {
-            await window.leap.enable('coreum-testnet-1');
-            const offlineSigner = window.leap.getOfflineSigner('coreum-testnet-1');
+            await window.leap.enable("coreum-testnet-1");
+            const offlineSigner =
+              window.leap.getOfflineSigner("coreum-testnet-1");
             const accounts = await offlineSigner.getAccounts();
             return {
-              name: 'Leap',
+              name: "Leap",
               address: accounts[0].address,
-              signer: offlineSigner
+              signer: offlineSigner,
             };
           } catch (error) {
-            console.error('Leap connection error:', error);
+            console.error("Leap connection error:", error);
             throw error;
           }
-        }
+        },
       });
     }
 
     // MetaMask (EVM)
     if (window.ethereum) {
       detected.push({
-        name: 'MetaMask',
-        icon: '🦊',
+        name: "MetaMask",
+        icon: "🦊",
         installed: true,
         connect: async () => {
           try {
-            const accounts = await window.ethereum.request({ 
-              method: 'eth_requestAccounts' 
+            const accounts = await window.ethereum.request({
+              method: "eth_requestAccounts",
             });
             return {
-              name: 'MetaMask',
+              name: "MetaMask",
               address: accounts[0],
-              provider: window.ethereum
+              provider: window.ethereum,
             };
           } catch (error) {
-            console.error('MetaMask connection error:', error);
+            console.error("MetaMask connection error:", error);
             throw error;
           }
-        }
+        },
       });
     }
 
     // Phantom (Solana)
     if (window.phantom?.isPhantom) {
       detected.push({
-        name: 'Phantom',
-        icon: '👻',
+        name: "Phantom",
+        icon: "👻",
         installed: true,
         connect: async () => {
           try {
             // Safe check for phantom
             if (!window.phantom) {
-              throw new Error('Phantom wallet not detected');
+              throw new Error("Phantom wallet not detected");
             }
-            
+
             const response = await window.phantom.connect();
             return {
-              name: 'Phantom',
+              name: "Phantom",
               address: response.publicKey.toString(),
-              provider: window.phantom
+              provider: window.phantom,
             };
           } catch (error) {
-            console.error('Phantom connection error:', error);
+            console.error("Phantom connection error:", error);
             throw error;
           }
-        }
+        },
       });
     }
 
@@ -148,10 +153,10 @@ export default function UniversalWalletV2({ onConnect, className = '' }: Univers
       onConnect({
         ...account,
         walletName: wallet.name,
-        walletIcon: wallet.icon
+        walletIcon: wallet.icon,
       });
     } catch (error) {
-      console.error('Connection failed:', error);
+      console.error("Connection failed:", error);
       alert(`Failed to connect to ${wallet.name}`);
     } finally {
       setConnecting(null);
@@ -160,12 +165,12 @@ export default function UniversalWalletV2({ onConnect, className = '' }: Univers
 
   const installWallet = (name: string) => {
     const urls: Record<string, string> = {
-      Keplr: 'https://www.keplr.app/download',
-      Leap: 'https://www.leapwallet.io/download',
-      MetaMask: 'https://metamask.io/download/',
-      Phantom: 'https://phantom.app/download'
+      Keplr: "https://www.keplr.app/download",
+      Leap: "https://www.leapwallet.io/download",
+      MetaMask: "https://metamask.io/download/",
+      Phantom: "https://phantom.app/download",
     };
-    window.open(urls[name], '_blank');
+    window.open(urls[name], "_blank");
   };
 
   return (
@@ -174,7 +179,7 @@ export default function UniversalWalletV2({ onConnect, className = '' }: Univers
         <div className="text-center py-4">
           <p className="text-gray-500 mb-3">No wallet extensions detected</p>
           <div className="flex flex-wrap gap-2 justify-center">
-            {['Keplr', 'Leap', 'MetaMask', 'Phantom'].map(name => (
+            {["Keplr", "Leap", "MetaMask", "Phantom"].map((name) => (
               <button
                 key={name}
                 onClick={() => installWallet(name)}
@@ -200,7 +205,9 @@ export default function UniversalWalletV2({ onConnect, className = '' }: Univers
             {connecting === wallet.name ? (
               <span className="text-sm text-gray-500">Connecting...</span>
             ) : (
-              <span className="text-amber-600 text-sm font-medium">Connect →</span>
+              <span className="text-amber-600 text-sm font-medium">
+                Connect →
+              </span>
             )}
           </button>
         ))

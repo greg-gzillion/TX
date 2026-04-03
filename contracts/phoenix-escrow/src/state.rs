@@ -1,7 +1,7 @@
-use cosmwasm_std::{Addr, Uint128};
+use cosmwasm_std::Uint128;
+use cw_storage_plus::{Item, Map};
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use cw_storage_plus::{Item, Map};
 
 pub const DEVELOPER_WALLET: &str = "core1mj58cdfrkc8uyunw2rna3wvkatdjfhd6lwtu0m";
 pub const COMMUNITY_RESERVE_FUND: &str = "core1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv";

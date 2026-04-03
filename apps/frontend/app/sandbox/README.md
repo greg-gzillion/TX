@@ -5,6 +5,7 @@
 ## 📋 Overview
 
 The PhoenixPME Sandbox is a comprehensive testing environment that allows developers to:
+
 - Experiment with auction creation and bidding
 - Test smart contract interactions
 - Simulate wallet connections and transactions
@@ -29,6 +30,7 @@ sandbox/
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Keplr wallet or Leap wallet browser extension
 - Test tokens (automatically provided in sandbox)
 
@@ -42,6 +44,7 @@ sandbox/
 ## 🎮 Features
 
 ### 1. **Wallet Selection**
+
 ```typescript
 // Multiple wallet options:
 - Test Wallet 1 (1000 TESTUSD)
@@ -53,6 +56,7 @@ sandbox/
 ```
 
 ### 2. **Auction Playground**
+
 - Create mock auctions with various metals
 - Place test bids
 - Simulate the 48-hour verification period
@@ -60,12 +64,14 @@ sandbox/
 - Experience the dual-collateral mechanism
 
 ### 3. **Contract Tester**
+
 - Direct smart contract interaction
 - Test escrow functionality
 - Simulate successful and failed trades
 - Verify TRUST/DONT TRUST issuance
 
 ### 4. **Price Feed**
+
 - Real-time metal prices (testnet)
 - Manual update simulation
 - Price history tracking
@@ -73,53 +79,68 @@ sandbox/
 ## 🔧 Component Documentation
 
 ### `AuctionPlayground.tsx`
+
 ```tsx
 <AuctionPlayground wallet={selectedWallet} />
 ```
+
 Full auction simulation with:
+
 - Create auction (Gold, Silver, Platinum, Palladium)
 - Place bids
 - View auction status
 - Test collateral locking
 
 ### `ContractTester.tsx`
+
 ```tsx
 <ContractTester wallet={selectedWallet} />
 ```
+
 Direct contract interaction:
+
 - Deploy test contracts
 - Call contract methods
 - View transaction results
 - Error simulation
 
 ### `PriceFeed.tsx`
+
 ```tsx
 <PriceFeed />
 ```
+
 Live price display:
+
 - Current metal prices
 - Price change indicators
 - Last update timestamp
 - Manual update trigger
 
 ### `TestWalletsPanel.tsx`
+
 ```tsx
-<TestWalletsPanel 
+<TestWalletsPanel
   selectedWallet={selectedWallet}
   onSelectWallet={setSelectedWallet}
 />
 ```
+
 Pre-funded test accounts:
+
 - 1000 TESTUSD each
 - One-click selection
 - Balance display
 - Account details
 
 ### `WalletSelector.tsx`
+
 ```tsx
 <WalletSelector onSelect={setSelectedWallet} />
 ```
+
 Wallet connection manager:
+
 - Connect Keplr
 - Connect Leap
 - Disconnect
@@ -128,6 +149,7 @@ Wallet connection manager:
 ## 🧪 Test Scenarios
 
 ### Scenario 1: Create an Auction
+
 1. Select a test wallet
 2. Go to Auction Playground
 3. Choose metal type (Gold)
@@ -136,6 +158,7 @@ Wallet connection manager:
 6. Verify collateral is locked
 
 ### Scenario 2: Place a Bid
+
 1. Select a different test wallet
 2. Find an active auction
 3. Enter bid amount
@@ -143,6 +166,7 @@ Wallet connection manager:
 5. Verify bid is recorded
 
 ### Scenario 3: Complete a Trade
+
 1. Create auction as seller
 2. Place bid as buyer
 3. Simulate delivery confirmation
@@ -150,6 +174,7 @@ Wallet connection manager:
 5. Verify collateral returned + PHNX issued
 
 ### Scenario 4: Test Contract Edge Cases
+
 1. Insufficient balance
 2. Invalid auction parameters
 3. Late bids
@@ -160,7 +185,7 @@ Wallet connection manager:
 ```typescript
 // Core state in sandbox page
 const [selectedWallet, setSelectedWallet] = useState(null);
-const [activeTab, setActiveTab] = useState('auctions');
+const [activeTab, setActiveTab] = useState("auctions");
 const [mounted, setMounted] = useState(false);
 ```
 
@@ -185,12 +210,12 @@ const [mounted, setMounted] = useState(false);
 
 Common issues and solutions:
 
-| Issue | Solution |
-|-------|----------|
+| Issue                 | Solution                       |
+| --------------------- | ------------------------------ |
 | Wallet not connecting | Ensure Keplr/Leap is installed |
-| Transaction fails | Check test token balance |
-| UI not updating | Refresh or reconnect wallet |
-| CORS errors | Check backend configuration |
+| Transaction fails     | Check test token balance       |
+| UI not updating       | Refresh or reconnect wallet    |
+| CORS errors           | Check backend configuration    |
 
 ## 📝 Adding New Features
 

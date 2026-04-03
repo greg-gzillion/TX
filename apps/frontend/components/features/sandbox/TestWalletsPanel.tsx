@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
 interface TestWallet {
   id: string;
@@ -14,20 +14,23 @@ interface TestWalletsPanelProps {
   onSelectWallet: (wallet: TestWallet) => void;
 }
 
-const API_URL = 'https://phoenix-api-756y.onrender.com';
+const API_URL = "https://phoenix-api-756y.onrender.com";
 
 // Simple random address generator for demo mode
 const generateRandomAddress = (): string => {
-  const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
   const length = 40;
-  let result = 'testcore1';
+  let result = "testcore1";
   for (let i = 0; i < length; i++) {
     result += chars[Math.floor(Math.random() * chars.length)];
   }
   return result;
 };
 
-export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWalletsPanelProps) {
+export function TestWalletsPanel({
+  selectedWallet,
+  onSelectWallet,
+}: TestWalletsPanelProps) {
   const [wallets, setWallets] = useState<TestWallet[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +39,7 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
   const createTestWallet = async () => {
     setLoading(true);
     setError(null);
-    
+
     try {
       if (useDemoMode) {
         // DEMO MODE: Create fake wallet (no backend needed)
@@ -44,19 +47,19 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
           id: Date.now().toString(),
           name: `User Wallet ${wallets.length + 1}`,
           address: generateRandomAddress(),
-          balance: '10,000 FAKE',
+          balance: "10,000 FAKE",
         };
-        setWallets(prev => [...prev, newWallet]);
+        setWallets((prev) => [...prev, newWallet]);
         onSelectWallet(newWallet);
       } else {
         // REAL MODE: Create actual testnet wallet via backend
         const response = await fetch(`${API_URL}/api/sandbox/wallets/create`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' }
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
         });
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
           const newWallet = {
             id: data.wallet.id,
@@ -64,15 +67,15 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
             address: data.wallet.address,
             balance: data.wallet.balance,
           };
-          setWallets(prev => [...prev, newWallet]);
+          setWallets((prev) => [...prev, newWallet]);
           onSelectWallet(newWallet);
         } else {
-          setError('Failed to create wallet');
+          setError("Failed to create wallet");
         }
       }
     } catch (err) {
-      console.error('Error creating wallet:', err);
-      setError('Network error - check backend');
+      console.error("Error creating wallet:", err);
+      setError("Network error - check backend");
     } finally {
       setLoading(false);
     }
@@ -81,31 +84,31 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
   const fundWallet = async (address: string) => {
     if (useDemoMode) {
       // DEMO MODE: Just update the balance in UI
-      setWallets(prev => prev.map(w => 
-        w.address === address 
-          ? { ...w, balance: '10,000 FAKE' } 
-          : w
-      ));
+      setWallets((prev) =>
+        prev.map((w) =>
+          w.address === address ? { ...w, balance: "10,000 FAKE" } : w,
+        ),
+      );
       return;
     }
 
     setLoading(true);
     try {
       const response = await fetch(`${API_URL}/api/sandbox/wallets/fund`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address }),
       });
-      
+
       if (response.ok) {
-        setWallets(prev => prev.map(w => 
-          w.address === address 
-            ? { ...w, balance: '10,000 TESTUSD' } 
-            : w
-        ));
+        setWallets((prev) =>
+          prev.map((w) =>
+            w.address === address ? { ...w, balance: "10,000 TESTUSD" } : w,
+          ),
+        );
       }
     } catch (err) {
-      console.error('Error funding wallet:', err);
+      console.error("Error funding wallet:", err);
     } finally {
       setLoading(false);
     }
@@ -118,16 +121,20 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
         <div className="flex items-center justify-between">
           <p className="text-purple-800 text-sm flex items-center">
             <span className="text-xl mr-2">🧪</span>
-            <strong>SANDBOX MODE:</strong> {useDemoMode ? 'Demo' : 'Real'} test wallets.
+            <strong>SANDBOX MODE:</strong> {useDemoMode ? "Demo" : "Real"} test
+            wallets.
           </p>
           <button
             onClick={() => setUseDemoMode(!useDemoMode)}
             className="text-xs bg-purple-200 text-purple-700 px-2 py-1 rounded hover:bg-purple-300"
           >
-            Switch to {useDemoMode ? 'Real' : 'Demo'} Mode
+            Switch to {useDemoMode ? "Real" : "Demo"} Mode
           </button>
         </div>
-        <a href="/auctions/create" className="text-purple-700 text-xs underline block mt-1">
+        <a
+          href="/auctions/create"
+          className="text-purple-700 text-xs underline block mt-1"
+        >
           Connect real wallet →
         </a>
       </div>
@@ -139,7 +146,7 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
           disabled={loading}
           className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 text-sm font-medium"
         >
-          {loading ? 'Creating...' : '+ Create New Test Wallet'}
+          {loading ? "Creating..." : "+ Create New Test Wallet"}
         </button>
       </div>
 
@@ -159,15 +166,18 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
       ) : (
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {wallets.map((wallet) => (
-            <div key={wallet.id} className="border rounded-lg p-3 hover:border-blue-300 transition">
+            <div
+              key={wallet.id}
+              className="border rounded-lg p-3 hover:border-blue-300 transition"
+            >
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => onSelectWallet(wallet)}
                     className={`px-3 py-1 rounded text-sm font-medium ${
                       selectedWallet?.address === wallet.address
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 hover:bg-gray-200'
+                        ? "bg-blue-500 text-white"
+                        : "bg-gray-100 hover:bg-gray-200"
                     }`}
                   >
                     Select
@@ -192,7 +202,7 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
                 <button
                   onClick={() => {
                     navigator.clipboard.writeText(wallet.address);
-                    alert('Address copied!');
+                    alert("Address copied!");
                   }}
                   className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded hover:bg-gray-200"
                 >
@@ -206,12 +216,15 @@ export function TestWalletsPanel({ selectedWallet, onSelectWallet }: TestWallets
 
       <div className="mt-4 p-3 bg-yellow-50 rounded-lg">
         <p className="text-xs text-yellow-700">
-          ⚠️ {useDemoMode ? 'Demo mode - fake wallets only' : 'Testnet tokens only - no real value'}. 
-          Wallets are stored in your browser.
+          ⚠️{" "}
+          {useDemoMode
+            ? "Demo mode - fake wallets only"
+            : "Testnet tokens only - no real value"}
+          . Wallets are stored in your browser.
         </p>
         <p className="text-xs text-yellow-600 mt-1">
-          {useDemoMode 
-            ? 'Demo wallets work offline - perfect for testing UI' 
+          {useDemoMode
+            ? "Demo wallets work offline - perfect for testing UI"
             : 'Each wallet is a REAL testnet address. Use "Get Test Funds" to claim from faucet.'}
         </p>
       </div>

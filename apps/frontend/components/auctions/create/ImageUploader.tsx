@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useToast } from '@/lib/contexts/ToastContext';
+import { useState } from "react";
+import { useToast } from "@/lib/contexts/ToastContext";
 
 interface UploadedImage {
   ipfsHash: string;
@@ -9,45 +9,49 @@ interface UploadedImage {
   file: File;
 }
 
-export default function ImageUploader({ onImagesChange }: { onImagesChange: (images: UploadedImage[]) => void }) {
+export default function ImageUploader({
+  onImagesChange,
+}: {
+  onImagesChange: (images: UploadedImage[]) => void;
+}) {
   const [images, setImages] = useState<UploadedImage[]>([]);
   const [uploading, setUploading] = useState(false);
   const { showToast } = useToast();
 
   const handleUpload = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
-    
+
     setUploading(true);
     const formData = new FormData();
-    
-    Array.from(files).forEach(file => {
-      formData.append('images', file);
+
+    Array.from(files).forEach((file) => {
+      formData.append("images", file);
     });
 
     try {
-      const response = await fetch('/api/upload/images', {
-        method: 'POST',
-        body: formData
+      const response = await fetch("/api/upload/images", {
+        method: "POST",
+        body: formData,
       });
 
-      if (!response.ok) throw new Error('Upload failed');
-      
+      if (!response.ok) throw new Error("Upload failed");
+
       const data = await response.json();
-      
+
       const newImages = data.uploads.map((upload: any, index: number) => ({
         ipfsHash: upload.ipfsHash,
         url: upload.url,
-        file: Array.from(files)[index]
+        file: Array.from(files)[index],
       }));
-      
+
       const updatedImages = [...images, ...newImages];
       setImages(updatedImages);
       onImagesChange(updatedImages);
-      
-      showToast(`✅ ${newImages.length} image(s) uploaded to IPFS`, 'success');
+
+      showToast(`✅ ${newImages.length} image(s) uploaded to IPFS`, "success");
     } catch (error) {
-      console.error('Upload error:', error);
-      showToast('❌ Failed to upload images', 'error');
+      console.error("Upload error:", error);
+      showToast("❌ Failed to upload images", "error");
     } finally {
       setUploading(false);
     }
@@ -64,7 +68,7 @@ export default function ImageUploader({ onImagesChange }: { onImagesChange: (ima
       <label className="block text-sm font-medium text-gray-700">
         Item Photos (up to 5)
       </label>
-      
+
       <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-amber-500 transition">
         <div className="space-y-1 text-center">
           <svg
@@ -81,7 +85,7 @@ export default function ImageUploader({ onImagesChange }: { onImagesChange: (ima
               strokeLinejoin="round"
             />
           </svg>
-          
+
           <div className="flex text-sm text-gray-600">
             <label
               htmlFor="file-upload"
@@ -101,7 +105,9 @@ export default function ImageUploader({ onImagesChange }: { onImagesChange: (ima
             </label>
             <p className="pl-1">or drag and drop</p>
           </div>
-          <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each (max 5)</p>
+          <p className="text-xs text-gray-500">
+            PNG, JPG, GIF up to 10MB each (max 5)
+          </p>
           <p className="text-xs text-green-600 mt-1">
             🚀 Stored on IPFS - Decentralized & Permanent
           </p>
@@ -111,7 +117,9 @@ export default function ImageUploader({ onImagesChange }: { onImagesChange: (ima
       {uploading && (
         <div className="text-center py-2">
           <div className="inline-block animate-spin rounded-full h-4 w-4 border-2 border-amber-600 border-t-transparent"></div>
-          <span className="ml-2 text-sm text-gray-600">Uploading to IPFS...</span>
+          <span className="ml-2 text-sm text-gray-600">
+            Uploading to IPFS...
+          </span>
         </div>
       )}
 

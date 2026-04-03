@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useSandboxAuctions } from './hooks/useSandboxAuctions';
-import SandboxAuctionCard from './SandboxAuctionCard';
-import SandboxCreateModal from './SandboxCreateModal';
+import { useState } from "react";
+import { useSandboxAuctions } from "./hooks/useSandboxAuctions";
+import SandboxAuctionCard from "./SandboxAuctionCard";
+import SandboxCreateModal from "./SandboxCreateModal";
 
 interface Props {
   wallet: any;
@@ -11,12 +11,14 @@ interface Props {
 
 export default function AuctionPlayground({ wallet }: Props) {
   const [showCreateModal, setShowCreateModal] = useState(false);
-  const [filter, setFilter] = useState('all'); // all, mine, bidding
-  const { auctions, createAuction, placeBid, buyNow } = useSandboxAuctions(wallet);
+  const [filter, setFilter] = useState("all"); // all, mine, bidding
+  const { auctions, createAuction, placeBid, buyNow } =
+    useSandboxAuctions(wallet);
 
-  const filteredAuctions = auctions.filter(auction => {
-    if (filter === 'mine') return auction.sellerAddress === wallet?.address;
-    if (filter === 'bidding') return auction.bids.some(b => b.bidder === wallet?.address);
+  const filteredAuctions = auctions.filter((auction) => {
+    if (filter === "mine") return auction.sellerAddress === wallet?.address;
+    if (filter === "bidding")
+      return auction.bids.some((b) => b.bidder === wallet?.address);
     return true;
   });
 
@@ -27,7 +29,8 @@ export default function AuctionPlayground({ wallet }: Props) {
         <div>
           <h2 className="text-2xl font-bold">🏛️ Live Sandbox Auctions</h2>
           <p className="text-sm text-gray-500 mt-1">
-            {auctions.length} active auctions • {auctions.reduce((sum, a) => sum + a.bids.length, 0)} total bids
+            {auctions.length} active auctions •{" "}
+            {auctions.reduce((sum, a) => sum + a.bids.length, 0)} total bids
           </p>
         </div>
         <button
@@ -42,17 +45,17 @@ export default function AuctionPlayground({ wallet }: Props) {
       {/* Filter tabs */}
       <div className="flex gap-2 mb-6 border-b">
         {[
-          { id: 'all', label: 'All Auctions' },
-          { id: 'mine', label: 'My Listings' },
-          { id: 'bidding', label: 'I\'m Bidding On' }
-        ].map(tab => (
+          { id: "all", label: "All Auctions" },
+          { id: "mine", label: "My Listings" },
+          { id: "bidding", label: "I'm Bidding On" },
+        ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setFilter(tab.id)}
             className={`px-4 py-2 font-medium transition relative ${
               filter === tab.id
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-500 hover:text-gray-700'
+                ? "text-blue-600 border-b-2 border-blue-600"
+                : "text-gray-500 hover:text-gray-700"
             }`}
           >
             {tab.label}
@@ -63,7 +66,7 @@ export default function AuctionPlayground({ wallet }: Props) {
       {/* Auction grid */}
       {filteredAuctions.length > 0 ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredAuctions.map(auction => (
+          {filteredAuctions.map((auction) => (
             <SandboxAuctionCard
               key={auction.id}
               auction={auction}
@@ -76,15 +79,17 @@ export default function AuctionPlayground({ wallet }: Props) {
       ) : (
         <div className="text-center py-12 bg-gray-50 rounded-lg border-2 border-dashed">
           <div className="text-6xl mb-4">🏛️</div>
-          <h3 className="text-xl font-bold text-gray-700 mb-2">No auctions found</h3>
+          <h3 className="text-xl font-bold text-gray-700 mb-2">
+            No auctions found
+          </h3>
           <p className="text-gray-500 mb-6">
-            {filter === 'all' 
-              ? 'Be the first to create an auction!' 
-              : filter === 'mine' 
-                ? 'You haven\'t created any auctions yet' 
-                : 'You haven\'t bid on any auctions yet'}
+            {filter === "all"
+              ? "Be the first to create an auction!"
+              : filter === "mine"
+                ? "You haven't created any auctions yet"
+                : "You haven't bid on any auctions yet"}
           </p>
-          {filter === 'all' && (
+          {filter === "all" && (
             <button
               onClick={() => setShowCreateModal(true)}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition font-bold"

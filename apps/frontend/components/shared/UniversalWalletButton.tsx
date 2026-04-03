@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useWallet } from '@/hooks/useWallet';
-import { usePathname } from 'next/navigation';
+import { useState } from "react";
+import { useWallet } from "@/hooks/useWallet";
+import { usePathname } from "next/navigation";
 
 export default function UniversalWalletButton() {
   const { address, isConnected, walletType, connect, disconnect } = useWallet();
   const pathname = usePathname();
   const [showDropdown, setShowDropdown] = useState(false);
-  const isSandbox = pathname?.includes('/sandbox');
+  const isSandbox = pathname?.includes("/sandbox");
 
   // Don't show on sandbox pages
   if (isSandbox) {
@@ -20,16 +20,16 @@ export default function UniversalWalletButton() {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-lg">
           <span className="text-sm">
-            {walletType === 'keplr' && '🪐'}
-            {walletType === 'leap' && '🐆'}
-            {walletType === 'metamask' && '🦊'}
-            {walletType === 'phantom' && '👻'}
+            {walletType === "keplr" && "🪐"}
+            {walletType === "leap" && "🐆"}
+            {walletType === "metamask" && "🦊"}
+            {walletType === "phantom" && "👻"}
           </span>
           <span className="text-sm font-mono">
-            {address.slice(0,6)}...{address.slice(-4)}
+            {address.slice(0, 6)}...{address.slice(-4)}
           </span>
         </div>
-        <button 
+        <button
           onClick={disconnect}
           className="text-xs bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
           title="Disconnect"
@@ -49,14 +49,14 @@ export default function UniversalWalletButton() {
         Connect Wallet
         <span className="text-xs">▼</span>
       </button>
-      
+
       {showDropdown && (
         <>
-          <div 
-            className="fixed inset-0 z-40" 
+          <div
+            className="fixed inset-0 z-40"
             onClick={() => setShowDropdown(false)}
           />
-          
+
           <div className="absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-xl border z-50 overflow-hidden">
             <WalletOptions onClose={() => setShowDropdown(false)} />
           </div>
@@ -72,10 +72,10 @@ function WalletOptions({ onClose }: { onClose: () => void }) {
   const [error, setError] = useState<string | null>(null);
 
   const wallets = [
-    { id: 'keplr', name: 'Keplr', icon: '🪐' },
-    { id: 'leap', name: 'Leap', icon: '🐆' },
-    { id: 'metamask', name: 'MetaMask', icon: '🦊' },
-    { id: 'phantom', name: 'Phantom', icon: '👻' },
+    { id: "keplr", name: "Keplr", icon: "🪐" },
+    { id: "leap", name: "Leap", icon: "🐆" },
+    { id: "metamask", name: "MetaMask", icon: "🦊" },
+    { id: "phantom", name: "Phantom", icon: "👻" },
   ];
 
   const handleConnect = async (walletId: string) => {
@@ -88,7 +88,9 @@ function WalletOptions({ onClose }: { onClose: () => void }) {
       onClose();
     } catch (error: any) {
       console.error(`Connection failed for ${walletId}:`, error);
-      setError(error?.message || 'Connection failed. Check console for details.');
+      setError(
+        error?.message || "Connection failed. Check console for details.",
+      );
     } finally {
       setConnecting(null);
     }
@@ -101,7 +103,7 @@ function WalletOptions({ onClose }: { onClose: () => void }) {
           {error}
         </div>
       )}
-      
+
       {wallets.map((wallet) => (
         <button
           key={wallet.id}
@@ -120,11 +122,15 @@ function WalletOptions({ onClose }: { onClose: () => void }) {
           )}
         </button>
       ))}
-      
+
       <div className="border-t mt-2 pt-2 px-3 pb-1">
         <p className="text-xs text-gray-500">
-          Don't have a wallet? 
-          <a href="https://www.keplr.app/download" target="_blank" className="text-amber-600 ml-1">
+          Don't have a wallet?
+          <a
+            href="https://www.keplr.app/download"
+            target="_blank"
+            className="text-amber-600 ml-1"
+          >
             Install
           </a>
         </p>

@@ -1,6 +1,5 @@
 use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, 
-    Response, StdResult, to_binary, Addr
+    entry_point, to_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
 };
 use serde::{Deserialize, Serialize};
 
@@ -28,7 +27,6 @@ pub struct BidResponse {
 }
 
 // Storage using cosmwasm-std storage (simplest approach)
-use cosmwasm_std::Storage;
 use std::cell::RefCell;
 
 thread_local! {
@@ -43,18 +41,18 @@ pub fn instantiate(
     msg: InstantiateMsg,
 ) -> StdResult<Response> {
     let admin = deps.api.addr_validate(&msg.admin)?;
-    
+
     // Store initial state
     let initial_bid = BidResponse {
         amount: "0".to_string(),
         bidder: admin.to_string(),
     };
-    
+
     // Simple storage approach
     STORAGE.with(|s| {
         *s.borrow_mut() = Some(initial_bid);
     });
-    
+
     Ok(Response::new()
         .add_attribute("action", "instantiate")
         .add_attribute("admin", msg.admin))
@@ -62,7 +60,7 @@ pub fn instantiate(
 
 #[entry_point]
 pub fn execute(
-    deps: DepsMut,
+    _deps: DepsMut,
     _env: Env,
     info: MessageInfo,
     msg: ExecuteMsg,
@@ -70,20 +68,22 @@ pub fn execute(
     match msg {
         ExecuteMsg::PlaceBid {} => {
             // Get funds (simplified)
-            let amount = info.funds.get(0)
+            let amount = info
+                .funds
+                .get(0)
                 .map(|coin| coin.amount.to_string())
                 .unwrap_or_else(|| "0".to_string());
-            
+
             // Update storage
             let new_bid = BidResponse {
                 amount: amount.clone(),
                 bidder: info.sender.to_string(),
             };
-            
+
             STORAGE.with(|s| {
                 *s.borrow_mut() = Some(new_bid);
             });
-            
+
             Ok(Response::new()
                 .add_attribute("action", "place_bid")
                 .add_attribute("sender", info.sender)
@@ -93,11 +93,7 @@ pub fn execute(
 }
 
 #[entry_point]
-pub fn query(
-    _deps: Deps,
-    _env: Env,
-    msg: QueryMsg,
-) -> StdResult<Binary> {
+pub fn query(_deps: Deps, _env: Env, msg: QueryMsg) -> StdResult<Binary> {
     match msg {
         QueryMsg::GetHighestBid {} => {
             let response = STORAGE.with(|s| {

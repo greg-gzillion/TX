@@ -1,22 +1,22 @@
-import { CoinSpec } from '../types';
-import { parseYearRange, isYearInRange } from './dateHelpers';
+import { CoinSpec } from "../types";
+import { parseYearRange, isYearInRange } from "./dateHelpers";
 
 export const validateYearAgainstCoin = (
   year: string,
-  coin: CoinSpec
+  coin: CoinSpec,
 ): { valid: boolean; warning?: string } => {
   const yearNum = parseInt(year);
   if (isNaN(yearNum)) {
-    return { valid: false, warning: 'Invalid year format' };
+    return { valid: false, warning: "Invalid year format" };
   }
 
   const range = parseYearRange(coin.years);
-  const max = range.max === 'present' ? new Date().getFullYear() : range.max;
+  const max = range.max === "present" ? new Date().getFullYear() : range.max;
 
   if (yearNum < range.min || yearNum > max) {
     return {
       valid: false,
-      warning: `This coin was only minted from ${range.min} to ${max}`
+      warning: `This coin was only minted from ${range.min} to ${max}`,
     };
   }
 
@@ -26,19 +26,19 @@ export const validateYearAgainstCoin = (
 export const validateYearAgainstMint = (
   year: string,
   minYear: number,
-  maxYear: number | 'present'
+  maxYear: number | "present",
 ): { valid: boolean; warning?: string } => {
   const yearNum = parseInt(year);
   if (isNaN(yearNum)) {
-    return { valid: false, warning: 'Invalid year format' };
+    return { valid: false, warning: "Invalid year format" };
   }
 
-  const max = maxYear === 'present' ? new Date().getFullYear() : maxYear;
+  const max = maxYear === "present" ? new Date().getFullYear() : maxYear;
 
   if (yearNum < minYear || yearNum > max) {
     return {
       valid: false,
-      warning: `This mint operated from ${minYear} to ${max}`
+      warning: `This mint operated from ${minYear} to ${max}`,
     };
   }
 

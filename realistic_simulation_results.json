@@ -1,0 +1,608 @@
+{
+  "timestamp": "2026-04-02T18:45:13.413327",
+  "market_prices": {
+    "gold": {
+      "bid": 4676.0,
+      "ask": 4678.0,
+      "change": 0,
+      "low": 4554.3,
+      "high": 4801.3
+    },
+    "silver": {
+      "bid": 72.9,
+      "ask": 73.15,
+      "change": 0.0,
+      "low": 69.48,
+      "high": 76.85
+    },
+    "platinum": {
+      "bid": 1980.0,
+      "ask": 1990.0,
+      "change": -17.0,
+      "low": 1871.0,
+      "high": 2015.0
+    },
+    "palladium": {
+      "bid": 1490.0,
+      "ask": 1530.0,
+      "change": -2.0,
+      "low": 1407.0,
+      "high": 1537.0
+    }
+  },
+  "auctions": [
+    {
+      "id": "AUC0001",
+      "seller": "bullion_dealer",
+      "item": "1 oz Gold American Eagle BU",
+      "metal": "gold",
+      "weight_oz": 1.0,
+      "grade": "BU",
+      "certified": true,
+      "market_value": 5160,
+      "starting_bid": 3096,
+      "reserve_price": 3611,
+      "buy_it_now": 4902,
+      "current_bid": 3096,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "quick_sale",
+      "duration_days": 3,
+      "bids": [
+        {
+          "bidder": "retail_investor",
+          "amount": 103096,
+          "collateral": 10309
+        }
+      ],
+      "winner": "retail_investor",
+      "final_price": 4902
+    },
+    {
+      "id": "AUC0002",
+      "seller": "central_bank",
+      "item": "10 oz Gold Bar (LBMA Good Delivery)",
+      "metal": "gold",
+      "weight_oz": 10.0,
+      "grade": "Good Delivery",
+      "certified": true,
+      "market_value": 49156,
+      "starting_bid": 34409,
+      "reserve_price": 41782,
+      "buy_it_now": 56529,
+      "current_bid": 34409,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "standard",
+      "duration_days": 7,
+      "bids": [
+        {
+          "bidder": "retail_investor",
+          "amount": 134409,
+          "collateral": 13440
+        }
+      ],
+      "winner": "retail_investor",
+      "final_price": 56529
+    },
+    {
+      "id": "AUC0003",
+      "seller": "bullion_dealer",
+      "item": "1 oz Gold Maple Leaf Proof",
+      "metal": "gold",
+      "weight_oz": 1.0,
+      "grade": "Proof",
+      "certified": true,
+      "market_value": 5926,
+      "starting_bid": 2963,
+      "reserve_price": 0,
+      "buy_it_now": 6518,
+      "current_bid": 2963,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "no_reserve",
+      "duration_days": 5,
+      "bids": [
+        {
+          "bidder": "jewelry_manufacturer",
+          "amount": 102963,
+          "collateral": 10296
+        }
+      ],
+      "winner": "jewelry_manufacturer",
+      "final_price": 6518
+    },
+    {
+      "id": "AUC0004",
+      "seller": "central_bank",
+      "item": "100 oz Silver Bar (RCM)",
+      "metal": "silver",
+      "weight_oz": 100.0,
+      "grade": "BU",
+      "certified": true,
+      "market_value": 7991,
+      "starting_bid": 4794,
+      "reserve_price": 5593,
+      "buy_it_now": 7591,
+      "current_bid": 4794,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "quick_sale",
+      "duration_days": 3,
+      "bids": [
+        {
+          "bidder": "bullion_dealer",
+          "amount": 104794,
+          "collateral": 10479
+        }
+      ],
+      "winner": "bullion_dealer",
+      "final_price": 7591
+    },
+    {
+      "id": "AUC0005",
+      "seller": "bullion_dealer",
+      "item": "1 oz Platinum Eagle",
+      "metal": "platinum",
+      "weight_oz": 1.0,
+      "grade": "BU",
+      "certified": true,
+      "market_value": 2237,
+      "starting_bid": 1901,
+      "reserve_price": 2125,
+      "buy_it_now": 2908,
+      "current_bid": 1901,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "premium",
+      "duration_days": 14,
+      "bids": [
+        {
+          "bidder": "jewelry_manufacturer",
+          "amount": 101901,
+          "collateral": 10190
+        }
+      ],
+      "winner": "jewelry_manufacturer",
+      "final_price": 2908
+    },
+    {
+      "id": "AUC0006",
+      "seller": "hedge_fund",
+      "item": "1/2 oz Gold Kangaroo",
+      "metal": "gold",
+      "weight_oz": 0.5,
+      "grade": "BU",
+      "certified": false,
+      "market_value": 2554,
+      "starting_bid": 2170,
+      "reserve_price": 2426,
+      "buy_it_now": 3320,
+      "current_bid": 2170,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "premium",
+      "duration_days": 14,
+      "bids": [
+        {
+          "bidder": "institutional_buyer",
+          "amount": 102170,
+          "collateral": 10217
+        }
+      ],
+      "winner": "institutional_buyer",
+      "final_price": 3320
+    },
+    {
+      "id": "AUC0007",
+      "seller": "central_bank",
+      "item": "5 oz Silver Round",
+      "metal": "silver",
+      "weight_oz": 5.0,
+      "grade": "BU",
+      "certified": false,
+      "market_value": 395,
+      "starting_bid": 335,
+      "reserve_price": 375,
+      "buy_it_now": 513,
+      "current_bid": 335,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "premium",
+      "duration_days": 14,
+      "bids": [
+        {
+          "bidder": "jewelry_manufacturer",
+          "amount": 100335,
+          "collateral": 10033
+        }
+      ],
+      "winner": "jewelry_manufacturer",
+      "final_price": 513
+    },
+    {
+      "id": "AUC0008",
+      "seller": "central_bank",
+      "item": "1 oz Palladium Maple Leaf",
+      "metal": "palladium",
+      "weight_oz": 1.0,
+      "grade": "BU",
+      "certified": true,
+      "market_value": 1736,
+      "starting_bid": 1215,
+      "reserve_price": 1475,
+      "buy_it_now": 1996,
+      "current_bid": 1215,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "standard",
+      "duration_days": 7,
+      "bids": [
+        {
+          "bidder": "hedge_fund",
+          "amount": 101215,
+          "collateral": 10121
+        }
+      ],
+      "winner": "hedge_fund",
+      "final_price": 1996
+    },
+    {
+      "id": "AUC0009",
+      "seller": "hedge_fund",
+      "item": "1/4 oz Gold Panda",
+      "metal": "gold",
+      "weight_oz": 0.25,
+      "grade": "MS70",
+      "certified": true,
+      "market_value": 1640,
+      "starting_bid": 1148,
+      "reserve_price": 1394,
+      "buy_it_now": 1885,
+      "current_bid": 1148,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "standard",
+      "duration_days": 7,
+      "bids": [
+        {
+          "bidder": "retail_investor",
+          "amount": 101148,
+          "collateral": 10114
+        }
+      ],
+      "winner": "retail_investor",
+      "final_price": 1885
+    },
+    {
+      "id": "AUC0010",
+      "seller": "hedge_fund",
+      "item": "1000 oz Silver Bar (Good Delivery)",
+      "metal": "silver",
+      "weight_oz": 1000.0,
+      "grade": "Good Delivery",
+      "certified": true,
+      "market_value": 76485,
+      "starting_bid": 45891,
+      "reserve_price": 53539,
+      "buy_it_now": 72660,
+      "current_bid": 45891,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "quick_sale",
+      "duration_days": 3,
+      "bids": [
+        {
+          "bidder": "retail_investor",
+          "amount": 145891,
+          "collateral": 14589
+        }
+      ],
+      "winner": "retail_investor",
+      "final_price": 72660
+    },
+    {
+      "id": "AUC0011",
+      "seller": "hedge_fund",
+      "item": "1 oz Platinum Maple Leaf",
+      "metal": "platinum",
+      "weight_oz": 1.0,
+      "grade": "Proof",
+      "certified": true,
+      "market_value": 2497,
+      "starting_bid": 1747,
+      "reserve_price": 2122,
+      "buy_it_now": 2871,
+      "current_bid": 1747,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "standard",
+      "duration_days": 7,
+      "bids": [
+        {
+          "bidder": "jewelry_manufacturer",
+          "amount": 101747,
+          "collateral": 10174
+        }
+      ],
+      "winner": "jewelry_manufacturer",
+      "final_price": 2871
+    },
+    {
+      "id": "AUC0012",
+      "seller": "bullion_dealer",
+      "item": "1907 $20 St Gaudens (MS65)",
+      "metal": "gold",
+      "weight_oz": 0.9675,
+      "grade": "MS65",
+      "certified": true,
+      "market_value": 12464,
+      "starting_bid": 6232,
+      "reserve_price": 0,
+      "buy_it_now": 13710,
+      "current_bid": 6232,
+      "current_bidder": null,
+      "status": "sold_bin",
+      "type": "no_reserve",
+      "duration_days": 5,
+      "bids": [
+        {
+          "bidder": "jewelry_manufacturer",
+          "amount": 106232,
+          "collateral": 10623
+        }
+      ],
+      "winner": "jewelry_manufacturer",
+      "final_price": 13710
+    }
+  ],
+  "results": [
+    {
+      "auction_id": "AUC0001",
+      "item": "1 oz Gold American Eagle BU",
+      "metal": "gold",
+      "weight_oz": 1.0,
+      "grade": "BU",
+      "market_value": 5160,
+      "final_price": 4902,
+      "winner": "retail_investor",
+      "seller": "bullion_dealer",
+      "fee": 53,
+      "fee_usd": 5.3e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0002",
+      "item": "10 oz Gold Bar (LBMA Good Delivery)",
+      "metal": "gold",
+      "weight_oz": 10.0,
+      "grade": "Good Delivery",
+      "market_value": 49156,
+      "final_price": 56529,
+      "winner": "retail_investor",
+      "seller": "central_bank",
+      "fee": 621,
+      "fee_usd": 0.000621,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0003",
+      "item": "1 oz Gold Maple Leaf Proof",
+      "metal": "gold",
+      "weight_oz": 1.0,
+      "grade": "Proof",
+      "market_value": 5926,
+      "final_price": 6518,
+      "winner": "jewelry_manufacturer",
+      "seller": "bullion_dealer",
+      "fee": 71,
+      "fee_usd": 7.1e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0004",
+      "item": "100 oz Silver Bar (RCM)",
+      "metal": "silver",
+      "weight_oz": 100.0,
+      "grade": "BU",
+      "market_value": 7991,
+      "final_price": 7591,
+      "winner": "bullion_dealer",
+      "seller": "central_bank",
+      "fee": 83,
+      "fee_usd": 8.3e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0005",
+      "item": "1 oz Platinum Eagle",
+      "metal": "platinum",
+      "weight_oz": 1.0,
+      "grade": "BU",
+      "market_value": 2237,
+      "final_price": 2908,
+      "winner": "jewelry_manufacturer",
+      "seller": "bullion_dealer",
+      "fee": 31,
+      "fee_usd": 3.1e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0006",
+      "item": "1/2 oz Gold Kangaroo",
+      "metal": "gold",
+      "weight_oz": 0.5,
+      "grade": "BU",
+      "market_value": 2554,
+      "final_price": 3320,
+      "winner": "institutional_buyer",
+      "seller": "hedge_fund",
+      "fee": 36,
+      "fee_usd": 3.6e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0007",
+      "item": "5 oz Silver Round",
+      "metal": "silver",
+      "weight_oz": 5.0,
+      "grade": "BU",
+      "market_value": 395,
+      "final_price": 513,
+      "winner": "jewelry_manufacturer",
+      "seller": "central_bank",
+      "fee": 5,
+      "fee_usd": 5e-06,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0008",
+      "item": "1 oz Palladium Maple Leaf",
+      "metal": "palladium",
+      "weight_oz": 1.0,
+      "grade": "BU",
+      "market_value": 1736,
+      "final_price": 1996,
+      "winner": "hedge_fund",
+      "seller": "central_bank",
+      "fee": 21,
+      "fee_usd": 2.1e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0009",
+      "item": "1/4 oz Gold Panda",
+      "metal": "gold",
+      "weight_oz": 0.25,
+      "grade": "MS70",
+      "market_value": 1640,
+      "final_price": 1885,
+      "winner": "retail_investor",
+      "seller": "hedge_fund",
+      "fee": 20,
+      "fee_usd": 2e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0010",
+      "item": "1000 oz Silver Bar (Good Delivery)",
+      "metal": "silver",
+      "weight_oz": 1000.0,
+      "grade": "Good Delivery",
+      "market_value": 76485,
+      "final_price": 72660,
+      "winner": "retail_investor",
+      "seller": "hedge_fund",
+      "fee": 799,
+      "fee_usd": 0.000799,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0011",
+      "item": "1 oz Platinum Maple Leaf",
+      "metal": "platinum",
+      "weight_oz": 1.0,
+      "grade": "Proof",
+      "market_value": 2497,
+      "final_price": 2871,
+      "winner": "jewelry_manufacturer",
+      "seller": "hedge_fund",
+      "fee": 31,
+      "fee_usd": 3.1e-05,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0012",
+      "item": "1907 $20 St Gaudens (MS65)",
+      "metal": "gold",
+      "weight_oz": 0.9675,
+      "grade": "MS65",
+      "market_value": 12464,
+      "final_price": 13710,
+      "winner": "jewelry_manufacturer",
+      "seller": "bullion_dealer",
+      "fee": 150,
+      "fee_usd": 0.00015,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    }
+  ],
+  "wallets": [
+    {
+      "name": "premium_collector",
+      "address": "testcore1rd98qx6esez9epyz5rqhj6phpk9wqnccqe73qq",
+      "type": "High Net Worth",
+      "initial_balance": 500000000000,
+      "current_balance": 500000000000
+    },
+    {
+      "name": "institutional_buyer",
+      "address": "testcore13cul03uymxn5wfafd97ly7rz6tap9mdx5k4ast",
+      "type": "Institution",
+      "initial_balance": 2000000000000,
+      "current_balance": 1999999999964
+    },
+    {
+      "name": "bullion_dealer",
+      "address": "testcore19gnm70h96e23ryzgqhd5mzcl4tky67vhsvtrc7",
+      "type": "Dealer",
+      "initial_balance": 1000000000000,
+      "current_balance": 999999999612
+    },
+    {
+      "name": "retail_investor",
+      "address": "testcore1yydecw6wksdq2qx0uu7t23krtlglk029l2e6lj",
+      "type": "Retail",
+      "initial_balance": 50000000000,
+      "current_balance": 49999998507
+    },
+    {
+      "name": "numismatist",
+      "address": "testcore1zqxfenz5wek7dzuv2skv6jq5zh7cjtxq0phmqj",
+      "type": "Collector",
+      "initial_balance": 200000000000,
+      "current_balance": 200000000000
+    },
+    {
+      "name": "jewelry_manufacturer",
+      "address": "testcore10xszv64mav3u9ntnz36rqdde22sl2jc7v3jz79",
+      "type": "Industrial",
+      "initial_balance": 300000000000,
+      "current_balance": 299999999712
+    },
+    {
+      "name": "central_bank",
+      "address": "testcore13uhphvmy6y3wgz9e4de4mg4m6ksj7ex2n97zvf",
+      "type": "Central Bank",
+      "initial_balance": 10000000000000,
+      "current_balance": 9999999999270
+    },
+    {
+      "name": "hedge_fund",
+      "address": "testcore1zftayhrgku73ldk67lttxaaxzelstlzw5r9vqt",
+      "type": "Fund",
+      "initial_balance": 5000000000000,
+      "current_balance": 4999999999093
+    }
+  ],
+  "crf_balance": 1921,
+  "summary": {
+    "total_auctions": 12,
+    "sold": 12,
+    "unsold": 0,
+    "total_value_usd": 0.175403,
+    "total_fees_usd": 0.001921,
+    "total_phnx": 12
+  }
+}

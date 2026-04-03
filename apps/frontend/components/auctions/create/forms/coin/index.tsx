@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Select from 'react-select';
-import { countryOptions } from './data/countries';
-import { gradeOptions } from './data/grades';
-import { CoinDetails } from './types';
-import { useMintData, useCoinData, useYearValidation } from './hooks';
-import { CoinTypeSelector } from './components';
+import { useState, useEffect } from "react";
+import Select from "react-select";
+import { countryOptions } from "./data/countries";
+import { gradeOptions } from "./data/grades";
+import { CoinDetails } from "./types";
+import { useMintData, useCoinData, useYearValidation } from "./hooks";
+import { CoinTypeSelector } from "./components";
 
 interface CoinDetailsFormProps {
   coinDetails: CoinDetails;
@@ -14,21 +14,38 @@ interface CoinDetailsFormProps {
   metalType?: string;
 }
 
-export default function CoinDetailsForm({ coinDetails, onChange, metalType }: CoinDetailsFormProps) {
+export default function CoinDetailsForm({
+  coinDetails,
+  onChange,
+  metalType,
+}: CoinDetailsFormProps) {
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
   const [selectedMint, setSelectedMint] = useState<any>(null);
-  
-  const { coinCategories, coinOptions, activeCategory, selectedCoin, handleCategoryClick, handleCoinSelect } = useCoinData(selectedCountry, metalType);
-  
+
+  const {
+    coinCategories,
+    coinOptions,
+    activeCategory,
+    selectedCoin,
+    handleCategoryClick,
+    handleCoinSelect,
+  } = useCoinData(selectedCountry, metalType);
+
   // ✅ FIXED: Pass selectedCoin to useMintData
   const { mintOptions } = useMintData(selectedCountry, metalType, selectedCoin);
-  
-  const { yearWarning, validYears } = useYearValidation(selectedCoin, selectedMint, coinDetails.year);
+
+  const { yearWarning, validYears } = useYearValidation(
+    selectedCoin,
+    selectedMint,
+    coinDetails.year,
+  );
 
   // Initialize selectedCountry from props
   useEffect(() => {
     if (coinDetails.country && !selectedCountry) {
-      const country = countryOptions.find(c => c.value === coinDetails.country);
+      const country = countryOptions.find(
+        (c) => c.value === coinDetails.country,
+      );
       if (country) setSelectedCountry(country);
     }
   }, [coinDetails.country]);
@@ -42,25 +59,25 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
 
   const handleCountryChange = (selected: any) => {
     setSelectedCountry(selected);
-    onChange({ 
-      ...coinDetails, 
-      country: selected?.value || '', 
-      mint: '', 
-      year: '' 
+    onChange({
+      ...coinDetails,
+      country: selected?.value || "",
+      mint: "",
+      year: "",
     });
   };
 
   const handleMintChange = (selected: any) => {
     setSelectedMint(selected);
-    onChange({ 
-      ...coinDetails, 
-      mint: selected?.value || '', 
-      year: '' 
+    onChange({
+      ...coinDetails,
+      mint: selected?.value || "",
+      year: "",
     });
   };
 
   const handleYearChange = (selected: any) => {
-    onChange({ ...coinDetails, year: selected?.value || '' });
+    onChange({ ...coinDetails, year: selected?.value || "" });
   };
 
   const handleMintageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +89,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
   };
 
   const handleGradeChange = (selected: any) => {
-    onChange({ ...coinDetails, grade: selected?.value || '' });
+    onChange({ ...coinDetails, grade: selected?.value || "" });
   };
 
   const handleOverrideYear = () => {
@@ -84,9 +101,13 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
       <h3 className="font-semibold text-amber-800 mb-3 flex items-center gap-2">
         <span className="text-xl">🪙</span>
         Coin Details
-        {coinDetails.overrideYear && <span className="text-xs text-amber-600 ml-2">(date override active)</span>}
+        {coinDetails.overrideYear && (
+          <span className="text-xs text-amber-600 ml-2">
+            (date override active)
+          </span>
+        )}
       </h3>
-      
+
       <div className="space-y-4">
         {/* Country Dropdown */}
         <div>
@@ -95,7 +116,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
           </label>
           <Select
             options={countryOptions}
-            value={countryOptions.find(c => c.value === coinDetails.country)}
+            value={countryOptions.find((c) => c.value === coinDetails.country)}
             onChange={handleCountryChange}
             placeholder="Search or select country..."
             isSearchable
@@ -105,16 +126,18 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
         </div>
 
         {/* Coin Type Selector */}
-        {selectedCountry?.value === 'USA' && metalType && Object.keys(coinCategories).length > 0 && (
-          <CoinTypeSelector
-            coinCategories={coinCategories}
-            coinOptions={coinOptions}
-            activeCategory={activeCategory}
-            selectedCoin={selectedCoin}
-            onCategoryClick={handleCategoryClick}
-            onCoinSelect={handleCoinSelect}
-          />
-        )}
+        {selectedCountry?.value === "USA" &&
+          metalType &&
+          Object.keys(coinCategories).length > 0 && (
+            <CoinTypeSelector
+              coinCategories={coinCategories}
+              coinOptions={coinOptions}
+              activeCategory={activeCategory}
+              selectedCoin={selectedCoin}
+              onCategoryClick={handleCategoryClick}
+              onCoinSelect={handleCoinSelect}
+            />
+          )}
 
         {/* Mint Dropdown */}
         <div>
@@ -125,7 +148,9 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
             options={mintOptions}
             value={mintOptions.find((m: any) => m.value === coinDetails.mint)}
             onChange={handleMintChange}
-            placeholder={selectedCountry ? "Select mint..." : "Select a country first"}
+            placeholder={
+              selectedCountry ? "Select mint..." : "Select a country first"
+            }
             isDisabled={!selectedCountry}
             isSearchable
             className="react-select-container"
@@ -144,10 +169,16 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
             Year <span className="text-red-500">*</span>
           </label>
           <Select
-            options={validYears.map(year => ({ value: year, label: year }))}
-            value={coinDetails.year ? { value: coinDetails.year, label: coinDetails.year } : null}
+            options={validYears.map((year) => ({ value: year, label: year }))}
+            value={
+              coinDetails.year
+                ? { value: coinDetails.year, label: coinDetails.year }
+                : null
+            }
             onChange={handleYearChange}
-            placeholder={selectedCoin ? "Select year..." : "Select a coin first"}
+            placeholder={
+              selectedCoin ? "Select year..." : "Select a coin first"
+            }
             isDisabled={!selectedCoin || validYears.length === 0}
             isSearchable
             className="react-select-container"
@@ -155,7 +186,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
           />
           {selectedCoin && validYears.length > 0 && (
             <p className="text-xs text-gray-500 mt-1">
-              Valid years: {validYears[validYears.length-1]} - {validYears[0]}
+              Valid years: {validYears[validYears.length - 1]} - {validYears[0]}
             </p>
           )}
           {yearWarning && !coinDetails.overrideYear && (
@@ -179,7 +210,7 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
           </label>
           <input
             type="text"
-            value={coinDetails.mintage || ''}
+            value={coinDetails.mintage || ""}
             onChange={handleMintageChange}
             placeholder="e.g., 1,000,000"
             className="w-full px-3 py-2 border border-gray-300 rounded-md"
@@ -209,7 +240,9 @@ export default function CoinDetailsForm({ coinDetails, onChange, metalType }: Co
             </label>
             <Select
               options={gradeOptions}
-              value={gradeOptions.flatMap(g => g.options).find((g: any) => g.value === coinDetails.grade)}
+              value={gradeOptions
+                .flatMap((g) => g.options)
+                .find((g: any) => g.value === coinDetails.grade)}
               onChange={handleGradeChange}
               placeholder="Select grade..."
               isSearchable

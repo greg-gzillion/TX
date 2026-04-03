@@ -1,6 +1,5 @@
 use cosmwasm_std::{
-    entry_point, Binary, Deps, DepsMut, Env, MessageInfo, 
-    Response, StdResult, to_json_binary
+    entry_point, to_json_binary, Binary, Deps, DepsMut, Env, MessageInfo, Response, StdResult,
 };
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
@@ -54,7 +53,7 @@ pub fn execute(
         ExecuteMsg::Increment {} => {
             let data = deps.storage.get(COUNT_KEY).unwrap_or(vec![0; 4]);
             let mut count = i32::from_le_bytes(data.try_into().unwrap_or([0; 4]));
-            count checked_add( 1;
+            count = count.checked_add(1).unwrap_or(0);
             deps.storage.set(COUNT_KEY, &count.to_le_bytes());
             Ok(Response::new().add_attribute("count", count.to_string()))
         }

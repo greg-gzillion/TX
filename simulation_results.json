@@ -1,53 +1,770 @@
 {
-  "timestamp": "2026-04-02T14:13:27.491015",
-  "rules": {
-    "collateral_percent": 10,
-    "fee_percent": 1.1,
-    "inspection_hours": 48,
-    "phnx_per_usd": 1,
-    "trust_per_success": 1,
-    "dont_trust_per_failure": 1
-  },
-  "market_prices": {
-    "gold": {
-      "bid": 4675.1,
-      "ask": 4677.1,
-      "change": -82.4,
-      "change_percent": -1.73,
-      "low": 4554.3,
-      "high": 4801.3,
-      "timestamp": "2026-04-02 16:05:00 EST"
+  "timestamp": "2026-04-02T18:40:23.744550",
+  "auctions": [
+    {
+      "id": "AUC0001",
+      "seller": "seller2",
+      "item": "5 oz Silver Round",
+      "metal": "silver",
+      "weight": 5.0,
+      "market_value": 379.08000000000004,
+      "starting_bid": 322,
+      "reserve_price": 360,
+      "buy_it_now": 492,
+      "current_bid": 365,
+      "current_bidder": null,
+      "bid_count": 1,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742193",
+      "expires_at": "2026-04-09T18:40:23.742211",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 365,
+          "collateral": 36,
+          "timestamp": "2026-04-02T18:40:23.743032"
+        }
+      ],
+      "type": "premium",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 365
     },
-    "silver": {
-      "bid": 72.64,
-      "ask": 72.89,
-      "change": -2.34,
-      "change_percent": -3.13,
-      "low": 69.48,
-      "high": 76.85
+    {
+      "id": "AUC0002",
+      "seller": "seller2",
+      "item": "1 oz Platinum Maple Leaf",
+      "metal": "platinum",
+      "weight": 1.0,
+      "market_value": 2138.4,
+      "starting_bid": 1817,
+      "reserve_price": 2031,
+      "buy_it_now": 2779,
+      "current_bid": 2609,
+      "current_bidder": null,
+      "bid_count": 2,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742254",
+      "expires_at": "2026-04-09T18:40:23.742268",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 2234,
+          "collateral": 223,
+          "timestamp": "2026-04-02T18:40:23.743085"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 2609,
+          "collateral": 260,
+          "timestamp": "2026-04-02T18:40:23.743105"
+        }
+      ],
+      "type": "premium",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 2609
     },
-    "platinum": {
-      "bid": 1999.0,
-      "ask": 2009.0,
-      "change": 38.0,
-      "change_percent": 1.94,
-      "low": 1871.0,
-      "high": 2010.0
+    {
+      "id": "AUC0003",
+      "seller": "seller1",
+      "item": "1 oz Gold American Eagle",
+      "metal": "gold",
+      "weight": 1.0,
+      "market_value": 4909.8,
+      "starting_bid": 2454,
+      "reserve_price": 0,
+      "buy_it_now": 5400,
+      "current_bid": 4614,
+      "current_bidder": null,
+      "bid_count": 4,
+      "status": "unsold",
+      "created_at": "2026-04-02T18:40:23.742392",
+      "expires_at": "2026-04-04T18:40:23.742406",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 2867,
+          "collateral": 286,
+          "timestamp": "2026-04-02T18:40:23.743160"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 3508,
+          "collateral": 350,
+          "timestamp": "2026-04-02T18:40:23.743174"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 4343,
+          "collateral": 434,
+          "timestamp": "2026-04-02T18:40:23.743186"
+        },
+        {
+          "round": 4,
+          "bidder": "buyer1",
+          "amount": 4614,
+          "collateral": 461,
+          "timestamp": "2026-04-02T18:40:23.743199"
+        }
+      ],
+      "type": "no_reserve"
     },
-    "palladium": {
-      "bid": 1494.0,
-      "ask": 1534.0,
-      "change": 33.0,
-      "change_percent": 2.26,
-      "low": 1407.0,
-      "high": 1537.0
+    {
+      "id": "AUC0004",
+      "seller": "seller1",
+      "item": "1/4 oz Gold Maple",
+      "metal": "gold",
+      "weight": 0.25,
+      "market_value": 1285.9,
+      "starting_bid": 1093,
+      "reserve_price": 1221,
+      "buy_it_now": 1671,
+      "current_bid": 1917,
+      "current_bidder": null,
+      "bid_count": 3,
+      "status": "sold_bin",
+      "created_at": "2026-04-02T18:40:23.742455",
+      "expires_at": "2026-04-09T18:40:23.742458",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 1297,
+          "collateral": 129,
+          "timestamp": "2026-04-02T18:40:23.743240"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 1591,
+          "collateral": 159,
+          "timestamp": "2026-04-02T18:40:23.743258"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 1917,
+          "collateral": 191,
+          "timestamp": "2026-04-02T18:40:23.743270"
+        }
+      ],
+      "type": "premium",
+      "reserve_met": true,
+      "winner": "buyer1",
+      "final_price": 1671
+    },
+    {
+      "id": "AUC0005",
+      "seller": "seller2",
+      "item": "5 oz Silver Round",
+      "metal": "silver",
+      "weight": 5.0,
+      "market_value": 379.08000000000004,
+      "starting_bid": 227,
+      "reserve_price": 284,
+      "buy_it_now": 360,
+      "current_bid": 302,
+      "current_bidder": null,
+      "bid_count": 2,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742496",
+      "expires_at": "2026-04-03T18:40:23.742499",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 259,
+          "collateral": 25,
+          "timestamp": "2026-04-02T18:40:23.743312"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer1",
+          "amount": 302,
+          "collateral": 30,
+          "timestamp": "2026-04-02T18:40:23.743327"
+        }
+      ],
+      "type": "quick_sale",
+      "reserve_met": true,
+      "winner": "buyer1",
+      "final_price": 302
+    },
+    {
+      "id": "AUC0006",
+      "seller": "seller1",
+      "item": "1 oz Platinum Maple Leaf",
+      "metal": "platinum",
+      "weight": 1.0,
+      "market_value": 2138.4,
+      "starting_bid": 1496,
+      "reserve_price": 1817,
+      "buy_it_now": 2459,
+      "current_bid": 1579,
+      "current_bidder": null,
+      "bid_count": 1,
+      "status": "unsold",
+      "created_at": "2026-04-02T18:40:23.742538",
+      "expires_at": "2026-04-05T18:40:23.742541",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 1579,
+          "collateral": 157,
+          "timestamp": "2026-04-02T18:40:23.743366"
+        }
+      ],
+      "type": "standard"
+    },
+    {
+      "id": "AUC0007",
+      "seller": "seller2",
+      "item": "1 oz Palladium Bar",
+      "metal": "palladium",
+      "weight": 1.0,
+      "market_value": 1534.7,
+      "starting_bid": 767,
+      "reserve_price": 0,
+      "buy_it_now": 1688,
+      "current_bid": 848,
+      "current_bidder": null,
+      "bid_count": 1,
+      "status": "unsold",
+      "created_at": "2026-04-02T18:40:23.742576",
+      "expires_at": "2026-04-04T18:40:23.742580",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 848,
+          "collateral": 84,
+          "timestamp": "2026-04-02T18:40:23.743406"
+        }
+      ],
+      "type": "no_reserve"
+    },
+    {
+      "id": "AUC0008",
+      "seller": "seller1",
+      "item": "1/4 oz Gold Maple",
+      "metal": "gold",
+      "weight": 0.25,
+      "market_value": 1285.9,
+      "starting_bid": 1093,
+      "reserve_price": 1221,
+      "buy_it_now": 1671,
+      "current_bid": 1753,
+      "current_bidder": null,
+      "bid_count": 3,
+      "status": "sold_bin",
+      "created_at": "2026-04-02T18:40:23.742616",
+      "expires_at": "2026-04-09T18:40:23.742620",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 1211,
+          "collateral": 121,
+          "timestamp": "2026-04-02T18:40:23.743445"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer1",
+          "amount": 1511,
+          "collateral": 151,
+          "timestamp": "2026-04-02T18:40:23.743458"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 1753,
+          "collateral": 175,
+          "timestamp": "2026-04-02T18:40:23.743477"
+        }
+      ],
+      "type": "premium",
+      "reserve_met": true,
+      "winner": "buyer1",
+      "final_price": 1671
+    },
+    {
+      "id": "AUC0009",
+      "seller": "seller2",
+      "item": "1/2 oz Gold Kangaroo",
+      "metal": "gold",
+      "weight": 0.5,
+      "market_value": 2478.28,
+      "starting_bid": 1734,
+      "reserve_price": 2106,
+      "buy_it_now": 2850,
+      "current_bid": 3098,
+      "current_bidder": null,
+      "bid_count": 5,
+      "status": "sold_bin",
+      "created_at": "2026-04-02T18:40:23.742655",
+      "expires_at": "2026-04-05T18:40:23.742659",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 1886,
+          "collateral": 188,
+          "timestamp": "2026-04-02T18:40:23.743505"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 2033,
+          "collateral": 203,
+          "timestamp": "2026-04-02T18:40:23.743517"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 2307,
+          "collateral": 230,
+          "timestamp": "2026-04-02T18:40:23.743530"
+        },
+        {
+          "round": 4,
+          "bidder": "buyer2",
+          "amount": 2651,
+          "collateral": 265,
+          "timestamp": "2026-04-02T18:40:23.743547"
+        },
+        {
+          "round": 5,
+          "bidder": "buyer2",
+          "amount": 3098,
+          "collateral": 309,
+          "timestamp": "2026-04-02T18:40:23.743560"
+        }
+      ],
+      "type": "standard",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 2850
+    },
+    {
+      "id": "AUC0010",
+      "seller": "seller2",
+      "item": "1/2 oz Gold Kangaroo",
+      "metal": "gold",
+      "weight": 0.5,
+      "market_value": 2478.28,
+      "starting_bid": 1486,
+      "reserve_price": 1858,
+      "buy_it_now": 2354,
+      "current_bid": 2282,
+      "current_bidder": null,
+      "bid_count": 4,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742695",
+      "expires_at": "2026-04-03T18:40:23.742699",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 1612,
+          "collateral": 161,
+          "timestamp": "2026-04-02T18:40:23.743592"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer1",
+          "amount": 1992,
+          "collateral": 199,
+          "timestamp": "2026-04-02T18:40:23.743604"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 2167,
+          "collateral": 216,
+          "timestamp": "2026-04-02T18:40:23.743621"
+        },
+        {
+          "round": 4,
+          "bidder": "buyer2",
+          "amount": 2282,
+          "collateral": 228,
+          "timestamp": "2026-04-02T18:40:23.743634"
+        }
+      ],
+      "type": "quick_sale",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 2282
+    },
+    {
+      "id": "AUC0011",
+      "seller": "seller2",
+      "item": "5 oz Silver Round",
+      "metal": "silver",
+      "weight": 5.0,
+      "market_value": 379.08000000000004,
+      "starting_bid": 227,
+      "reserve_price": 284,
+      "buy_it_now": 360,
+      "current_bid": 327,
+      "current_bidder": null,
+      "bid_count": 2,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742733",
+      "expires_at": "2026-04-03T18:40:23.742736",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 266,
+          "collateral": 26,
+          "timestamp": "2026-04-02T18:40:23.743671"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 327,
+          "collateral": 32,
+          "timestamp": "2026-04-02T18:40:23.743682"
+        }
+      ],
+      "type": "quick_sale",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 327
+    },
+    {
+      "id": "AUC0012",
+      "seller": "seller2",
+      "item": "1 oz Gold American Eagle",
+      "metal": "gold",
+      "weight": 1.0,
+      "market_value": 4909.8,
+      "starting_bid": 2945,
+      "reserve_price": 3682,
+      "buy_it_now": 4664,
+      "current_bid": 3938,
+      "current_bidder": null,
+      "bid_count": 3,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742780",
+      "expires_at": "2026-04-03T18:40:23.742784",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer1",
+          "amount": 3188,
+          "collateral": 318,
+          "timestamp": "2026-04-02T18:40:23.743725"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 3522,
+          "collateral": 352,
+          "timestamp": "2026-04-02T18:40:23.743738"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer2",
+          "amount": 3938,
+          "collateral": 393,
+          "timestamp": "2026-04-02T18:40:23.743749"
+        }
+      ],
+      "type": "quick_sale",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 3938
+    },
+    {
+      "id": "AUC0013",
+      "seller": "seller1",
+      "item": "5 oz Silver Round",
+      "metal": "silver",
+      "weight": 5.0,
+      "market_value": 379.08000000000004,
+      "starting_bid": 227,
+      "reserve_price": 284,
+      "buy_it_now": 360,
+      "current_bid": 382,
+      "current_bidder": null,
+      "bid_count": 3,
+      "status": "sold_bin",
+      "created_at": "2026-04-02T18:40:23.742821",
+      "expires_at": "2026-04-03T18:40:23.742823",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 277,
+          "collateral": 27,
+          "timestamp": "2026-04-02T18:40:23.743791"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 342,
+          "collateral": 34,
+          "timestamp": "2026-04-02T18:40:23.743805"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 382,
+          "collateral": 38,
+          "timestamp": "2026-04-02T18:40:23.743823"
+        }
+      ],
+      "type": "quick_sale",
+      "reserve_met": true,
+      "winner": "buyer1",
+      "final_price": 360
+    },
+    {
+      "id": "AUC0014",
+      "seller": "seller1",
+      "item": "10 oz Silver Bar",
+      "metal": "silver",
+      "weight": 10.0,
+      "market_value": 743.58,
+      "starting_bid": 371,
+      "reserve_price": 0,
+      "buy_it_now": 817,
+      "current_bid": 609,
+      "current_bidder": null,
+      "bid_count": 3,
+      "status": "unsold",
+      "created_at": "2026-04-02T18:40:23.742863",
+      "expires_at": "2026-04-04T18:40:23.742867",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 414,
+          "collateral": 41,
+          "timestamp": "2026-04-02T18:40:23.743855"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer1",
+          "amount": 489,
+          "collateral": 48,
+          "timestamp": "2026-04-02T18:40:23.743868"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer1",
+          "amount": 609,
+          "collateral": 60,
+          "timestamp": "2026-04-02T18:40:23.743880"
+        }
+      ],
+      "type": "no_reserve"
+    },
+    {
+      "id": "AUC0015",
+      "seller": "seller2",
+      "item": "1 oz Platinum Maple Leaf",
+      "metal": "platinum",
+      "weight": 1.0,
+      "market_value": 2138.4,
+      "starting_bid": 1496,
+      "reserve_price": 1817,
+      "buy_it_now": 2459,
+      "current_bid": 2338,
+      "current_bidder": null,
+      "bid_count": 3,
+      "status": "sold",
+      "created_at": "2026-04-02T18:40:23.742910",
+      "expires_at": "2026-04-05T18:40:23.742914",
+      "bids": [
+        {
+          "round": 1,
+          "bidder": "buyer2",
+          "amount": 1837,
+          "collateral": 183,
+          "timestamp": "2026-04-02T18:40:23.743919"
+        },
+        {
+          "round": 2,
+          "bidder": "buyer2",
+          "amount": 2143,
+          "collateral": 214,
+          "timestamp": "2026-04-02T18:40:23.743937"
+        },
+        {
+          "round": 3,
+          "bidder": "buyer2",
+          "amount": 2338,
+          "collateral": 233,
+          "timestamp": "2026-04-02T18:40:23.743949"
+        }
+      ],
+      "type": "standard",
+      "reserve_met": true,
+      "winner": "buyer2",
+      "final_price": 2338
     }
-  },
-  "results": {
-    "successful_trades": 5,
-    "failed_trades": 1,
-    "total_fees": 129,
-    "total_phnx_issued": 10,
-    "disputes_resolved": 0
+  ],
+  "results": [
+    {
+      "auction_id": "AUC0001",
+      "item": "5 oz Silver Round",
+      "final_price": 365,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 4,
+      "phnx_earned": 1,
+      "status": "sold"
+    },
+    {
+      "auction_id": "AUC0002",
+      "item": "1 oz Platinum Maple Leaf",
+      "final_price": 2609,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 28,
+      "phnx_earned": 1,
+      "status": "sold"
+    },
+    {
+      "auction_id": "AUC0004",
+      "item": "1/4 oz Gold Maple",
+      "final_price": 1671,
+      "winner": "buyer1",
+      "seller": "seller1",
+      "fee": 18,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0005",
+      "item": "5 oz Silver Round",
+      "final_price": 302,
+      "winner": "buyer1",
+      "seller": "seller2",
+      "fee": 3,
+      "phnx_earned": 1,
+      "status": "sold"
+    },
+    {
+      "auction_id": "AUC0008",
+      "item": "1/4 oz Gold Maple",
+      "final_price": 1671,
+      "winner": "buyer1",
+      "seller": "seller1",
+      "fee": 18,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0009",
+      "item": "1/2 oz Gold Kangaroo",
+      "final_price": 2850,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 31,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0010",
+      "item": "1/2 oz Gold Kangaroo",
+      "final_price": 2282,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 25,
+      "phnx_earned": 1,
+      "status": "sold"
+    },
+    {
+      "auction_id": "AUC0011",
+      "item": "5 oz Silver Round",
+      "final_price": 327,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 3,
+      "phnx_earned": 1,
+      "status": "sold"
+    },
+    {
+      "auction_id": "AUC0012",
+      "item": "1 oz Gold American Eagle",
+      "final_price": 3938,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 43,
+      "phnx_earned": 1,
+      "status": "sold"
+    },
+    {
+      "auction_id": "AUC0013",
+      "item": "5 oz Silver Round",
+      "final_price": 360,
+      "winner": "buyer1",
+      "seller": "seller1",
+      "fee": 3,
+      "phnx_earned": 1,
+      "status": "sold_bin"
+    },
+    {
+      "auction_id": "AUC0015",
+      "item": "1 oz Platinum Maple Leaf",
+      "final_price": 2338,
+      "winner": "buyer2",
+      "seller": "seller2",
+      "fee": 25,
+      "phnx_earned": 1,
+      "status": "sold"
+    }
+  ],
+  "wallets": [
+    {
+      "name": "buyer1",
+      "address": "testcore1rd98qx6esez9epyz5rqhj6phpk9wqnccqe73qq",
+      "initial_balance": 10000000000,
+      "current_balance": 9999999958
+    },
+    {
+      "name": "buyer2",
+      "address": "testcore13cul03uymxn5wfafd97ly7rz6tap9mdx5k4ast",
+      "initial_balance": 10000000000,
+      "current_balance": 9999999841
+    },
+    {
+      "name": "seller1",
+      "address": "testcore19gnm70h96e23ryzgqhd5mzcl4tky67vhsvtrc7",
+      "initial_balance": 5000000000,
+      "current_balance": 4999999961
+    },
+    {
+      "name": "seller2",
+      "address": "testcore1yydecw6wksdq2qx0uu7t23krtlglk029l2e6lj",
+      "initial_balance": 5000000000,
+      "current_balance": 4999999838
+    },
+    {
+      "name": "escrow",
+      "address": "testcore1m5adn3k68tk4zqmujpnstmp9r933jafzu44tnv",
+      "initial_balance": 1000000000,
+      "current_balance": 1000000201
+    }
+  ],
+  "summary": {
+    "total_auctions": 15,
+    "sold": 11,
+    "unsold": 4,
+    "total_value_usd": 0.018713,
+    "total_fees_usd": 0.000201,
+    "total_phnx": 11
   }
 }

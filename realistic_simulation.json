@@ -1,0 +1,156 @@
+{
+  "timestamp": "2026-04-02T18:48:54.574105",
+  "auctions": [
+    {
+      "id": "AUC0001",
+      "seller": "bullion_dealer",
+      "item": "1 oz Gold American Eagle BU",
+      "metal": "gold",
+      "weight_oz": 1.0,
+      "market_value": 4818340000,
+      "starting_bid": 3372838000,
+      "reserve_price": 4095589000,
+      "buy_it_now": 5541091000,
+      "status": "sold",
+      "bids": [],
+      "winner": "numismatist",
+      "final_price": 4483984593
+    },
+    {
+      "id": "AUC0002",
+      "seller": "bullion_dealer",
+      "item": "10 oz Gold Bar",
+      "metal": "gold",
+      "weight_oz": 10.0,
+      "market_value": 47247800000,
+      "starting_bid": 33073459999,
+      "reserve_price": 40160630000,
+      "buy_it_now": 54334969999,
+      "status": "sold",
+      "bids": [],
+      "winner": "central_bank",
+      "final_price": 54334969999
+    },
+    {
+      "id": "AUC0003",
+      "seller": "central_bank",
+      "item": "100 oz Silver Bar",
+      "metal": "silver",
+      "weight_oz": 100.0,
+      "market_value": 7461300000,
+      "starting_bid": 5222910000,
+      "reserve_price": 6342105000,
+      "buy_it_now": 8580494999,
+      "status": "sold",
+      "bids": [],
+      "winner": "bullion_dealer",
+      "final_price": 8580494999
+    },
+    {
+      "id": "AUC0004",
+      "seller": "central_bank",
+      "item": "1 oz Platinum Eagle",
+      "metal": "platinum",
+      "weight_oz": 1.0,
+      "market_value": 2089500000,
+      "starting_bid": 1462650000,
+      "reserve_price": 1776075000,
+      "buy_it_now": 2402925000,
+      "status": "sold",
+      "bids": [],
+      "winner": "jewelry_manufacturer",
+      "final_price": 2402925000
+    },
+    {
+      "id": "AUC0005",
+      "seller": "central_bank",
+      "item": "1 oz Palladium Maple Leaf",
+      "metal": "palladium",
+      "weight_oz": 1.0,
+      "market_value": 1621800000,
+      "starting_bid": 1135260000,
+      "reserve_price": 1378530000,
+      "buy_it_now": 1865069999,
+      "status": "sold",
+      "bids": [],
+      "winner": "jewelry_manufacturer",
+      "final_price": 1445173288
+    },
+    {
+      "id": "AUC0006",
+      "seller": "bullion_dealer",
+      "item": "1000 oz Silver Bar",
+      "metal": "silver",
+      "weight_oz": 1000.0,
+      "market_value": 73515749999,
+      "starting_bid": 51461024999,
+      "reserve_price": 62488387499,
+      "buy_it_now": 84543112498,
+      "status": "sold",
+      "bids": [],
+      "winner": "jewelry_manufacturer",
+      "final_price": 84543112498
+    }
+  ],
+  "wallets": [
+    {
+      "name": "premium_collector",
+      "address": "testcore1rd98qx6esez9epyz5rqhj6phpk9wqnccqe73qq",
+      "type": "High Net Worth",
+      "initial_balance": 500000000000,
+      "current_balance": 500000000000
+    },
+    {
+      "name": "institutional_buyer",
+      "address": "testcore13cul03uymxn5wfafd97ly7rz6tap9mdx5k4ast",
+      "type": "Institution",
+      "initial_balance": 2000000000000,
+      "current_balance": 2000000000000
+    },
+    {
+      "name": "bullion_dealer",
+      "address": "testcore19gnm70h96e23ryzgqhd5mzcl4tky67vhsvtrc7",
+      "type": "Dealer",
+      "initial_balance": 1000000000000,
+      "current_balance": 998328631820
+    },
+    {
+      "name": "retail_investor",
+      "address": "testcore1yydecw6wksdq2qx0uu7t23krtlglk029l2e6lj",
+      "type": "Retail",
+      "initial_balance": 50000000000,
+      "current_balance": 50000000000
+    },
+    {
+      "name": "numismatist",
+      "address": "testcore1zqxfenz5wek7dzuv2skv6jq5zh7cjtxq0phmqj",
+      "type": "Collector",
+      "initial_balance": 200000000000,
+      "current_balance": 199950676170
+    },
+    {
+      "name": "jewelry_manufacturer",
+      "address": "testcore10xszv64mav3u9ntnz36rqdde22sl2jc7v3jz79",
+      "type": "Industrial",
+      "initial_balance": 300000000000,
+      "current_balance": 299027696682
+    },
+    {
+      "name": "central_bank",
+      "address": "testcore13uhphvmy6y3wgz9e4de4mg4m6ksj7ex2n97zvf",
+      "type": "Central Bank",
+      "initial_balance": 10000000000000,
+      "current_balance": 9999265600806
+    },
+    {
+      "name": "hedge_fund",
+      "address": "testcore1zftayhrgku73ldk67lttxaaxzelstlzw5r9vqt",
+      "type": "Fund",
+      "initial_balance": 5000000000000,
+      "current_balance": 5000000000000
+    }
+  ],
+  "crf_balance": 1713697261,
+  "total_value_usd": 155790.660377,
+  "total_fees_usd": 1713.697261
+}

@@ -5,7 +5,7 @@ async function createWallet() {
     prefix: "testcore",
   });
   const accounts = await wallet.getAccounts();
-  
+
   console.log("✅ WALLET CREATED LOCALLY");
   console.log("Address:", accounts[0].address);
   console.log("Mnemonic:", wallet.mnemonic);

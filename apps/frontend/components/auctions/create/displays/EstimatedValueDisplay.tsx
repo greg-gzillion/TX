@@ -1,10 +1,12 @@
-'use client';
+"use client";
 
 interface EstimatedValueDisplayProps {
   estimatedValue: number;
 }
 
-export default function EstimatedValueDisplay({ estimatedValue }: EstimatedValueDisplayProps) {
+export default function EstimatedValueDisplay({
+  estimatedValue,
+}: EstimatedValueDisplayProps) {
   if (estimatedValue <= 0) return null;
 
   return (
