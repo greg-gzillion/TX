@@ -27,7 +27,7 @@
     "@cosmjs/tendermint-rpc": "^0.38.1",
     "@next/third-parties": "^16.1.6",
     "@types/node": "^20.12.7",
-    "@types/react": "^18.3.1",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^18.3.0",
     "@vercel/analytics": "^1.6.1",
     "@walletconnect/modal": "^2.6.2",
@@ -35,7 +35,7 @@
     "@walletconnect/types": "^2.11.0",
     "lucide-react": "^0.575.0",
     "next": "^16.2.2",
-    "react": "^18.3.1",
+    "react": "^19.2.5",
     "react-dom": "^18.3.1",
     "react-select": "^5.10.2",
     "typescript": "^5.4.5"
