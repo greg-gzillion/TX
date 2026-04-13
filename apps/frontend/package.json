@@ -26,7 +26,7 @@
     "@cosmjs/stargate": "^0.38.1",
     "@cosmjs/tendermint-rpc": "^0.38.1",
     "@next/third-parties": "^16.1.6",
-    "@types/node": "^20.12.7",
+    "@types/node": "^25.6.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "@vercel/analytics": "^1.6.1",
