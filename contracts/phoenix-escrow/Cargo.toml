@@ -16,5 +16,5 @@ serde = "1.0"
 thiserror = "1.0"
 
 [dev-dependencies]
-cosmwasm-vm = "1.5"
+cosmwasm-vm = "3.0"
 cw-multi-test = "0.16"
