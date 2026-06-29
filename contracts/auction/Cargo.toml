@@ -11,7 +11,7 @@ name = "auction_guaranteed"  # Explicit library name
 cosmwasm-std = "2.3.2"
 serde = { version = "1", features = ["derive"] }
 cw-storage-plus = "2.0"
-cosmwasm-schema = "2.3"
+cosmwasm-schema = "3.0"
 schemars = "0.8"
 thiserror = "2.0"
 
